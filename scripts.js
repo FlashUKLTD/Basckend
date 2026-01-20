@@ -191,3 +191,87 @@ document.addEventListener("DOMContentLoaded", function() {
   // Fallback polling (lightweight)
   setInterval(apply, 300);
 })();
+
+
+//SOCIALS
+(function () {
+  // Prevent duplicates (important if injector runs twice)
+  if (window.__FLASH_SOCIAL_ICONS__) return;
+  window.__FLASH_SOCIAL_ICONS__ = true;
+
+  // ===== EDIT LINKS HERE =====
+  var FACEBOOK_URL  = "https://www.facebook.com/";   // <-- your Facebook link
+  var INSTAGRAM_URL = "https://www.instagram.com/flashcompetitionsni";  // <-- your Instagram link
+  // ===========================
+
+  // Finds your navbar container
+  function getNavContainer(){
+    // These cover most setups (header/nav)
+    return document.querySelector('header nav')
+        || document.querySelector('header')
+        || document.querySelector('nav');
+  }
+
+  function buildIcons(){
+    var wrap = document.createElement("div");
+    wrap.className = "flash-socialbar";
+
+    // Facebook icon
+    var fb = document.createElement("a");
+    fb.href = FACEBOOK_URL;
+    fb.target = "_blank";
+    fb.rel = "noopener";
+    fb.setAttribute("aria-label", "Flash Competitions Facebook");
+    fb.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M22 12.06C22 6.504 17.523 2 12 2S2 6.504 2 12.06C2 17.082 5.657 21.245 10.438 22v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.915 3.777-3.915 1.094 0 2.238.197 2.238.197v2.476h-1.26c-1.242 0-1.63.776-1.63 1.57v1.887h2.773l-.443 2.91h-2.33V22C18.343 21.245 22 17.082 22 12.06Z"></path>' +
+      '</svg>';
+
+    // Instagram icon
+    var ig = document.createElement("a");
+    ig.href = INSTAGRAM_URL;
+    ig.target = "_blank";
+    ig.rel = "noopener";
+    ig.setAttribute("aria-label", "Flash Competitions Instagram");
+    ig.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Z"></path>' +
+        '<path d="M12 7.2A4.8 4.8 0 1 1 7.2 12 4.806 4.806 0 0 1 12 7.2Zm0 2A2.8 2.8 0 1 0 14.8 12 2.803 2.803 0 0 0 12 9.2Z"></path>' +
+        '<path d="M17.35 6.65a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z"></path>' +
+      '</svg>';
+
+    wrap.appendChild(ig);
+    wrap.appendChild(fb);
+
+    return wrap;
+  }
+
+  function insertOnce(){
+    // stop duplicates
+    if (document.querySelector(".flash-socialbar")) return true;
+
+    var nav = getNavContainer();
+    if (!nav) return false;
+
+    // Find the actual menu area (fallbacks)
+    var menu =
+      nav.querySelector("[data-flux-navbar-items]") ||
+      nav.querySelector("ul") ||
+      nav.querySelector("div");
+
+    if (!menu) return false;
+
+    // Insert BEFORE navbar items (to the left)
+    menu.parentElement.insertBefore(buildIcons(), menu);
+    return true;
+  }
+
+  // Try now + quick retries (max ~5s), then stop forever
+  if (insertOnce()) return;
+
+  var tries = 0, maxTries = 20;
+  var t = setInterval(function(){
+    tries++;
+    if (insertOnce() || tries >= maxTries) clearInterval(t);
+  }, 250);
+})();
