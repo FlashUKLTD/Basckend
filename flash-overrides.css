@@ -18,7 +18,75 @@
 }
 
 
+/* ===========================
+   Flash Competitions - LIVE icon + text
+   (No background changes)
+=========================== */
 
+/* wrapper inserted by JS */
+#header-instant-list .flash-live-wrap{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-right: 10px;
+  line-height: 1;
+  transform: translateY(-.5px);
+}
+
+/* dot */
+#header-instant-list .flash-live-dot{
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  position: relative;
+
+  background: linear-gradient(135deg, #a855f7, #3b82f6);
+  box-shadow: 0 0 14px rgba(168, 85, 247, .55);
+}
+
+/* pulse ring */
+#header-instant-list .flash-live-dot::after{
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 2px solid rgba(168, 85, 247, .35);
+
+  transform: scale(.6);
+  opacity: 0;
+  animation: flashLivePulse 1.25s ease-out infinite;
+}
+
+@keyframes flashLivePulse{
+  0%   { transform: scale(.6); opacity: 0; }
+  22%  { opacity: .70; }
+  70%  { transform: scale(1.25); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* LIVE text */
+#header-instant-list .flash-live-text{
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .9px;
+  text-transform: uppercase;
+
+  background: linear-gradient(90deg, #a855f7, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  text-shadow: 0 0 16px rgba(59,130,246,.18);
+}
+
+/* ensure alignment in navbar */
+#header-instant-list [data-content],
+#header-instant-list > div{
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* END OF LIVE TEXT CODE FOR INSTANT WINNERS TAB BUTTON*/
 
 /* Premium site credit pill */
 .flex.items-center.border.rounded-lg.py-1\.5.px-2.gap-1\.5.group {
@@ -4479,6 +4547,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
