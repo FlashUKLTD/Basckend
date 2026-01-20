@@ -1,75 +1,3 @@
-window.addEventListener("error", (e) => console.error("SCRIPT ERROR:", e.error || e.message));
-console.log("scripts.js loaded ✅");
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const bannerVideo = document.querySelector('video[src*="1462022977347391569/020617_2.mp4"]');
-
-  if (!bannerVideo) return;
-
-  // Ensure required attributes
-  bannerVideo.muted = true;
-  bannerVideo.autoplay = true;
-  bannerVideo.loop = true;
-  bannerVideo.playsInline = true;
-
-  // Attempt to play immediately
-  bannerVideo.play().catch(() => {
-    // If blocked, wait for user interaction
-    const tryPlayOnInteract = () => {
-      
-      bannerVideo.play().catch(() => {
-        console.warn("Autoplay blocked until user interacts:", bannerVideo.src);
-      });
-      window.removeEventListener("click", tryPlayOnInteract);
-      window.removeEventListener("touchstart", tryPlayOnInteract);
-    };
-
-    window.addEventListener("click", tryPlayOnInteract);
-    window.addEventListener("touchstart", tryPlayOnInteract);
-  });
-});
-
-(() => {
-  function addLiveBadge(){
-    const a =
-      document.querySelector('#header-instant-list') ||
-      document.querySelector('a[href*="/instant-winners"]');
-
-    if(!a) return;
-
-    const span = a.querySelector('span') || a;
-    if(!span) return;
-
-    // stop duplicates
-    if(a.querySelector('.flash-live-wrap')) return;
-
-    // build badge
-    const wrap = document.createElement('span');
-    wrap.className = 'flash-live-wrap';
-    wrap.setAttribute('aria-hidden', 'true');
-
-    const dot = document.createElement('span');
-    dot.className = 'flash-live-dot';
-
-    const txt = document.createElement('span');
-    txt.className = 'flash-live-text';
-    txt.textContent = 'LIVE';
-
-    wrap.appendChild(dot);
-    wrap.appendChild(txt);
-
-    // Insert before the text span
-    span.parentElement.insertBefore(wrap, span);
-  }
-
-  addLiveBadge();
-  document.addEventListener('DOMContentLoaded', addLiveBadge);
-
-  // survive theme re-render / SPA updates
-  const obs = new MutationObserver(addLiveBadge);
-  obs.observe(document.documentElement, { childList: true, subtree: true });
-})();
 
 document.addEventListener("DOMContentLoaded", function() {
     // Select the admin edit button
@@ -104,56 +32,162 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  // Find the logo image
-  const logo = document.querySelector('img[src="https://static.rafflex.io/test.rafflex.uk/images/01KF6ZCB1YHC6VRNBT6T4QCVG4.png"]');
+(function () {
+  // Prevent double-run if injection executes twice
+  if (window.__FLASH_LIVE_BADGE_ADDED__) return;
+  window.__FLASH_LIVE_BADGE_ADDED__ = true;
 
-  if (logo) {
-    // Create a new video element
-    const video = document.createElement("video");
-    video.src = "https://cdn.discordapp.com/attachments/1462022924708876321/1462204783762079858/SWIFT_920_x_240_px_2.mp4?ex=696d57d2&is=696c0652&hm=2d98aa13d64ac55966419b4d7b324c7910bada7baa6cd41af1b591089ad06920&";
-    video.autoplay = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.style.maxHeight = "5rem"; // match original image height
-    video.style.width = "auto";     // maintain aspect ratio
-    video.style.display = "block";
+  function addLiveBadgeOnce() {
+    var a = document.querySelector('#header-instant-list');
+    if (!a) return false;
 
-    // Replace the image with the video
-    logo.parentNode.replaceChild(video, logo);
+    // Already added? stop
+    if (a.querySelector('.flash-live-wrap')) return true;
+
+    // Find where your text is
+    var span = a.querySelector('span');
+    if (!span || !span.parentElement) return false;
+
+    // Create wrap
+    var wrap = document.createElement('span');
+    wrap.className = 'flash-live-wrap';
+    wrap.setAttribute('aria-hidden', 'true');
+
+    // Dot
+    var dot = document.createElement('span');
+    dot.className = 'flash-live-dot';
+
+    // LIVE text
+    var txt = document.createElement('span');
+    txt.className = 'flash-live-text';
+    txt.textContent = 'LIVE';
+
+    wrap.appendChild(dot);
+    wrap.appendChild(txt);
+
+    // Insert before the actual text
+    span.parentElement.insertBefore(wrap, span);
+
+    return true;
   }
-});
 
+  // Try immediately
+  if (addLiveBadgeOnce()) return;
 
-document.addEventListener("DOMContentLoaded", function() {
-  // Select the video inside your link
-  const video = document.querySelector('a[href="https://test.rafflex.uk/competition/penny-pops"] video');
+  // Lightweight retries (max 20 attempts over ~5 seconds) then STOP
+  var tries = 0;
+  var maxTries = 20;
 
-  if (!video) return;
+  var t = setInterval(function () {
+    tries++;
 
-  // Ensure it's muted and plays inline
-  video.muted = true;
-  video.playsInline = true;
+    if (addLiveBadgeOnce() || tries >= maxTries) {
+      clearInterval(t);
+    }
+  }, 250);
+})();
 
-  // Attempt autoplay
-  const playPromise = video.play();
-  
-  if (playPromise !== undefined) {
-    playPromise
-      .then(() => {
-        console.log("Video autoplay started on mobile/desktop");
-      })
-      .catch(() => {
-        // fallback: wait for first touch to start video
-        const resumeAutoplay = () => {
-          video.play();
-          document.removeEventListener("touchstart", resumeAutoplay);
-        };
-        document.addEventListener("touchstart", resumeAutoplay, { once: true });
-      });
+(() => {
+  // Ensure we have a reliable hide class
+  const styleId = "js-injection-hide-style";
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = ".js-hide{display:none!important;}";
+    document.head.appendChild(style);
   }
-});
 
+  function getOddsEl() {
+    // Best anchor: exact x-text function
+    return document.querySelector('span[x-text="calculateOdds()"]')
+      // Fallback: any span that contains "Odds" (in case markup changes)
+      || Array.from(document.querySelectorAll("span")).find(s =>
+        (s.textContent || "").trim().startsWith("Odds ")
+      );
+  }
 
+  function apply() {
+    const el = getOddsEl();
+    if (!el) return;
 
+    const txt = (el.textContent || "").trim();
+
+    // Hide when Infinity/1 (also covers weird whitespace)
+    const isInfinity = /(^|\b)Odds\s+Infinity\s*\/\s*1\b/i.test(txt);
+
+    if (isInfinity) {
+      el.classList.add("js-hide");
+    } else {
+      // ✅ Reappear automatically when not Infinity/1
+      el.classList.remove("js-hide");
+    }
+  }
+
+  // Run now + after Alpine initializes
+  apply();
+  setTimeout(apply, 50);
+  setTimeout(apply, 250);
+  setTimeout(apply, 1000);
+
+  // Watch for Alpine/dynamic updates
+  new MutationObserver(apply).observe(document.documentElement, {
+    subtree: true,
+    childList: true,
+    characterData: true
+  });
+
+  // Fallback polling
+  setInterval(apply, 300);
+})();
+
+(() => {
+  // Add a strong "hidden" class in case your CSS doesn't include Tailwind's `hidden`
+  const style = document.createElement("style");
+  style.textContent = ".js-hide-ticket-total{display:none!important;}";
+  document.head.appendChild(style);
+
+  function getTicketTotalEl() {
+    // Best: target the specific x-text expression
+    return document.querySelector('p[x-text*="Tickets Total"]')
+      // Fallback: any <p> that starts with Tickets Total:
+      || Array.from(document.querySelectorAll("p")).find(p =>
+        p.textContent && p.textContent.trim().startsWith("Tickets Total:")
+      );
+  }
+
+  function parsePounds(text) {
+    // Extract the first £ number like £0.00, £12.30, etc.
+    const m = text.match(/£\s*([0-9]+(?:\.[0-9]{1,2})?)/);
+    if (!m) return null;
+    return Number(m[1]);
+  }
+
+  function apply() {
+    const p = getTicketTotalEl();
+    if (!p) return;
+
+    const container = p.closest("div") || p.parentElement;
+    const amount = parsePounds(p.textContent || "");
+
+    if (amount === null) return;
+
+    if (amount === 0) {
+      container.classList.add("js-hide-ticket-total");
+    } else {
+      container.classList.remove("js-hide-ticket-total");
+    }
+  }
+
+  // Run now + shortly after (covers Alpine init timing)
+  apply();
+  setTimeout(apply, 50);
+  setTimeout(apply, 250);
+  setTimeout(apply, 1000);
+
+  // React to Alpine DOM updates
+  const obs = new MutationObserver(apply);
+  obs.observe(document.documentElement, { subtree: true, childList: true, characterData: true });
+
+  // Fallback polling (lightweight)
+  setInterval(apply, 300);
+})();
