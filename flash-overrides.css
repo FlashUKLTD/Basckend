@@ -1,9 +1,4 @@
-:root {
-    --primary-color-500: #ffffff;
-    --primary-gradient-500: linear-gradient(90deg, #f59e0b, #ef4444, #1d4ed8)
-    --text-primary-600 {
-    color: #ffffff;
-}
+
   }
 .bg-primary-500 {
   background: linear-gradient(90deg, #f59e0b, #ef4444, #1d4ed8)
@@ -4479,6 +4474,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
