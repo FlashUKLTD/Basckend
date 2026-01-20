@@ -18,11 +18,6 @@
 }
 
 
-a#header-instant-list{
-  outline: 3px solid hotpink !important;
-  background: lime !important;
-  color: black !important;
-}
 
 
 /* Premium site credit pill */
@@ -4484,6 +4479,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
