@@ -1,4 +1,3 @@
-<script>
 document.addEventListener("DOMContentLoaded", () => {
   const bannerVideo = document.querySelector('video[src*="1462022977347391569/020617_2.mp4"]');
 
@@ -26,9 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("touchstart", tryPlayOnInteract);
   });
 });
-</script>
 
-<script>
 (() => {
   function addLiveBadge(){
     const a =
@@ -69,9 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const obs = new MutationObserver(addLiveBadge);
   obs.observe(document.documentElement, { childList: true, subtree: true });
 })();
-</script>
-  
-<script>
+
 document.addEventListener("DOMContentLoaded", function() {
     // Select the admin edit button
     const button = document.querySelector('a[href*="/admin/products/"][href$="/edit"]');
@@ -104,9 +99,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-</script>
 
-  <script>
 document.addEventListener("DOMContentLoaded", function () {
   // Find the logo image
   const logo = document.querySelector('img[src="https://static.rafflex.io/test.rafflex.uk/images/01KF6ZCB1YHC6VRNBT6T4QCVG4.png"]');
@@ -129,8 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-
-<script>
 document.addEventListener("DOMContentLoaded", function() {
   // Select the video inside your link
   const video = document.querySelector('a[href="https://test.rafflex.uk/competition/penny-pops"] video');
@@ -160,4 +151,4 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-</script>
+
