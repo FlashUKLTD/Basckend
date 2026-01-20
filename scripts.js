@@ -1,3 +1,7 @@
+window.addEventListener("error", (e) => console.error("SCRIPT ERROR:", e.error || e.message));
+console.log("scripts.js loaded ✅");
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const bannerVideo = document.querySelector('video[src*="1462022977347391569/020617_2.mp4"]');
 
@@ -150,5 +154,6 @@ document.addEventListener("DOMContentLoaded", function() {
       });
   }
 });
+
 
 
