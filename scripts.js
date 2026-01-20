@@ -28,7 +28,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+(() => {
+  function addLiveBadge(){
+    const a =
+      document.querySelector('#header-instant-list') ||
+      document.querySelector('a[href*="/instant-winners"]');
 
+    if(!a) return;
+
+    const span = a.querySelector('span') || a;
+    if(!span) return;
+
+    // stop duplicates
+    if(a.querySelector('.flash-live-wrap')) return;
+
+    // build badge
+    const wrap = document.createElement('span');
+    wrap.className = 'flash-live-wrap';
+    wrap.setAttribute('aria-hidden', 'true');
+
+    const dot = document.createElement('span');
+    dot.className = 'flash-live-dot';
+
+    const txt = document.createElement('span');
+    txt.className = 'flash-live-text';
+    txt.textContent = 'LIVE';
+
+    wrap.appendChild(dot);
+    wrap.appendChild(txt);
+
+    // Insert before the text span
+    span.parentElement.insertBefore(wrap, span);
+  }
+
+  addLiveBadge();
+  document.addEventListener('DOMContentLoaded', addLiveBadge);
+
+  // survive theme re-render / SPA updates
+  const obs = new MutationObserver(addLiveBadge);
+  obs.observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+  
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     // Select the admin edit button
@@ -117,4 +159,5 @@ document.addEventListener("DOMContentLoaded", function() {
       });
   }
 });
+
 </script>
