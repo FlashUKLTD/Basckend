@@ -18,6 +18,74 @@
 }
 
 
+/*FLASH SOCIAL BAR ON NAVBAR START*/
+.flash-socialbar{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 12px;
+}
+
+.flash-socialbar a{
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  text-decoration: none;
+
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+
+  transition: transform .18s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+
+.flash-socialbar a:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.09);
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 16px 32px -22px rgba(59,130,246,.65);
+}
+
+/* Icon itself */
+.flash-socialbar svg{
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: rgba(255,255,255,.92);
+  transition: filter .22s ease, transform .22s ease;
+}
+
+.flash-socialbar a:hover svg{
+  transform: scale(1.05);
+  filter: drop-shadow(0 10px 18px rgba(59,130,246,.25));
+}
+
+/* Subtle Flash brand accent on hover (purple->blue) */
+.flash-socialbar a::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .22s ease;
+
+  background: linear-gradient(135deg, rgba(168,85,247,.20), rgba(59,130,246,.22));
+}
+
+.flash-socialbar a{
+  position: relative;
+  overflow: hidden;
+}
+
+.flash-socialbar a:hover::after{
+  opacity: 1;
+}
+
+/*FLASH SOCIAL BAR ON NAVBAR END*/
 /* ===========================
    Flash Competitions - LIVE icon + text
    (No background changes)
@@ -4540,6 +4608,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
