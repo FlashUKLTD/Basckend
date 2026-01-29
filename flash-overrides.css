@@ -3,6 +3,15 @@
     --primary-gradient-500: linear-gradient(90deg, #f59e0b, #ef4444, #1d4ed8)
     --text-primary-600 {
     color: #ffffff;
+      --fcA-ac1:#8B5CFF;
+  --fcA-ac2:#2D7CFF;
+  --fcA-gold:#F5D36B;
+
+  --fcA-text: rgba(255,255,255,.92);
+  --fcA-line: rgba(255,255,255,.12);
+  --fcA-line2: rgba(255,255,255,.08);
+  --fcA-shadow: 0 14px 40px rgba(0,0,0,.45);
+  --fcA-shadow2: 0 28px 90px rgba(0,0,0,.62);
 }
   }
 .bg-primary-500 {
@@ -10,7 +19,125 @@
 
 }
 
+/* BAR */
+.bg-zinc-900.border-b.border-zinc-800{
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  border-bottom: 1px solid var(--fcA-line) !important;
+  background:
+    radial-gradient(900px 260px at 20% 0%, rgba(139,92,255,.12), transparent 60%),
+    radial-gradient(900px 260px at 80% 0%, rgba(45,124,255,.10), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.62), rgba(0,0,0,.35)) !important;
+  box-shadow: var(--fcA-shadow);
+  backdrop-filter: blur(10px);
+  position: sticky;
+}
+.bg-zinc-900.border-b.border-zinc-800::before{
+  content:"";
+  position:absolute;
+  left:0; right:0; top:0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(139,92,255,0),
+    rgba(139,92,255,.65),
+    rgba(45,124,255,.65),
+    rgba(245,211,107,.30),
+    rgba(45,124,255,.45),
+    rgba(139,92,255,0)
+  );
+  opacity:.9;
+  pointer-events:none;
+}
 
+/* Container spacing */
+.bg-zinc-900.border-b.border-zinc-800 .max-w-10xl{
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+.bg-zinc-900.border-b.border-zinc-800 .h-10{
+  height:auto !important;
+  min-height:44px;
+}
+.bg-zinc-900.border-b.border-zinc-800 .flex.items-center.gap-2{
+  gap: 10px !important;
+}
+
+/* REMOVE LOGO IMAGE + divider */
+.bg-zinc-900.border-b.border-zinc-800 a img{
+  display:none !important;
+}
+.bg-zinc-900.border-b.border-zinc-800 .flex.items-center.gap-2 > a.flex-shrink-0{
+  display:none !important;
+}
+.bg-zinc-900.border-b.border-zinc-800 .text-zinc-600.hidden.sm\\:inline{
+  display:none !important;
+}
+
+/* Buttons */
+.bg-zinc-900.border-b.border-zinc-800 [data-flux-button]{
+  border: 1px solid var(--fcA-line2) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)) !important;
+  color: var(--fcA-text) !important;
+  border-radius: 14px !important;
+  height: 36px !important;
+  padding: 0 12px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.bg-zinc-900.border-b.border-zinc-800 [data-flux-button] svg{
+  color: rgba(255,255,255,.84) !important;
+  opacity:.95;
+}
+@media (hover:hover){
+  .bg-zinc-900.border-b.border-zinc-800 [data-flux-button]:hover{
+    border-color: rgba(255,255,255,.16) !important;
+    background: linear-gradient(180deg, rgba(139,92,255,.14), rgba(45,124,255,.10)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 14px 26px rgba(0,0,0,.25);
+    transform: translateY(-1px);
+  }
+}
+
+/* Primary feel for /admin button */
+.bg-zinc-900.border-b.border-zinc-800 a[href$="/admin"][data-flux-button]{
+  border-color: rgba(139,92,255,.24) !important;
+  background: linear-gradient(90deg, rgba(139,92,255,.22), rgba(45,124,255,.18)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 0 30px rgba(139,92,255,.10);
+}
+
+/* Dropdown menu */
+.bg-zinc-900.border-b.border-zinc-800 [data-flux-menu]{
+  border: 1px solid rgba(255,255,255,.14) !important;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(139,92,255,.10), transparent 58%),
+    radial-gradient(900px 420px at 90% 20%, rgba(45,124,255,.10), transparent 58%),
+    linear-gradient(180deg, rgba(10,12,22,.94), rgba(10,12,22,.84)) !important;
+  box-shadow: var(--fcA-shadow2) !important;
+  backdrop-filter: blur(12px);
+  border-radius: 16px !important;
+  overflow:hidden;
+  padding: 6px !important;
+}
+.bg-zinc-900.border-b.border-zinc-800 [data-flux-menu-item]{
+  border-radius: 12px !important;
+  color: rgba(255,255,255,.92) !important;
+  transition: background .16s ease, transform .16s ease, border-color .16s ease;
+  border: 1px solid transparent;
+}
+@media (hover:hover){
+  .bg-zinc-900.border-b.border-zinc-800 [data-flux-menu-item]:hover{
+    background: linear-gradient(90deg, rgba(139,92,255,.14), rgba(45,124,255,.10)) !important;
+    border-color: rgba(255,255,255,.10);
+    transform: translateX(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .bg-zinc-900.border-b.border-zinc-800 [data-flux-button],
+  .bg-zinc-900.border-b.border-zinc-800 [data-flux-menu-item]{
+    transition:none !important;
+  }
+}
 
 /* very important, remove when results happen. this deletes the result page link */
 #header-results {
@@ -4608,6 +4735,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
