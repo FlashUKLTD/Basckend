@@ -32,6 +32,84 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+(function(){
+  var KEY = "fc_adminbar_hidden"; // "1" = hidden, "0" = shown
+  var MAX_TRIES = 40;
+  var TRY_EVERY = 200;
+
+  function getHidden(){
+    try { return localStorage.getItem(KEY) === "1"; } catch(e){ return false; }
+  }
+  function setHidden(hidden){
+    document.documentElement.classList.toggle("fcAdminBarHidden", !!hidden);
+    try { localStorage.setItem(KEY, hidden ? "1" : "0"); } catch(e){}
+  }
+
+  function findAdminBar(){
+    // admin bar wrapper is stable in your markup
+    return document.querySelector(".bg-zinc-900.border-b.border-zinc-800");
+  }
+
+  function ensureToggle(bar){
+    if(!bar) return false;
+
+    // apply persisted state (only if bar exists)
+    setHidden(getHidden());
+
+    // create toggle once
+    var existing = document.getElementById("fcAdminBarToggle");
+    if(existing){
+      existing.style.display = "inline-flex";
+      return true;
+    }
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "fcAdminBarToggle";
+    btn.setAttribute("aria-label", "Toggle admin bar");
+    btn.innerHTML =
+      '<span class="fcABT-dot"></span>' +
+      '<span class="fcABT-label">Admin bar</span>' +
+      '<span class="fcABT-switch" aria-hidden="true"><span class="fcABT-knob"></span></span>';
+
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      var hiddenNow = document.documentElement.classList.contains("fcAdminBarHidden");
+      setHidden(!hiddenNow);
+    });
+
+    document.body.appendChild(btn);
+    btn.style.display = "inline-flex";
+    return true;
+  }
+
+  function boot(){
+    var tries = 0;
+    function attempt(){
+      var bar = findAdminBar();
+
+      // Only render if the bar exists
+      if(bar){
+        ensureToggle(bar);
+        return;
+      }
+
+      tries++;
+      if(tries >= MAX_TRIES) return;
+      setTimeout(attempt, TRY_EVERY);
+    }
+    attempt();
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  }else{
+    boot();
+  }
+  // extra late boot for dynamic admin loads
+  setTimeout(boot, 600);
+})();
+
 (function () {
   // Prevent double-run if injection executes twice
   if (window.__FLASH_LIVE_BADGE_ADDED__) return;
@@ -275,3 +353,4 @@ document.addEventListener("DOMContentLoaded", function() {
     if (insertOnce() || tries >= maxTries) clearInterval(t);
   }, 250);
 })();
+
