@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
     btn.setAttribute("aria-label", "Toggle admin bar");
     btn.innerHTML =
       '<span class="fcABT-dot"></span>' +
-      '<span class="fcABT-label">Admin bar</span>' +
+      '<span class="fcABT-label">Tools</span>' +
       '<span class="fcABT-switch" aria-hidden="true"><span class="fcABT-knob"></span></span>';
 
     btn.addEventListener("click", function(e){
@@ -353,4 +353,5 @@ document.addEventListener("DOMContentLoaded", function() {
     if (insertOnce() || tries >= maxTries) clearInterval(t);
   }, 250);
 })();
+
 
