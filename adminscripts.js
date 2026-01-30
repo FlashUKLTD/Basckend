@@ -32,7 +32,7 @@
         '<div class="fcATfabLeft">' +
           '<div class="fcATbolt">⚡</div>' +
           '<div class="fcATfabText">' +
-            '<b>Admin tools</b>' +
+            '<b>Flash Moderation</b>' +
             '<span class="fcATsub">Click to open • Desktop only</span>' +
           '</div>' +
         '</div>' +
@@ -49,7 +49,7 @@
             '<div class="fcATselectWrap">' +
               '<select class="fcATselect" aria-label="Choose tools section">' +
                 '<option value="shortcuts">🧭 Admin shortcuts</option>' +
-                '<option value="competition">🏁 Competition tools</option>' +
+                '<option value="competition">🏁 Competition Tools</option>' +
                 '<option value="prefs">⚙️ Preferences</option>' +
               '</select>' +
             '</div>' +
