@@ -72,10 +72,240 @@ window.FLASH_SITE.liveBadge = {
   textColor: "rgba(255,255,255,0.92)",
   glow: "rgba(248,113,113,0.35)"
 };
+/* =========================================================
+   🔧 EASY SETTINGS — EDIT HERE ONLY (MOBILE NAV)
+   ========================================================= */
+window.FC_MOBILE_NAV = {
+  enabled: true,
+
+  /* Where to apply (mobile sidebar only) */
+  sidebarSelector: '[data-flux-sidebar].lg\\:hidden',
+  navSelector: '[data-flux-navlist]',
+
+  /* Optional: show a separator line between items */
+  showSeparators: true,
+
+  /* Optional: rename the dropdown label */
+  dropdownLabel: "Competitions",
+
+  /* Optional: hide original nav list after rebuild */
+  hideOriginalNav: true,
+
+  /* Order + labels + icons
+     - id: internal name
+     - match: how we find the existing element inside the sidebar nav
+       (use ONE of: hrefIncludes, idEquals)
+     - label: optional text override
+     - icon: SVG string (optional)
+     - enabled: true/false
+     - type: "link" or "dropdown"
+  */
+  items: [
+    {
+      id: "results",
+      type: "link",
+      match: { idEquals: "header-results" },
+      label: "Results",
+      enabled: true,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 8h6M9 12h6"/></svg>'
+    },
+    {
+      id: "entrylists",
+      type: "link",
+      match: { idEquals: "header-entry-list" },
+      label: "Entry Lists",
+      enabled: true,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg>'
+    },
+    {
+      id: "instant",
+      type: "link",
+      match: { idEquals: "header-instant-list" },
+      label: "Instant Winners",
+      enabled: true,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h8l-1 8 11-14h-8l1-6z"/></svg>'
+    },
+    {
+      id: "about",
+      type: "link",
+      match: { idEquals: "header-about" },
+      label: "About",
+      enabled: true,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12s4.03-9 9-9 9 4.03 9 9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7h.01"/></svg>'
+    },
+
+    /* Dropdown (existing ui-dropdown) */
+    {
+      id: "competitions_dropdown",
+      type: "dropdown",
+      match: { idEquals: "categories-header" }, /* dropdown trigger button id */
+      label: "Competitions",
+      enabled: true,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 0 0-2-2H9l-5 5v11a2 2 0 0 0 2 2h6"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 5v5H4"/></svg>'
+    },
+
+    /* My Account back in list */
+    {
+      id: "account",
+      type: "link",
+      match: { hrefIncludes: "/account/settings" },
+      label: "My Account",
+      enabled: true,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 0 0-16 0"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 13a4 4 0 1 0-4-4 4 4 0 0 0 4 4z"/></svg>'
+    }
+  ]
+};
+
 
 /* =========================================================
    STOP ✋ END OF EDITABLE SETTINGS
    ========================================================= */
+
+
+(() => {
+  const CFG = window.FC_MOBILE_NAV || {};
+  if(!CFG.enabled) return;
+
+  const MAX_TRIES = 40;
+  const TRY_EVERY = 220;
+
+  const qs = (sel, root=document) => (root || document).querySelector(sel);
+  const qsa = (sel, root=document) => Array.prototype.slice.call((root || document).querySelectorAll(sel) || []);
+
+  function findSidebar(){
+    return qs(CFG.sidebarSelector || '[data-flux-sidebar].lg\\:hidden');
+  }
+  function findNav(sidebar){
+    return sidebar ? qs(CFG.navSelector || '[data-flux-navlist]', sidebar) : null;
+  }
+
+  function matchEl(nav, match){
+    if(!nav || !match) return null;
+
+    if(match.idEquals){
+      return qs('#' + CSS.escape(match.idEquals), nav);
+    }
+    if(match.hrefIncludes){
+      const a = qsa('a[href]', nav).find(x => (x.getAttribute('href') || '').indexOf(match.hrefIncludes) !== -1);
+      return a || null;
+    }
+    return null;
+  }
+
+  function ensureInjected(sidebar, nav){
+    if(!sidebar || !nav) return false;
+    if(sidebar.__fcNavBuilt) return true; // prevent duplicates
+
+    const wrap = document.createElement('div');
+    wrap.className = 'fcNavX';
+    wrap.setAttribute('data-fc-navx', '1');
+
+    const items = Array.isArray(CFG.items) ? CFG.items : [];
+    let first = true;
+
+    items.forEach((it) => {
+      if(!it || it.enabled === false) return;
+
+      const el = matchEl(nav, it.match);
+      if(!el) return;
+
+      if(CFG.showSeparators && !first){
+        const sep = document.createElement('div');
+        sep.className = 'fcNavX-sep';
+        wrap.appendChild(sep);
+      }
+      first = false;
+
+      if(it.type === 'dropdown'){
+        const dd = el.closest('ui-dropdown');
+        if(!dd) return;
+
+        wrap.appendChild(dd);
+
+        const btn = qs('button', dd);
+        if(btn){
+          btn.classList.add('fcNavX-row');
+
+          const prevI = qs('.fcNavX-ico', btn);
+          const prevT = qs('.fcNavX-txt', btn);
+          if(prevI) prevI.remove();
+          if(prevT) prevT.remove();
+
+          const ico = document.createElement('span');
+          ico.className = 'fcNavX-ico';
+          ico.innerHTML = it.icon || '';
+
+          const txt = document.createElement('span');
+          txt.className = 'fcNavX-txt';
+          txt.textContent = it.label || CFG.dropdownLabel || 'Competitions';
+
+          btn.insertBefore(ico, btn.firstChild);
+          btn.insertBefore(txt, ico.nextSibling);
+        }
+        return;
+      }
+
+      const a = el.closest('a') || el;
+      if(!a || a.tagName !== 'A') return;
+
+      a.classList.add('fcNavX-row');
+
+      const existingLabelSpan = qs('span.text-base', a);
+      if(existingLabelSpan) existingLabelSpan.style.display = 'none';
+
+      const prevI = qs('.fcNavX-ico', a);
+      const prevT = qs('.fcNavX-txt', a);
+      if(prevI) prevI.remove();
+      if(prevT) prevT.remove();
+
+      const ico = document.createElement('span');
+      ico.className = 'fcNavX-ico';
+      ico.innerHTML = it.icon || '';
+
+      const txt = document.createElement('span');
+      txt.className = 'fcNavX-txt';
+      txt.textContent = it.label || (a.textContent || '').trim() || '';
+
+      a.insertBefore(ico, a.firstChild);
+      a.insertBefore(txt, ico.nextSibling);
+
+      wrap.appendChild(a);
+    });
+
+    nav.parentNode.insertBefore(wrap, nav);
+
+    if(CFG.hideOriginalNav){
+      nav.style.display = 'none';
+    }
+
+    sidebar.__fcNavBuilt = true;
+    return true;
+  }
+
+  function boot(){
+    try{
+      const sidebar = findSidebar();
+      const nav = findNav(sidebar);
+      if(!sidebar || !nav) return false;
+      return ensureInjected(sidebar, nav);
+    }catch(e){
+      return false; // never block page
+    }
+  }
+
+  let tries = 0;
+  const t = setInterval(() => {
+    tries++;
+    const ok = boot();
+    if(ok || tries >= MAX_TRIES) clearInterval(t);
+  }, TRY_EVERY);
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', () => { boot(); }, { once:true });
+  }else{
+    boot();
+  }
+})();
 
 (function(){
   "use strict";
