@@ -52,6 +52,65 @@
    STOP ✋ END OF EDITABLE SETTINGS
    ========================================================= */
 
+.fcTicketCard::after{
+  content:"";
+  display:block;
+  clear:both;
+}
+
+/* Grid wrapper we inject */
+.fcTicketGrid{
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;            /* ✅ overrides any font-size:0 parent */
+  line-height: 1;
+  position: relative;
+  z-index: 2;                  /* ✅ above any background overlays */
+}
+
+/* Ticket pill */
+.fcTicketGrid .fcTicketPill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 6px 10px;
+  border-radius: 10px;
+
+  /* Flash premium look */
+  background: rgba(139,92,255,.10);
+  border: 1px solid rgba(139,92,255,.22);
+
+  /* ✅ force visibility even if theme breaks it */
+  color: #8B5CFF !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-indent: 0 !important;
+  font-size: 14px !important;
+  font-weight: 800;
+  letter-spacing: .02em;
+
+  /* avoid text being clipped */
+  overflow: visible !important;
+}
+
+/* If something is overlaying spans, push content above */
+.fcTicketCard{
+  position: relative;
+  z-index: 1;
+}
+
+/* Safety: ensure ticket spans aren't made invisible by global rules */
+.fcTicketCard span.text-primary-500{
+  color: #8B5CFF !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  font-size: 14px !important;
+  text-indent: 0 !important;
+}
+
 /* Sidebar background polish (safe: only mobile sidebar) */
 [data-flux-sidebar].lg\:hidden{
   background:
