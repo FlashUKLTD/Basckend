@@ -16,7 +16,27 @@
   --fc-accent-purple: #8B5CFF;
   --fc-accent-blue:   #2D7CFF;
   --fc-accent-gold:   #F5D36B;
+     /* Brand (Flash) */
+  --fcNav-bg0:#070815;
+  --fcNav-bg1:#0B0F22;
+  --fcNav-ac1:#8B5CFF; /* purple */
+  --fcNav-ac2:#2D7CFF; /* blue */
+  --fcNav-gold:#F5D36B;
 
+  --fcNav-text: rgba(255,255,255,.94);
+  --fcNav-dim: rgba(255,255,255,.72);
+  --fcNav-line: rgba(255,255,255,.10);
+
+  /* Sizing */
+  --fcNav-rowPadY: 14px;
+  --fcNav-rowPadX: 10px;
+  --fcNav-rowRadius: 14px;
+  --fcNav-ico: 22px;
+
+  /* Hover */
+  --fcNav-hoverBg: rgba(255,255,255,.06);
+  --fcNav-hoverBorder: rgba(139,92,255,.22);
+   
   /* Site accent hook (used by some components / tailwind tokens) */
   --primary-color-500: var(--fc-accent-purple);
 
@@ -31,6 +51,135 @@
 /* =========================================================
    STOP ✋ END OF EDITABLE SETTINGS
    ========================================================= */
+
+/* Sidebar background polish (safe: only mobile sidebar) */
+[data-flux-sidebar].lg\:hidden{
+  background:
+    radial-gradient(900px 520px at 18% 10%, rgba(139,92,255,.18), transparent 58%),
+    radial-gradient(900px 520px at 82% 16%, rgba(45,124,255,.16), transparent 60%),
+    linear-gradient(180deg, var(--fcNav-bg1), var(--fcNav-bg0)) !important;
+  border-right: 1px solid rgba(139,92,255,.22) !important;
+}
+
+/* Injected nav wrapper */
+.fcNavX{
+  margin: 18px 0 14px !important;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Rows (links + dropdown trigger) */
+.fcNavX .fcNavX-row{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  width: 100%;
+  padding: var(--fcNav-rowPadY) var(--fcNav-rowPadX);
+  border-radius: var(--fcNav-rowRadius);
+  color: var(--fcNav-text);
+  text-decoration:none;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background .18s ease, border-color .18s ease;
+}
+
+/* Hover */
+.fcNavX .fcNavX-row:hover{
+  background: var(--fcNav-hoverBg);
+  border-color: var(--fcNav-hoverBorder);
+}
+
+/* Icon slot */
+.fcNavX .fcNavX-ico{
+  width: var(--fcNav-ico);
+  height: var(--fcNav-ico);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: rgba(255,255,255,.92);
+  opacity: .92;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 0 12px rgba(139,92,255,.16));
+}
+.fcNavX .fcNavX-ico svg{
+  width: 100%;
+  height: 100%;
+  display:block;
+}
+
+/* Label */
+.fcNavX .fcNavX-txt{
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: rgba(255,255,255,.92);
+}
+
+/* Subtle separators between rows */
+.fcNavX .fcNavX-sep{
+  height: 1px;
+  margin: 6px 10px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+  opacity: .65;
+}
+
+/* Dropdown container styling (keeps native dropdown behavior) */
+.fcNavX ui-dropdown{
+  display:block;
+}
+.fcNavX ui-dropdown > button{
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  width: 100%;
+  padding: var(--fcNav-rowPadY) var(--fcNav-rowPadX);
+  border-radius: var(--fcNav-rowRadius);
+  color: var(--fcNav-text);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background .18s ease, border-color .18s ease;
+}
+.fcNavX ui-dropdown > button:hover{
+  background: var(--fcNav-hoverBg);
+  border-color: var(--fcNav-hoverBorder);
+}
+.fcNavX ui-dropdown > button [data-content]{
+  flex:1;
+  min-width:0;
+}
+.fcNavX ui-dropdown > button [data-content] span{
+  display:none !important; /* we replace label with our own */
+}
+
+/* Dropdown menu itself (popover) */
+.fcNavX [data-flux-navmenu]{
+  background:
+    radial-gradient(520px 220px at 20% 10%, rgba(139,92,255,.14), transparent 55%),
+    radial-gradient(520px 220px at 80% 20%, rgba(45,124,255,.12), transparent 58%),
+    linear-gradient(180deg, rgba(12,14,34,.96), rgba(7,8,21,.98)) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 26px 80px rgba(0,0,0,.70) !important;
+}
+.fcNavX [data-flux-navmenu] a{
+  color: rgba(255,255,255,.90) !important;
+  border-radius: 12px !important;
+}
+.fcNavX [data-flux-navmenu] a:hover{
+  background: rgba(255,255,255,.08) !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .fcNavX *{ transition:none !important; animation:none !important; }
+}
 
 :root {
     --primary-color-500: #ffffff;
