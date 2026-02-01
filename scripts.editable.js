@@ -62,7 +62,7 @@ window.FLASH_SITE.liveBadge = {
   enabled: true,
 
   // Which link to badge
-  hrefIncludes: "/live",
+  hrefIncludes: "/i/livestream",
 
   // Badge text (set "" to hide text, dot still shows)
   text: "LIVE",
@@ -141,7 +141,7 @@ window.FC_MOBILE_NAV = {
       match: { idEquals: "categories-header" }, /* dropdown trigger button id */
       label: "Competitions",
       enabled: true,
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 0 0-2-2H9l-5 5v11a2 2 0 0 0 2 2h6"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 5v5H4"/></svg>'
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h8l-1 8 11-14h-8l1-6z"/><path d="M9 19l3 3 3-3"/></svg>'
     },
 
     /* My Account back in list */
