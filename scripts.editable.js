@@ -141,8 +141,8 @@ window.FC_MOBILE_NAV = {
       match: { idEquals: "categories-header" }, /* dropdown trigger button id */
       label: "Competitions",
       enabled: true,
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h8l-1 8 11-14h-8l1-6z"/><path d="M9 19l3 3 3-3"/></svg>'
-    },
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v3a4 4 0 0 1-8 0V4Z"/><path d="M6 5H4v2a4 4 0 0 0 4 4"/><path d="M18 5h2v2a4 4 0 0 1-4 4"/><path d="M10 14h4"/><path d="M9 18h6"/><path d="M12 14v4"/><path d="M7 20h10"/><path d="M9 22h6"/><path d="M8 11h8"/><path d="M12 17l-2-2"/><path d="M12 17l2-2"/></svg>'
+     },
 
     /* My Account back in list */
     {
