@@ -160,7 +160,87 @@ window.FC_MOBILE_NAV = {
 /* =========================================================
    STOP ✋ END OF EDITABLE SETTINGS
    ========================================================= */
+(() => {
+  const CFG = {
+    cardSelector: '.rounded-xl.bg-gray-800',          // ticket card
+    ticketSpanSelector: 'span.text-primary-500',      // the ticket numbers
+    wrapClass: 'fcTicketGrid',
+    pillClass: 'fcTicketPill',
+    maxTries: 60,
+    everyMs: 250
+  };
 
+  const qs  = (s, r=document) => (r||document).querySelector(s);
+  const qsa = (s, r=document) => Array.prototype.slice.call((r||document).querySelectorAll(s) || []);
+
+  function fixOneCard(card){
+    if(!card || card.__fcTicketsFixed) return;
+
+    const spans = qsa(CFG.ticketSpanSelector, card)
+      .filter(sp => (sp.textContent || '').trim().length);
+
+    if(!spans.length) return;
+
+    // Tag the card + clear float safely
+    card.classList.add('fcTicketCard');
+
+    // Create wrapper
+    let wrap = qs('.' + CFG.wrapClass, card);
+    if(!wrap){
+      wrap = document.createElement('div');
+      wrap.className = CFG.wrapClass;
+      card.appendChild(wrap);
+    }else{
+      wrap.innerHTML = '';
+    }
+
+    // Move spans into wrapper as pills
+    spans.forEach(sp => {
+      const txt = (sp.textContent || '').trim();
+      const pill = document.createElement('span');
+      pill.className = CFG.pillClass;
+      pill.textContent = txt;
+
+      // Remove original span (or hide it) to avoid duplicate layout bugs
+      sp.style.display = 'none';
+
+      wrap.appendChild(pill);
+    });
+
+    card.__fcTicketsFixed = true;
+  }
+
+  function run(){
+    // Only run on pages that actually show tickets (light guard)
+    const header = document.body && document.body.innerText
+      ? document.body.innerText.toLowerCase()
+      : '';
+    if(header.indexOf('my tickets') === -1 && header.indexOf('your tickets') === -1){
+      // still allow if cards exist
+    }
+
+    const cards = qsa(CFG.cardSelector);
+    if(!cards.length) return false;
+
+    cards.forEach(fixOneCard);
+    return true;
+  }
+
+  // Retry loop for dynamic loads
+  let tries = 0;
+  const t = setInterval(() => {
+    tries++;
+    const ok = run();
+    if(ok || tries >= CFG.maxTries) clearInterval(t);
+  }, CFG.everyMs);
+
+  // Also run on DOM ready
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', run, { once:true });
+  }else{
+    run();
+  }
+})();
 
 (() => {
   const CFG = window.FC_MOBILE_NAV || {};
