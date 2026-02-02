@@ -3,9 +3,10 @@
    =========================================================
    ✅ EDIT ONLY the CUSTOMISATION section
    ✅ Keeps ALL original functionality, adds:
-      - Desktop navbar reorder + rename
+      - Desktop navbar reorder + rename + icons
+      - Desktop wallet forced far right
       - Mobile sidebar nav rebuild + custom order + icons
-      - Prevent socials injecting into mobile
+      - Socials: desktop only (never mobile sidebar)
    ========================================================= */
 
 
@@ -94,7 +95,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     instagram: "https://www.instagram.com/flashcompetitionsni",
 
     /* IMPORTANT: keep socials out of mobile sidebar */
-    showOnMobile: true,
+    showOnMobile: false,
 
     desktopTargets: [
       "header nav",
@@ -128,7 +129,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     /* Order you want on desktop */
     items: [
       { id:"competitions", type:"dropdown", match:{ idEquals:"categories-header" }, label:"Competitions", enabled:true },
-       { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Entry Lists", enabled:true },
+      { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Entry Lists", enabled:true },
       { id:"instant", type:"link", match:{ idEquals:"header-instant-list" }, label:"Instant Winners", enabled:true },
       { id:"results", type:"link", match:{ idEquals:"header-results" }, label:"Results", enabled:false },
       { id:"about", type:"link", match:{ idEquals:"header-about" }, label:"Meet the Team", enabled:true },
@@ -136,7 +137,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     ]
   },
 
-     /* =========================
+  /* =========================
      6.5) DESKTOP WALLET POSITION
      =========================
      ✅ Moves the existing #wallet element
@@ -145,18 +146,40 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
   */
   desktopWallet: {
     enabled: true,
-
-    /* Where the wallet currently is */
     walletSelector: '#wallet',
-
-    /* The desktop container that holds nav + wallet */
     desktopBarSelector: '.hidden.lg\\:flex.lg\\:gap-x-8',
-
-    /* Put wallet at the very end (far right) */
     position: 'end' // 'end' | 'start'
   },
 
-   
+  /* =========================
+     6.7) DESKTOP NAV ICONS
+     =========================
+     ✅ Adds icons to the existing desktop nav items (no rebuild)
+     ✅ Uses the same SVG strings as mobile items (by default)
+     ✅ Safe: prevents duplicates
+  */
+  desktopNavIcons: {
+    enabled: true,
+    navSelector: 'nav[data-flux-navbar]',
+    iconGap: "6px",
+    iconSizePx: 16,
+    opacity: 0.9,
+
+    /* If true, pulls icons from mobileNav.items by matching id/selector */
+    useMobileIcons: true,
+
+    /* Optional overrides / add icons even if useMobileIcons is false */
+    items: [
+      { match:{ idEquals:"header-instant-list" }, iconId:"instant" },
+      { match:{ idEquals:"categories-header" }, iconId:"competitions_dropdown" },
+      { match:{ idEquals:"header-results" }, iconId:"results" },
+      { match:{ idEquals:"header-entry-list" }, iconId:"entrylists" },
+      { match:{ idEquals:"header-about" }, iconId:"about" },
+      { match:{ hrefIncludes:"/account/settings" }, iconId:"account" }
+    ]
+  },
+
+
   /* =========================
      7) MOBILE SIDEBAR NAV REBUILDER (CUSTOM ORDER + ICONS)
      ========================= */
@@ -562,14 +585,12 @@ document.addEventListener("DOMContentLoaded", function() {
       const wallet = qs(CFG.walletSelector || '#wallet');
       if(!wallet) return false;
 
-      // Already last? (no-op)
       if(CFG.position === 'end'){
         if(bar.lastElementChild === wallet) return true;
         bar.appendChild(wallet);
         return true;
       }
 
-      // Or move to start
       if(CFG.position === 'start'){
         if(bar.firstElementChild === wallet) return true;
         bar.insertBefore(wallet, bar.firstChild);
@@ -579,7 +600,6 @@ document.addEventListener("DOMContentLoaded", function() {
       return false;
     }
 
-    // Try now + retries (for dynamic loads)
     let tries = 0;
     const t = setInterval(() => {
       tries++;
@@ -593,7 +613,6 @@ document.addEventListener("DOMContentLoaded", function() {
       apply();
     }
 
-    // Also re-apply if responsive breakpoint changes
     if(window.matchMedia){
       const mq = window.matchMedia("(min-width: 1024px)");
       if(mq && mq.addEventListener){
@@ -655,7 +674,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         used.add(node);
 
-        // rename safely
         if(it.label){
           const txt = qs('span.text-base', node);
           if(txt) txt.textContent = it.label;
@@ -694,6 +712,113 @@ document.addEventListener("DOMContentLoaded", function() {
       document.addEventListener('DOMContentLoaded', () => { boot(); }, { once:true });
     }else{
       boot();
+    }
+  }catch(_){}
+})();
+
+
+/* =========================================================
+   🖥️ DESKTOP NAV ICONS (IN-PLACE, SAFE)
+   - Adds icons without affecting Flux behaviour
+   - Prevents duplicates
+   ========================================================= */
+(() => {
+  try{
+    const CFG = (window.FLASH_CUSTOM && window.FLASH_CUSTOM.desktopNavIcons) || {};
+    if(!CFG.enabled) return;
+
+    const MAX_TRIES = 40;
+    const TRY_EVERY = 220;
+
+    const qs = (sel, root=document) => (root || document).querySelector(sel);
+    const qsa = (sel, root=document) => Array.prototype.slice.call((root || document).querySelectorAll(sel) || []);
+
+    function isDesktop(){
+      return window.matchMedia && window.matchMedia("(min-width:1024px)").matches;
+    }
+
+    function findNav(){
+      return qs(CFG.navSelector || 'nav[data-flux-navbar]');
+    }
+
+    function matchEl(nav, match){
+      if(!nav || !match) return null;
+      if(match.idEquals){
+        try{ return qs('#' + CSS.escape(match.idEquals), nav); }
+        catch(_){ return qs('#' + match.idEquals, nav); }
+      }
+      if(match.hrefIncludes){
+        return qsa('a[href]', nav).find(a => (a.getAttribute('href') || '').indexOf(match.hrefIncludes) !== -1) || null;
+      }
+      return null;
+    }
+
+    function iconMapFromMobile(){
+      const map = {};
+      const mob = (window.FLASH_CUSTOM && window.FLASH_CUSTOM.mobileNav && window.FLASH_CUSTOM.mobileNav.items) || [];
+      mob.forEach(it => { if(it && it.id && it.icon) map[it.id] = it.icon; });
+      return map;
+    }
+
+    function apply(){
+      if(!isDesktop()) return false;
+
+      const nav = findNav();
+      if(!nav) return false;
+
+      const map = CFG.useMobileIcons ? iconMapFromMobile() : {};
+      const items = Array.isArray(CFG.items) ? CFG.items : [];
+
+      items.forEach((it) => {
+        const el = matchEl(nav, it.match);
+        if(!el) return;
+
+        const node = el.closest('ui-dropdown') || el.closest('a') || el;
+        const content = node.querySelector('[data-content]') || node;
+        if(!content) return;
+
+        if(content.querySelector('.fc-desktop-ico')) return;
+
+        const iconSvg = map[it.iconId] || it.icon || '';
+        if(!iconSvg) return;
+
+        const wrap = document.createElement('span');
+        wrap.className = 'fc-desktop-ico';
+        wrap.style.display = 'inline-flex';
+        wrap.style.alignItems = 'center';
+        wrap.style.marginRight = CFG.iconGap || '6px';
+        wrap.style.opacity = String(CFG.opacity == null ? 0.9 : CFG.opacity);
+        wrap.innerHTML = iconSvg;
+
+        const svg = wrap.querySelector('svg');
+        if(svg){
+          svg.style.width = (CFG.iconSizePx || 16) + "px";
+          svg.style.height = (CFG.iconSizePx || 16) + "px";
+        }
+
+        content.insertBefore(wrap, content.firstChild);
+      });
+
+      return true;
+    }
+
+    let tries = 0;
+    const t = setInterval(() => {
+      tries++;
+      if(apply() || tries >= MAX_TRIES) clearInterval(t);
+    }, TRY_EVERY);
+
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', apply, { once:true });
+    }else{
+      apply();
+    }
+
+    if(window.matchMedia){
+      const mq = window.matchMedia("(min-width:1024px)");
+      if(mq && mq.addEventListener){
+        mq.addEventListener("change", apply);
+      }
     }
   }catch(_){}
 })();
@@ -787,7 +912,6 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.insertBefore(ico, btn.firstChild);
             btn.insertBefore(txt, ico.nextSibling);
 
-            // hide original label inside button so ours shows
             const dc = qs('[data-content] span', btn);
             if(dc) dc.style.display = 'none';
           }
@@ -856,5 +980,3 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
-
-
