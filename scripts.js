@@ -1,9 +1,9 @@
 /* =========================================================
    ⚡ FLASH COMPETITIONS — SCRIPTS.JS (DROP-IN REPLACEMENT)
    =========================================================
-   ✅ DO NOT EDIT BELOW unless needed
-   ✅ EDIT ONLY the CUSTOMISATION section here
+   ✅ EDIT ONLY the CUSTOMISATION section
    ✅ Keeps ALL original functionality, adds:
+      - Desktop navbar reorder + rename
       - Mobile sidebar nav rebuild + custom order + icons
       - Prevent socials injecting into mobile
    ========================================================= */
@@ -93,22 +93,18 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     facebook: "https://www.facebook.com/",
     instagram: "https://www.instagram.com/flashcompetitionsni",
 
-    /* IMPORTANT:
-       - This prevents the socials appearing in mobile sidebar.
-       - Leave as false unless you explicitly want socials on mobile.
-    */
+    /* IMPORTANT: keep socials out of mobile sidebar */
     showOnMobile: false,
 
-    /* Try these desktop targets first */
     desktopTargets: [
       "header nav",
       "header",
       "nav"
     ],
 
-    /* Inside the nav/header, attempt to locate the menu area */
     menuTargets: [
-      "[data-flux-navbar-items]",
+      "nav[data-flux-navbar]",        /* best */
+      "[data-flux-navbar-items]",     /* fallback */
       "ul",
       "div"
     ],
@@ -117,12 +113,32 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
   },
 
   /* =========================
-     6) MOBILE SIDEBAR NAV REBUILDER (CUSTOM ORDER)
+     6) DESKTOP NAV REORDER + RENAME
      =========================
-     ✅ This ONLY affects the mobile sidebar ([data-flux-sidebar].lg:hidden)
-     ✅ Desktop navbar is untouched.
-     ✅ You can reorder by changing items array order.
+     ✅ Moves existing DOM nodes only
+     ✅ Dropdown stays functional
+     ✅ Wallet is untouched
+     ✅ Reorder by rearranging items array
   */
+  desktopNav: {
+    enabled: true,
+    navSelector: 'nav[data-flux-navbar]',
+    keepUnmatchedAtEnd: true,
+
+    /* Order you want on desktop */
+    items: [
+      { id:"competitions", type:"dropdown", match:{ idEquals:"categories-header" }, label:"Competitions", enabled:true },
+       { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Entry Lists", enabled:true },
+      { id:"instant", type:"link", match:{ idEquals:"header-instant-list" }, label:"Instant Winners", enabled:true },
+      { id:"results", type:"link", match:{ idEquals:"header-results" }, label:"Results", enabled:false },
+      { id:"about", type:"link", match:{ idEquals:"header-about" }, label:"Meet the Team", enabled:true },
+      { id:"account", type:"link", match:{ hrefIncludes:"/account/settings" }, label:"My Account", enabled:true }
+    ]
+  },
+
+  /* =========================
+     7) MOBILE SIDEBAR NAV REBUILDER (CUSTOM ORDER + ICONS)
+     ========================= */
   mobileNav: {
     enabled: true,
 
@@ -130,20 +146,11 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     sidebarSelector: '[data-flux-sidebar].lg\\:hidden',
     navSelector: '[data-flux-navlist]',
 
-    /* Optional: show a separator line between items */
     showSeparators: true,
-
-    /* Optional: rename dropdown label */
     dropdownLabel: "Competitions",
-
-    /* Optional: hide original nav list after rebuild */
     hideOriginalNav: true,
 
-    /* Order + labels + icons
-       - type: "link" or "dropdown"
-       - match: { idEquals } OR { hrefIncludes }
-       - icon: SVG string
-    */
+    /* Mobile order + labels + icons */
     items: [
       {
         id: "results",
@@ -201,12 +208,11 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         label: "Competitions",
         enabled: true,
         icon:
-          /* cleaner dropdown/competition-ish icon */
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 17h16"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M8 9l-2-2-2 2"/>' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 8h12"/>' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 12h12"/>' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 16h12"/>' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M10 10l-2-2-2 2"/>' +
           '</svg>'
       },
 
@@ -228,6 +234,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
 };
 
 
+
 /* =========================================================
    ✅ ORIGINAL FUNCTIONALITY (UNCHANGED BEHAVIOUR)
    ========================================================= */
@@ -237,18 +244,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const CFG = window.FLASH_CUSTOM.adminManage;
     if(!CFG || CFG.enabled === false) return;
 
-    // Select the admin edit button
     const button = document.querySelector(CFG.selector);
 
     if (button) {
-      // Replace text
       button.textContent = CFG.text;
 
-      // Style button
       const s = CFG.styles || {};
       Object.keys(s).forEach((k) => { button.style[k] = s[k]; });
 
-      // Hover effect
       const h = CFG.hover || {};
       const o = CFG.out || {};
 
@@ -268,7 +271,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const CFG = window.FLASH_CUSTOM.liveBadge;
     if(!CFG || CFG.enabled === false) return;
 
-    // Prevent double-run if injection executes twice
     if (window.__FLASH_LIVE_BADGE_ADDED__) return;
     window.__FLASH_LIVE_BADGE_ADDED__ = true;
 
@@ -276,23 +278,18 @@ document.addEventListener("DOMContentLoaded", function() {
       var a = document.querySelector(CFG.anchorSelector || '#header-instant-list');
       if (!a) return false;
 
-      // Already added? stop
       if (a.querySelector('.' + (CFG.wrapClass || 'flash-live-wrap'))) return true;
 
-      // Find where your text is
       var span = a.querySelector('span');
       if (!span || !span.parentElement) return false;
 
-      // Create wrap
       var wrap = document.createElement('span');
       wrap.className = (CFG.wrapClass || 'flash-live-wrap');
       wrap.setAttribute('aria-hidden', 'true');
 
-      // Dot
       var dot = document.createElement('span');
       dot.className = (CFG.dotClass || 'flash-live-dot');
 
-      // LIVE text
       var txt = document.createElement('span');
       txt.className = (CFG.textClass || 'flash-live-text');
       txt.textContent = (CFG.text || 'LIVE');
@@ -300,16 +297,13 @@ document.addEventListener("DOMContentLoaded", function() {
       wrap.appendChild(dot);
       wrap.appendChild(txt);
 
-      // Insert before the actual text
       span.parentElement.insertBefore(wrap, span);
 
       return true;
     }
 
-    // Try immediately
     if (addLiveBadgeOnce()) return;
 
-    // Lightweight retries then STOP
     var tries = 0;
     var maxTries = (CFG.retries && CFG.retries.max) || 20;
     var every = (CFG.retries && CFG.retries.everyMs) || 250;
@@ -327,7 +321,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const CFG = window.FLASH_CUSTOM.hideOddsInfinity;
     if(!CFG || CFG.enabled === false) return;
 
-    // Ensure we have a reliable hide class
     const styleId = CFG.styleId || "js-injection-hide-style";
     if (!document.getElementById(styleId)) {
       const style = document.createElement("style");
@@ -377,7 +370,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const CFG = window.FLASH_CUSTOM.hideTicketTotalZero;
     if(!CFG || CFG.enabled === false) return;
 
-    // Add a strong hidden class
     const styleId = CFG.styleId || "js-injection-hide-ticket-total-style";
     if (!document.getElementById(styleId)) {
       const style = document.createElement("style");
@@ -430,13 +422,15 @@ document.addEventListener("DOMContentLoaded", function() {
 })();
 
 
-//SOCIALS (Desktop header only, NOT mobile sidebar)
+
+/* =========================================================
+   🖥️ SOCIALS (DESKTOP ONLY — NEVER MOBILE SIDEBAR)
+   ========================================================= */
 (function () {
   try{
     const CFG = window.FLASH_CUSTOM.socials;
     if(!CFG || CFG.enabled === false) return;
 
-    // Prevent duplicates
     if (window.__FLASH_SOCIAL_ICONS__) return;
     window.__FLASH_SOCIAL_ICONS__ = true;
 
@@ -448,10 +442,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function getNavContainer(){
-      // Block mobile unless explicitly allowed
       if (isMobile() && CFG.showOnMobile === false) return null;
 
-      // Find desktop header/nav
       var targets = Array.isArray(CFG.desktopTargets) ? CFG.desktopTargets : ["header nav","header","nav"];
       for(var i=0;i<targets.length;i++){
         var el = document.querySelector(targets[i]);
@@ -464,7 +456,6 @@ document.addEventListener("DOMContentLoaded", function() {
       var wrap = document.createElement("div");
       wrap.className = "flash-socialbar";
 
-      // Facebook icon
       var fb = document.createElement("a");
       fb.href = FACEBOOK_URL;
       fb.target = "_blank";
@@ -475,7 +466,6 @@ document.addEventListener("DOMContentLoaded", function() {
           '<path d="M22 12.06C22 6.504 17.523 2 12 2S2 6.504 2 12.06C2 17.082 5.657 21.245 10.438 22v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.915 3.777-3.915 1.094 0 2.238.197 2.238.197v2.476h-1.26c-1.242 0-1.63.776-1.63 1.57v1.887h2.773l-.443 2.91h-2.33V22C18.343 21.245 22 17.082 22 12.06Z"></path>' +
         '</svg>';
 
-      // Instagram icon (restored: NOT a white square)
       var ig = document.createElement("a");
       ig.href = INSTAGRAM_URL;
       ig.target = "_blank";
@@ -495,22 +485,19 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function insertOnce(){
-      // stop duplicates
       if (document.querySelector(".flash-socialbar")) return true;
 
       var nav = getNavContainer();
       if (!nav) return false;
 
-      // Find the actual menu area
       var menu = null;
-      var menuTargets = Array.isArray(CFG.menuTargets) ? CFG.menuTargets : ["[data-flux-navbar-items]","ul","div"];
+      var menuTargets = Array.isArray(CFG.menuTargets) ? CFG.menuTargets : ["nav[data-flux-navbar]","[data-flux-navbar-items]","ul","div"];
       for(var i=0;i<menuTargets.length;i++){
         var m = nav.querySelector(menuTargets[i]);
         if(m){ menu = m; break; }
       }
       if (!menu) return false;
 
-      // Insert BEFORE navbar items
       menu.parentElement.insertBefore(buildIcons(), menu);
       return true;
     }
@@ -530,7 +517,103 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 /* =========================================================
-   ✅ MOBILE SIDEBAR NAV REBUILDER (CUSTOM ORDER)
+   🖥️ DESKTOP NAV REORDER + RENAME (MOVES EXISTING NODES)
+   ========================================================= */
+(() => {
+  try{
+    const CFG = (window.FLASH_CUSTOM && window.FLASH_CUSTOM.desktopNav) || {};
+    if(!CFG.enabled) return;
+
+    const MAX_TRIES = 40;
+    const TRY_EVERY = 220;
+
+    const qs = (sel, root=document) => (root || document).querySelector(sel);
+    const qsa = (sel, root=document) => Array.prototype.slice.call((root || document).querySelectorAll(sel) || []);
+
+    function findNav(){
+      return qs(CFG.navSelector || 'nav[data-flux-navbar]');
+    }
+
+    function matchEl(nav, match){
+      if(!nav || !match) return null;
+
+      if(match.idEquals){
+        try{ return qs('#' + CSS.escape(match.idEquals), nav); }
+        catch(_){ return qs('#' + match.idEquals, nav); }
+      }
+      if(match.hrefIncludes){
+        return qsa('a[href]', nav).find(x => (x.getAttribute('href') || '').indexOf(match.hrefIncludes) !== -1) || null;
+      }
+      return null;
+    }
+
+    function ensure(nav){
+      if(!nav) return false;
+      if(nav.__fcDesktopReordered) return true;
+
+      const items = Array.isArray(CFG.items) ? CFG.items : [];
+      const children = Array.prototype.slice.call(nav.children || []);
+      const used = new Set();
+
+      const frag = document.createDocumentFragment();
+
+      items.forEach((it) => {
+        if(!it || it.enabled === false) return;
+        const el = matchEl(nav, it.match);
+        if(!el) return;
+
+        const node = (it.type === 'dropdown') ? el.closest('ui-dropdown') : el.closest('a');
+        if(!node || used.has(node)) return;
+
+        used.add(node);
+
+        // rename safely
+        if(it.label){
+          const txt = qs('span.text-base', node);
+          if(txt) txt.textContent = it.label;
+        }
+
+        frag.appendChild(node);
+      });
+
+      if(CFG.keepUnmatchedAtEnd !== false){
+        children.forEach((c) => { if(!used.has(c)) frag.appendChild(c); });
+      }
+
+      nav.appendChild(frag);
+      nav.__fcDesktopReordered = true;
+      return true;
+    }
+
+    function boot(){
+      try{
+        const nav = findNav();
+        if(!nav) return false;
+        return ensure(nav);
+      }catch(_){
+        return false;
+      }
+    }
+
+    let tries = 0;
+    const t = setInterval(() => {
+      tries++;
+      const ok = boot();
+      if(ok || tries >= MAX_TRIES) clearInterval(t);
+    }, TRY_EVERY);
+
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', () => { boot(); }, { once:true });
+    }else{
+      boot();
+    }
+  }catch(_){}
+})();
+
+
+
+/* =========================================================
+   ✅ MOBILE SIDEBAR NAV REBUILDER (CUSTOM ORDER + ICONS)
    - Uses existing elements (moves them) to keep behaviour intact
    - Does NOT touch desktop navbar
    ========================================================= */
@@ -568,11 +651,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function ensureInjected(sidebar, nav){
       if(!sidebar || !nav) return false;
-
-      // prevent duplicate work
       if(sidebar.__fcNavBuilt) return true;
 
-      // container
       const wrap = document.createElement('div');
       wrap.className = 'fcNavX';
       wrap.setAttribute('data-fc-navx', '1');
@@ -618,6 +698,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             btn.insertBefore(ico, btn.firstChild);
             btn.insertBefore(txt, ico.nextSibling);
+
+            // hide original label inside button so ours shows
+            const dc = qs('[data-content] span', btn);
+            if(dc) dc.style.display = 'none';
           }
           return;
         }
@@ -627,7 +711,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         a.classList.add('fcNavX-row');
 
-        // hide existing text span so our controlled label shows
         const existingLabelSpan = qs('span.text-base', a);
         if(existingLabelSpan) existingLabelSpan.style.display = 'none';
 
