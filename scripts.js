@@ -180,13 +180,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         match: { idEquals: "categories-header" },
         label: "Competitions",
         enabled: true,
-        icon:
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 8h12"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 12h12"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 16h12"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M10 10l-2-2-2 2"/>' +
-          '</svg>'
+        icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9a2 2 0 0 0 0 6v4h16v-4a2 2 0 0 0 0-6V5H4z"/><path d="M9 8v8"/><path d="M12 8v8"/></svg>'
       },
       {
         id: "results",
@@ -855,6 +849,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
