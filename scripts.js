@@ -1,258 +1,261 @@
+
 /* =========================================================
-   🔧 FLASH — EASY CUSTOMISATION ZONE
-   Edit ONLY this section for future changes
+   🔧 FLASH — EASY CUSTOMISATION (SAFE ONLY)
+   👉 EDIT THIS SECTION ONLY
    ========================================================= */
 
-window.FLASH_CONFIG = {
+window.FLASH_CUSTOM = {
 
   /* ---------------- ADMIN BUTTON ---------------- */
-  adminEdit: {
-    enabled: true,
-    selector: 'a[href*="/admin/products/"][href$="/edit"]',
+  adminButton: {
     label: "⚙️ Manage Competition",
     gradient: "linear-gradient(90deg, #8181ec, #4f3ff7)",
-    borderColor: "#8181ec",
-    glow: "0 6px 20px rgba(129,129,236,.8)"
+    border: "#8181ec",
+    glow: "0 6px 20px rgba(129,129,236,0.8)"
   },
 
   /* ---------------- LIVE BADGE ---------------- */
-  liveBadge: {
-    enabled: true,
-    targetId: "#header-instant-list",
-    text: "LIVE"
-  },
-
-  /* ---------------- ODDS HIDING ---------------- */
-  hideInfinityOdds: true,
-
-  /* ---------------- TICKET TOTAL ---------------- */
-  hideZeroTicketTotal: true,
+  liveBadgeText: "LIVE",
 
   /* ---------------- SOCIAL LINKS ---------------- */
   socials: {
-    enabled: true,
     facebook: "https://www.facebook.com/",
     instagram: "https://www.instagram.com/flashcompetitionsni"
   },
 
-  /* ---------------- MOBILE NAV ---------------- */
-  mobileNav: {
-    enabled: true,
-    sidebarSelector: '[data-flux-sidebar].lg\\:hidden',
-    navSelector: '[data-flux-navlist]',
-    hideOriginalNav: true,
-    showSeparators: true,
-
-    items: [
-      { match: { idEquals: "header-results" }, label: "Winners" },
-      { match: { idEquals: "header-entry-list" }, label: "Entry Lists" },
-      { match: { idEquals: "header-instant-list" }, label: "Instant Winners" },
-      { match: { idEquals: "categories-header" }, type: "dropdown", label: "Competitions" },
-      { match: { hrefIncludes: "/account/settings" }, label: "Settings" }
-    ]
-  }
+  /* ---------------- MOBILE SIDEBAR ORDER ----------------
+     ⚠️ MOBILE ONLY
+     ⚠️ EXISTING ELEMENTS ONLY
+     ⚠️ DESKTOP IS NEVER TOUCHED
+  ------------------------------------------------ */
+  mobileNavOrder: [
+    "header-results",
+    "header-entry-list",
+    "header-instant-list",
+    "categories-header",
+    "/account/settings"
+  ]
 };
 
 /* =========================================================
-   🚀 FUNCTIONAL CODE — DO NOT EDIT BELOW
+   🚫 ORIGINAL CODE — DO NOT EDIT BELOW
    ========================================================= */
 
+
 /* ---------- ADMIN BUTTON ---------- */
-document.addEventListener("DOMContentLoaded", () => {
-  const C = FLASH_CONFIG.adminEdit;
-  if (!C.enabled) return;
+document.addEventListener("DOMContentLoaded", function() {
+  const button = document.querySelector('a[href*="/admin/products/"][href$="/edit"]');
+  if (!button) return;
 
-  const btn = document.querySelector(C.selector);
-  if (!btn) return;
+  button.textContent = FLASH_CUSTOM.adminButton.label;
 
-  btn.textContent = C.label;
-  Object.assign(btn.style, {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "0.5rem",
-    fontWeight: "700",
-    background: C.gradient,
-    color: "#fff",
-    borderRadius: "0.75rem",
-    padding: "0.5rem 1rem",
-    border: `2px solid ${C.borderColor}`,
-    transition: "all .3s ease",
-    boxShadow: "0 4px 12px rgba(129,129,236,.5)"
+  button.style.display = "inline-flex";
+  button.style.alignItems = "center";
+  button.style.gap = "0.5rem";
+  button.style.fontWeight = "700";
+  button.style.background = FLASH_CUSTOM.adminButton.gradient;
+  button.style.color = "#ffffff";
+  button.style.boxShadow = "0 4px 12px rgba(129,129,236,0.5)";
+  button.style.transition = "all 0.3s ease";
+  button.style.borderRadius = "0.75rem";
+  button.style.padding = "0.5rem 1rem";
+  button.style.border = "2px solid " + FLASH_CUSTOM.adminButton.border;
+
+  button.addEventListener("mouseover", () => {
+    button.style.transform = "scale(1.05)";
+    button.style.boxShadow = FLASH_CUSTOM.adminButton.glow;
   });
-
-  btn.onmouseover = () => {
-    btn.style.transform = "scale(1.05)";
-    btn.style.boxShadow = C.glow;
-  };
-  btn.onmouseout = () => {
-    btn.style.transform = "scale(1)";
-    btn.style.boxShadow = "0 4px 12px rgba(129,129,236,.5)";
-  };
+  button.addEventListener("mouseout", () => {
+    button.style.transform = "scale(1)";
+    button.style.boxShadow = "0 4px 12px rgba(129,129,236,0.5)";
+  });
 });
 
+
 /* ---------- LIVE BADGE ---------- */
-(function(){
-  if (!FLASH_CONFIG.liveBadge.enabled) return;
-  if (window.__FLASH_LIVE__) return;
-  window.__FLASH_LIVE__ = true;
+(function () {
+  if (window.__FLASH_LIVE_BADGE_ADDED__) return;
+  window.__FLASH_LIVE_BADGE_ADDED__ = true;
 
-  function apply(){
-    const a = document.querySelector(FLASH_CONFIG.liveBadge.targetId);
-    if (!a || a.querySelector(".flash-live-wrap")) return true;
+  function addLiveBadgeOnce() {
+    var a = document.querySelector('#header-instant-list');
+    if (!a || a.querySelector('.flash-live-wrap')) return false;
 
-    const span = a.querySelector("span");
-    if (!span) return false;
+    var span = a.querySelector('span');
+    if (!span || !span.parentElement) return false;
 
-    const wrap = document.createElement("span");
-    wrap.className = "flash-live-wrap";
-    wrap.innerHTML =
-      '<span class="flash-live-dot"></span>' +
-      `<span class="flash-live-text">${FLASH_CONFIG.liveBadge.text}</span>`;
+    var wrap = document.createElement('span');
+    wrap.className = 'flash-live-wrap';
+    wrap.setAttribute('aria-hidden', 'true');
 
+    var dot = document.createElement('span');
+    dot.className = 'flash-live-dot';
+
+    var txt = document.createElement('span');
+    txt.className = 'flash-live-text';
+    txt.textContent = FLASH_CUSTOM.liveBadgeText;
+
+    wrap.appendChild(dot);
+    wrap.appendChild(txt);
     span.parentElement.insertBefore(wrap, span);
     return true;
   }
 
-  let t = setInterval(() => apply() && clearInterval(t), 250);
+  var tries = 0;
+  var t = setInterval(function () {
+    tries++;
+    if (addLiveBadgeOnce() || tries >= 20) clearInterval(t);
+  }, 250);
 })();
+
 
 /* ---------- HIDE INFINITY ODDS ---------- */
 (() => {
-  if (!FLASH_CONFIG.hideInfinityOdds) return;
+  const styleId = "js-injection-hide-style";
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = ".js-hide{display:none!important;}";
+    document.head.appendChild(style);
+  }
 
-  const style = document.createElement("style");
-  style.textContent = ".js-hide{display:none!important}";
-  document.head.appendChild(style);
-
-  function apply(){
+  function apply() {
     const el =
       document.querySelector('span[x-text="calculateOdds()"]') ||
-      [...document.querySelectorAll("span")].find(s => s.textContent.startsWith("Odds "));
+      [...document.querySelectorAll("span")].find(s =>
+        (s.textContent || "").trim().startsWith("Odds ")
+      );
     if (!el) return;
 
     el.classList.toggle("js-hide", /Infinity\s*\/\s*1/i.test(el.textContent));
   }
 
-  new MutationObserver(apply).observe(document.documentElement,{subtree:true,childList:true});
-  setInterval(apply,300);
+  apply();
+  new MutationObserver(apply).observe(document.documentElement, {
+    subtree: true,
+    childList: true,
+    characterData: true
+  });
+  setInterval(apply, 300);
 })();
+
 
 /* ---------- HIDE ZERO TICKET TOTAL ---------- */
 (() => {
-  if (!FLASH_CONFIG.hideZeroTicketTotal) return;
-
   const style = document.createElement("style");
-  style.textContent = ".js-hide-ticket-total{display:none!important}";
+  style.textContent = ".js-hide-ticket-total{display:none!important;}";
   document.head.appendChild(style);
 
-  function apply(){
+  function apply() {
     const p =
       document.querySelector('p[x-text*="Tickets Total"]') ||
-      [...document.querySelectorAll("p")].find(p=>p.textContent.startsWith("Tickets Total:"));
+      [...document.querySelectorAll("p")].find(p =>
+        p.textContent && p.textContent.trim().startsWith("Tickets Total:")
+      );
     if (!p) return;
 
     const m = p.textContent.match(/£\s*([\d.]+)/);
     if (!m) return;
 
-    p.closest("div").classList.toggle("js-hide-ticket-total", Number(m[1]) === 0);
+    (p.closest("div") || p.parentElement)
+      .classList.toggle("js-hide-ticket-total", Number(m[1]) === 0);
   }
 
-  new MutationObserver(apply).observe(document.documentElement,{subtree:true,childList:true});
-  setInterval(apply,300);
+  apply();
+  new MutationObserver(apply).observe(document.documentElement, {
+    subtree: true,
+    childList: true,
+    characterData: true
+  });
+  setInterval(apply, 300);
 })();
 
-/* ---------- SOCIAL ICONS (MOBILE SIDEBAR ONLY — SAFE) ---------- */
-(function(){
-  const C = FLASH_CONFIG.socials;
-  if (!C.enabled) return;
-  if (window.__FLASH_SOCIAL_MOBILE__) return;
-  window.__FLASH_SOCIAL_MOBILE__ = true;
 
-  function getMobileSidebar(){
-    return document.querySelector('[data-flux-sidebar].lg\\:hidden');
+/* ---------- SOCIAL ICONS (ORIGINAL — UNTOUCHED) ---------- */
+(function () {
+  if (window.__FLASH_SOCIAL_ICONS__) return;
+  window.__FLASH_SOCIAL_ICONS__ = true;
+
+  var FACEBOOK_URL  = FLASH_CUSTOM.socials.facebook;
+  var INSTAGRAM_URL = FLASH_CUSTOM.socials.instagram;
+
+  function getNavContainer(){
+    return document.querySelector('header nav')
+        || document.querySelector('header')
+        || document.querySelector('nav');
   }
 
-  function insert(){
-    const sidebar = getMobileSidebar();
-    if (!sidebar) return false;
+  function buildIcons(){
+    var wrap = document.createElement("div");
+    wrap.className = "flash-socialbar";
 
-    // Do NOT duplicate
-    if (sidebar.querySelector(".flash-socialbar")) return true;
+    var fb = document.createElement("a");
+    fb.href = FACEBOOK_URL;
+    fb.target = "_blank";
+    fb.rel = "noopener";
+    fb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.504 17.523 2 12 2S2 6.504 2 12.06C2 17.082 5.657 21.245 10.438 22v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.915 3.777-3.915 1.094 0 2.238.197 2.238.197v2.476h-1.26c-1.242 0-1.63.776-1.63 1.57v1.887h2.773l-.443 2.91h-2.33V22C18.343 21.245 22 17.082 22 12.06Z"/></svg>';
 
-    // Find nav list inside sidebar
-    const nav =
-      sidebar.querySelector('[data-flux-navlist]') ||
-      sidebar.querySelector("nav");
+    var ig = document.createElement("a");
+    ig.href = INSTAGRAM_URL;
+    ig.target = "_blank";
+    ig.rel = "noopener";
+    ig.innerHTML = '<svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Z"/></svg>';
 
+    wrap.appendChild(ig);
+    wrap.appendChild(fb);
+    return wrap;
+  }
+
+  function insertOnce(){
+    if (document.querySelector(".flash-socialbar")) return true;
+    var nav = getNavContainer();
     if (!nav) return false;
 
-    const wrap = document.createElement("div");
-    wrap.className = "flash-socialbar flash-socialbar--mobile";
-    wrap.innerHTML = `
-      <a href="${C.instagram}" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
-      <a href="${C.facebook}" target="_blank" rel="noopener" aria-label="Facebook">FB</a>
-    `;
+    var menu =
+      nav.querySelector("[data-flux-navbar-items]") ||
+      nav.querySelector("ul") ||
+      nav.querySelector("div");
 
-    // Insert AFTER nav items, not before
-    nav.after(wrap);
+    if (!menu) return false;
+    menu.parentElement.insertBefore(buildIcons(), menu);
     return true;
   }
 
-  // Retry safely for dynamic loads
-  let tries = 0;
-  const t = setInterval(() => {
+  var tries = 0;
+  var t = setInterval(function(){
     tries++;
-    if (insert() || tries > 20) clearInterval(t);
+    if (insertOnce() || tries >= 20) clearInterval(t);
   }, 250);
 })();
 
 
-/* ---------- MOBILE NAV ---------- */
-(() => {
-  const CFG = FLASH_CONFIG.mobileNav;
-  if (!CFG.enabled) return;
+/* ---------- MOBILE SIDEBAR ORDER (SAFE, EXISTING NODES ONLY) ---------- */
+(function(){
+  const ORDER = FLASH_CUSTOM.mobileNavOrder;
+  if (!ORDER || !ORDER.length) return;
 
-  function qs(s,r=document){return r.querySelector(s)}
-  function qsa(s,r=document){return [...r.querySelectorAll(s)]}
+  function apply(){
+    const sidebar = document.querySelector('[data-flux-sidebar].lg\\:hidden');
+    if (!sidebar || sidebar.__flashReordered) return;
 
-  function build(){
-    const sidebar = qs(CFG.sidebarSelector);
-    if (!sidebar || sidebar.__fcBuilt) return;
-
-    const nav = qs(CFG.navSelector, sidebar);
+    const nav = sidebar.querySelector('[data-flux-navlist]');
     if (!nav) return;
 
-    const wrap = document.createElement("div");
-    wrap.className = "fcNavX";
-
-    let first=true;
-    CFG.items.forEach(it=>{
-      let el=null;
-      if(it.match.idEquals) el=qs("#"+CSS.escape(it.match.idEquals),nav);
-      if(it.match.hrefIncludes) el=qsa("a[href]",nav).find(a=>a.href.includes(it.match.hrefIncludes));
-      if(!el) return;
-
-      if(CFG.showSeparators && !first){
-        const sep=document.createElement("div");
-        sep.className="fcNavX-sep";
-        wrap.appendChild(sep);
-      }
-      first=false;
-
-      if(it.type==="dropdown"){
-        const dd=el.closest("ui-dropdown");
-        if(dd) wrap.appendChild(dd);
-      } else {
-        wrap.appendChild(el.closest("a"));
-      }
+    const items = [];
+    ORDER.forEach(key => {
+      let el =
+        nav.querySelector('#' + CSS.escape(key)) ||
+        [...nav.querySelectorAll('a[href]')].find(a => a.href.includes(key));
+      if (el) items.push(el.closest('a') || el);
     });
 
-    nav.before(wrap);
-    if(CFG.hideOriginalNav) nav.style.display="none";
-    sidebar.__fcBuilt=true;
+    items.forEach(el => nav.appendChild(el));
+    sidebar.__flashReordered = true;
   }
 
-  let t=setInterval(build,220);
+  let t = setInterval(() => {
+    apply();
+    if (document.querySelector('[data-flux-sidebar].lg\\:hidden')?.__flashReordered) clearInterval(t);
+  }, 300);
 })();
-
 
