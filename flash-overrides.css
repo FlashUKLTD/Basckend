@@ -10,6 +10,8 @@
 
 }
 
+
+
 :root{
   /* Brand (Flash) */
   --fcNav-bg0:#070815;
@@ -22,6 +24,16 @@
   --fcNav-dim: rgba(255,255,255,.72);
   --fcNav-line: rgba(255,255,255,.10);
 
+  /* Mobile nav */
+  --flash-nav-row-radius: 14px;
+  --flash-nav-row-padding-y: 14px;
+  --flash-nav-row-padding-x: 10px;
+  --flash-nav-icon-size: 22px;
+
+  --flash-nav-hover-bg: rgba(255,255,255,.06);
+  --flash-nav-hover-border: rgba(139,92,255,.22);
+
+    
   /* Sizing */
   --fcNav-rowPadY: 14px;
   --fcNav-rowPadX: 10px;
@@ -5338,6 +5350,61 @@ html body
   }
 }
 
+/* =========================================================
+   FLASH — MOBILE SIDEBAR NAV (ADDITIVE)
+   ========================================================= */
+
+.fcNavX{
+  margin: 18px 0 14px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.fcNavX-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding: var(--flash-nav-row-padding-y) var(--flash-nav-row-padding-x);
+  border-radius: var(--flash-nav-row-radius);
+  color: var(--flash-text-main);
+  text-decoration:none;
+  background: transparent;
+  border:1px solid transparent;
+  transition: background .18s ease, border-color .18s ease;
+}
+
+.fcNavX-row:hover{
+  background: var(--flash-nav-hover-bg);
+  border-color: var(--flash-nav-hover-border);
+}
+
+.fcNavX-ico{
+  width: var(--flash-nav-icon-size);
+  height: var(--flash-nav-icon-size);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.fcNavX-ico svg{
+  width:100%;
+  height:100%;
+}
+
+.fcNavX-txt{
+  font-size:16px;
+  font-weight:900;
+}
+
+.fcNavX-sep{
+  height:1px;
+  margin:6px 10px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   html body
     .grid.grid-cols-1.md\:grid-cols-2.gap-5.p-5.items-center
@@ -5347,6 +5414,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
