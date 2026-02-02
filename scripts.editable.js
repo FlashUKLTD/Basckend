@@ -25,6 +25,56 @@ window.FLASH_SITE.adminEdit = {
   hoverBg: "rgba(255,255,255,0.12)"
 };
 
+
+window.FC_MOBILE_NAV = {
+  enabled: true,
+
+  sidebarSelector: '[data-flux-sidebar].lg\\:hidden',
+  navSelector: '[data-flux-navlist]',
+
+  showSeparators: true,
+  hideOriginalNav: true,
+
+  items: [
+    {
+      id: "results",
+      type: "link",
+      match: { idEquals: "header-results" },
+      label: "Results",
+      enabled: true
+    },
+    {
+      id: "entrylists",
+      type: "link",
+      match: { idEquals: "header-entry-list" },
+      label: "Entry Lists",
+      enabled: true
+    },
+    {
+      id: "instant",
+      type: "link",
+      match: { idEquals: "header-instant-list" },
+      label: "Instant Winners",
+      enabled: true
+    },
+    {
+      id: "competitions",
+      type: "dropdown",
+      match: { idEquals: "categories-header" },
+      label: "Competitions",
+      enabled: true
+    },
+    {
+      id: "account",
+      type: "link",
+      match: { hrefIncludes: "/account/settings" },
+      label: "My Account",
+      enabled: true
+    }
+  ]
+};
+
+
 /* -------------------------
    Social buttons injection
    ------------------------- */
@@ -551,6 +601,78 @@ window.FC_MOBILE_NAV = {
     }
   })();
 
+
+   /* =========================================================
+   FLASH — MOBILE NAV ENHANCER (NON-DESTRUCTIVE)
+   ========================================================= */
+(function(){
+  const CFG = window.FC_MOBILE_NAV;
+  if(!CFG || !CFG.enabled) return;
+
+  const qs = (s,r=document)=>r.querySelector(s);
+  const qsa = (s,r=document)=>Array.from(r.querySelectorAll(s));
+
+  function build(){
+    const sidebar = qs(CFG.sidebarSelector);
+    if(!sidebar || sidebar.__fcBuilt) return;
+
+    const nav = qs(CFG.navSelector, sidebar);
+    if(!nav) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'fcNavX';
+
+    let first = true;
+
+    CFG.items.forEach(it=>{
+      if(!it.enabled) return;
+
+      let el = null;
+      if(it.match.idEquals) el = qs('#'+CSS.escape(it.match.idEquals), nav);
+      if(it.match.hrefIncludes){
+        el = qsa('a[href]', nav).find(a=>a.href.includes(it.match.hrefIncludes));
+      }
+      if(!el) return;
+
+      if(CFG.showSeparators && !first){
+        const sep = document.createElement('div');
+        sep.className = 'fcNavX-sep';
+        wrap.appendChild(sep);
+      }
+      first = false;
+
+      if(it.type === 'dropdown'){
+        const dd = el.closest('ui-dropdown');
+        if(dd) wrap.appendChild(dd);
+        return;
+      }
+
+      const a = el.closest('a');
+      if(!a) return;
+
+      a.classList.add('fcNavX-row');
+      const txt = document.createElement('span');
+      txt.className = 'fcNavX-txt';
+      txt.textContent = it.label;
+
+      a.prepend(txt);
+      wrap.appendChild(a);
+    });
+
+    nav.before(wrap);
+    if(CFG.hideOriginalNav) nav.style.display = 'none';
+    sidebar.__fcBuilt = true;
+  }
+
+  let tries = 0;
+  const t = setInterval(()=>{
+    tries++;
+    build();
+    if(tries > 40) clearInterval(t);
+  },220);
+})();
+
+   
   /* ======================================================
      3) LIVE badge injection
      ====================================================== */
