@@ -193,7 +193,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         type: "link",
         match: { idEquals: "header-results" },
         label: "Results",
-        enabled: true,
+        enabled: false,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
             '<path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2z"/>' +
@@ -855,4 +855,5 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
