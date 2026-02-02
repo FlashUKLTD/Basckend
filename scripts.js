@@ -1,4 +1,3 @@
-<script>
 /* =========================================================
    🔧 FLASH — EASY CUSTOMISATION ZONE
    Edit ONLY this section for future changes
@@ -232,4 +231,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let t=setInterval(build,220);
 })();
-</script>
+
