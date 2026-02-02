@@ -161,28 +161,51 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(apply,300);
 })();
 
-/* ---------- SOCIAL ICONS ---------- */
+/* ---------- SOCIAL ICONS (MOBILE SIDEBAR ONLY — SAFE) ---------- */
 (function(){
-  if (!FLASH_CONFIG.socials.enabled) return;
-  if (window.__FLASH_SOCIAL__) return;
-  window.__FLASH_SOCIAL__ = true;
+  const C = FLASH_CONFIG.socials;
+  if (!C.enabled) return;
+  if (window.__FLASH_SOCIAL_MOBILE__) return;
+  window.__FLASH_SOCIAL_MOBILE__ = true;
+
+  function getMobileSidebar(){
+    return document.querySelector('[data-flux-sidebar].lg\\:hidden');
+  }
 
   function insert(){
-    if (document.querySelector(".flash-socialbar")) return true;
-    const nav = document.querySelector("header nav, header, nav");
+    const sidebar = getMobileSidebar();
+    if (!sidebar) return false;
+
+    // Do NOT duplicate
+    if (sidebar.querySelector(".flash-socialbar")) return true;
+
+    // Find nav list inside sidebar
+    const nav =
+      sidebar.querySelector('[data-flux-navlist]') ||
+      sidebar.querySelector("nav");
+
     if (!nav) return false;
 
     const wrap = document.createElement("div");
-    wrap.className = "flash-socialbar";
-    wrap.innerHTML =
-      `<a href="${FLASH_CONFIG.socials.instagram}" target="_blank">IG</a>
-       <a href="${FLASH_CONFIG.socials.facebook}" target="_blank">FB</a>`;
-    nav.prepend(wrap);
+    wrap.className = "flash-socialbar flash-socialbar--mobile";
+    wrap.innerHTML = `
+      <a href="${C.instagram}" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+      <a href="${C.facebook}" target="_blank" rel="noopener" aria-label="Facebook">FB</a>
+    `;
+
+    // Insert AFTER nav items, not before
+    nav.after(wrap);
     return true;
   }
 
-  let t=setInterval(()=>insert()&&clearInterval(t),250);
+  // Retry safely for dynamic loads
+  let tries = 0;
+  const t = setInterval(() => {
+    tries++;
+    if (insert() || tries > 20) clearInterval(t);
+  }, 250);
 })();
+
 
 /* ---------- MOBILE NAV ---------- */
 (() => {
@@ -231,4 +254,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let t=setInterval(build,220);
 })();
+
 
