@@ -136,6 +136,27 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     ]
   },
 
+     /* =========================
+     6.5) DESKTOP WALLET POSITION
+     =========================
+     ✅ Moves the existing #wallet element
+     ✅ Desktop only
+     ✅ Does not recreate anything (keeps functionality)
+  */
+  desktopWallet: {
+    enabled: true,
+
+    /* Where the wallet currently is */
+    walletSelector: '#wallet',
+
+    /* The desktop container that holds nav + wallet */
+    desktopBarSelector: '.hidden.lg\\:flex.lg\\:gap-x-8',
+
+    /* Put wallet at the very end (far right) */
+    position: 'end' // 'end' | 'start'
+  },
+
+   
   /* =========================
      7) MOBILE SIDEBAR NAV REBUILDER (CUSTOM ORDER + ICONS)
      ========================= */
@@ -515,6 +536,73 @@ document.addEventListener("DOMContentLoaded", function() {
 })();
 
 
+/* =========================================================
+   🖥️ DESKTOP WALLET MOVE (FAR RIGHT)
+   ========================================================= */
+(() => {
+  try{
+    const CFG = (window.FLASH_CUSTOM && window.FLASH_CUSTOM.desktopWallet) || {};
+    if(!CFG.enabled) return;
+
+    const MAX_TRIES = 40;
+    const TRY_EVERY = 220;
+
+    const qs = (sel, root=document) => (root || document).querySelector(sel);
+
+    function isDesktop(){
+      return window.matchMedia && window.matchMedia("(min-width: 1024px)").matches;
+    }
+
+    function apply(){
+      if(!isDesktop()) return false;
+
+      const bar = qs(CFG.desktopBarSelector || '.hidden.lg\\:flex.lg\\:gap-x-8');
+      if(!bar) return false;
+
+      const wallet = qs(CFG.walletSelector || '#wallet');
+      if(!wallet) return false;
+
+      // Already last? (no-op)
+      if(CFG.position === 'end'){
+        if(bar.lastElementChild === wallet) return true;
+        bar.appendChild(wallet);
+        return true;
+      }
+
+      // Or move to start
+      if(CFG.position === 'start'){
+        if(bar.firstElementChild === wallet) return true;
+        bar.insertBefore(wallet, bar.firstChild);
+        return true;
+      }
+
+      return false;
+    }
+
+    // Try now + retries (for dynamic loads)
+    let tries = 0;
+    const t = setInterval(() => {
+      tries++;
+      const ok = apply();
+      if(ok || tries >= MAX_TRIES) clearInterval(t);
+    }, TRY_EVERY);
+
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', apply, { once:true });
+    }else{
+      apply();
+    }
+
+    // Also re-apply if responsive breakpoint changes
+    if(window.matchMedia){
+      const mq = window.matchMedia("(min-width: 1024px)");
+      if(mq && mq.addEventListener){
+        mq.addEventListener("change", () => { apply(); });
+      }
+    }
+  }catch(_){}
+})();
+
 
 /* =========================================================
    🖥️ DESKTOP NAV REORDER + RENAME (MOVES EXISTING NODES)
@@ -768,4 +856,5 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
