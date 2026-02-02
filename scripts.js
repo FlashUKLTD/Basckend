@@ -129,10 +129,10 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     items: [
       { id:"competitions", type:"dropdown", match:{ idEquals:"categories-header" }, label:"Competitions", enabled:true },
        { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Entry Lists", enabled:true },
-      { id:"instant", type:"link", match:{ idEquals:"header-instant-list" }, label:"Instant Winners", enabled:true },
+      { id:"instant", type:"link", match:{ idEquals:"header-instant-list" }, label:"Winners", enabled:true },
       { id:"results", type:"link", match:{ idEquals:"header-results" }, label:"Results", enabled:false },
       { id:"about", type:"link", match:{ idEquals:"header-about" }, label:"Meet the Team", enabled:true },
-      { id:"account", type:"link", match:{ hrefIncludes:"/account/settings" }, label:"My Account", enabled:true }
+      { id:"account", type:"link", match:{ hrefIncludes:"/account/settings" }, label:"Account", enabled:true }
     ]
   },
 
@@ -173,6 +173,21 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
 
     /* Mobile order + labels + icons */
     items: [
+        /* Dropdown trigger (existing ui-dropdown) */
+      {
+        id: "competitions_dropdown",
+        type: "dropdown",
+        match: { idEquals: "categories-header" },
+        label: "Competitions",
+        enabled: true,
+        icon:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 8h12"/>' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 12h12"/>' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 16h12"/>' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M10 10l-2-2-2 2"/>' +
+          '</svg>'
+      },
       {
         id: "results",
         type: "link",
@@ -183,17 +198,6 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
             '<path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2z"/>' +
             '<path stroke-linecap="round" stroke-linejoin="round" d="M9 8h6M9 12h6"/>' +
-          '</svg>'
-      },
-      {
-        id: "entrylists",
-        type: "link",
-        match: { idEquals: "header-entry-list" },
-        label: "Entry Lists",
-        enabled: true,
-        icon:
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/>' +
           '</svg>'
       },
       {
@@ -208,6 +212,17 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
           '</svg>'
       },
       {
+        id: "entrylists",
+        type: "link",
+        match: { idEquals: "header-entry-list" },
+        label: "Entry Lists",
+        enabled: true,
+        icon:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/>' +
+          '</svg>'
+      },
+      {
         id: "about",
         type: "link",
         match: { idEquals: "header-about" },
@@ -218,22 +233,6 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
             '<path stroke-linecap="round" stroke-linejoin="round" d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12s4.03-9 9-9 9 4.03 9 9z"/>' +
             '<path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6"/>' +
             '<path stroke-linecap="round" stroke-linejoin="round" d="M12 7h.01"/>' +
-          '</svg>'
-      },
-
-      /* Dropdown trigger (existing ui-dropdown) */
-      {
-        id: "competitions_dropdown",
-        type: "dropdown",
-        match: { idEquals: "categories-header" },
-        label: "Competitions",
-        enabled: true,
-        icon:
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 8h12"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 12h12"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M6 16h12"/>' +
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M10 10l-2-2-2 2"/>' +
           '</svg>'
       },
 
@@ -856,3 +855,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
