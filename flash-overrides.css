@@ -54,6 +54,119 @@
   border-right: 1px solid rgba(139,92,255,.22) !important;
 }
 
+
+
+/*login and signup button*/
+
+
+
+
+
+.flex.flex-1.items-center.justify-end.gap-x-1.border{
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  gap: 10px !important;
+}
+.flex.flex-1.items-center.justify-end
+a[href*="/login"]{
+  position: relative;
+  padding: 8px 14px !important;
+  border-radius: 12px !important;
+
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+
+  color: rgba(255,255,255,.92) !important;
+  font-weight: 700 !important;
+  letter-spacing: .2px;
+
+  backdrop-filter: blur(6px);
+  transition: 
+    background .25s ease,
+    border-color .25s ease,
+    transform .2s ease,
+    box-shadow .25s ease;
+}
+
+.flex.flex-1.items-center.justify-end
+a[href*="/login"]:hover{
+  background: rgba(255,255,255,.08) !important;
+  border-color: rgba(255,255,255,.28) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  transform: translateY(-1px);
+}
+.flex.flex-1.items-center.justify-end
+a[href*="/register"]{
+  position: relative;
+  padding: 9px 16px !important;
+  border-radius: 14px !important;
+
+  background: linear-gradient(
+    135deg,
+    #8B5CFF,
+    #2D7CFF
+  ) !important;
+
+  color: #fff !important;
+  font-weight: 900 !important;
+  letter-spacing: .3px;
+
+  box-shadow:
+    0 10px 40px rgba(45,124,255,.35),
+    inset 0 1px 0 rgba(255,255,255,.25);
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    filter .25s ease;
+  overflow: hidden;
+}
+.flex.flex-1.items-center.justify-end
+a[href*="/register"]::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255,255,255,.35) 50%,
+    transparent 65%
+  );
+  transform: translateX(-60%) rotate(12deg);
+  animation: fcAuthSweep 6.5s ease-in-out infinite;
+  pointer-events:none;
+}
+.flex.flex-1.items-center.justify-end
+a[href*="/register"]:hover{
+  transform: translateY(-1.5px);
+  filter: brightness(1.05);
+  box-shadow:
+    0 16px 60px rgba(45,124,255,.45),
+    inset 0 1px 0 rgba(255,255,255,.3);
+}
+.flex.flex-1.items-center.justify-end
+a:focus-visible{
+  outline: none !important;
+  box-shadow:
+    0 0 0 2px rgba(139,92,255,.55),
+    0 10px 40px rgba(0,0,0,.35);
+}
+@media (prefers-reduced-motion: reduce){
+  .flex.flex-1.items-center.justify-end
+  a[href*="/register"]::before{
+    animation: none !important;
+  }
+}
+@keyframes fcAuthSweep{
+  0%{ transform: translateX(-60%) rotate(12deg); opacity:.15; }
+  45%{ opacity:.45; }
+  100%{ transform: translateX(60%) rotate(12deg); opacity:.15; }
+}
+
+
+
 /* Injected nav wrapper */
 .fcNavX{
   margin: 18px 0 14px !important;
@@ -5414,6 +5527,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
