@@ -25,56 +25,6 @@ window.FLASH_SITE.adminEdit = {
   hoverBg: "rgba(255,255,255,0.12)"
 };
 
-
-window.FC_MOBILE_NAV = {
-  enabled: true,
-
-  sidebarSelector: '[data-flux-sidebar].lg\\:hidden',
-  navSelector: '[data-flux-navlist]',
-
-  showSeparators: true,
-  hideOriginalNav: true,
-
-  items: [
-    {
-      id: "results",
-      type: "link",
-      match: { idEquals: "header-results" },
-      label: "Results",
-      enabled: true
-    },
-    {
-      id: "entrylists",
-      type: "link",
-      match: { idEquals: "header-entry-list" },
-      label: "Entry Lists",
-      enabled: true
-    },
-    {
-      id: "instant",
-      type: "link",
-      match: { idEquals: "header-instant-list" },
-      label: "Instant Winners",
-      enabled: true
-    },
-    {
-      id: "competitions",
-      type: "dropdown",
-      match: { idEquals: "categories-header" },
-      label: "Competitions",
-      enabled: true
-    },
-    {
-      id: "account",
-      type: "link",
-      match: { hrefIncludes: "/account/settings" },
-      label: "My Account",
-      enabled: true
-    }
-  ]
-};
-
-
 /* -------------------------
    Social buttons injection
    ------------------------- */
@@ -85,8 +35,8 @@ window.FLASH_SITE.socials = {
   navSelector: "nav[data-flux-navlist], [data-flux-navlist]",
 
   // Links (set "" to hide a button)
-  facebookUrl: "https://facebook.com",
-  instagramUrl: "https://instagram.com",
+  facebookUrl: "https://facebook.com/flashcompetitions",
+  instagramUrl: "https://instagram.com/flashcompetitionsuk",
   tiktokUrl: "https://tiktok.com",
 
   // Visuals
@@ -436,72 +386,6 @@ window.FC_MOBILE_NAV = {
     boot();
   }
 })();
-
-(function(){
-  "use strict";
-
-  var CFG = window.FLASH_SITE || {};
-
-  /* ======================================================
-     1) Admin Edit button styling
-     ====================================================== */
-  (function(){
-    var A = CFG.adminEdit || {};
-    if(A.enabled === false) return;
-
-    function injectAdminEditStylesOnce(){
-      if(document.getElementById("flash-admin-edit-style")) return;
-
-      var style = document.createElement("style");
-      style.id = "flash-admin-edit-style";
-      style.textContent = ''
-        + '.flash-admin-edit-btn{'
-        + 'display:inline-flex;align-items:center;gap:8px;'
-        + 'padding:8px 10px;border-radius:12px;'
-        + 'background:'+ (A.bg || "rgba(255,255,255,0.08)") +';'
-        + 'border:1px solid '+ (A.border || "rgba(255,255,255,0.18)") +';'
-        + 'color:'+ (A.text || "rgba(255,255,255,0.92)") +';'
-        + 'font-weight:900;font-size:13px;line-height:1;'
-        + 'text-decoration:none;'
-        + '}'
-        + '.flash-admin-edit-btn:hover{background:'+ (A.hoverBg || "rgba(255,255,255,0.12)") +';}';
-      document.head.appendChild(style);
-    }
-
-    function addEditButton(){
-      injectAdminEditStylesOnce();
-
-      var hrefIncludes = String(A.hrefIncludes || "/admin");
-      var label = String(A.label || "Edit");
-
-      var link = document.querySelector('a[href*="' + hrefIncludes.replace(/"/g,'') + '"]');
-      if(!link) return false;
-
-      // Avoid re-adding
-      if(link.classList.contains("flash-admin-edit-btn")) return true;
-
-      link.classList.add("flash-admin-edit-btn");
-      link.textContent = label;
-      return true;
-    }
-
-    function boot(){
-      try{ if(addEditButton()) return true; }catch(_){}
-      return false;
-    }
-
-    // Attempt now + small retries (safe for dynamic content)
-    if(boot()) return;
-    var tries=0, max=20;
-    var t=setInterval(function(){
-      tries++;
-      if(boot() || tries>=max) clearInterval(t);
-    }, 250);
-
-    if(document.readyState === "loading"){
-      document.addEventListener("DOMContentLoaded", function(){ boot(); }, {once:true});
-    }
-  })();
 
   /* ======================================================
      2) Social buttons injection
