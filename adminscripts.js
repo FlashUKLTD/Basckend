@@ -30,14 +30,14 @@
     dock.innerHTML =
       '<div class="fcATfab" aria-label="Open admin tools">' +
         '<div class="fcATfabLeft">' +
-          '<div class="fcATbolt">⚡</div>' +
+          '<div class="fcATbolt">⚙️</div>' +
           '<div class="fcATfabText">' +
-            '<b>Flash Moderation</b>' +
+            '<b>Employee Menu</b>' +
             '<span class="fcATsub">Click to open • Desktop only</span>' +
           '</div>' +
         '</div>' +
         '<div class="fcATfabRight">' +
-          '<span class="fcATpill fcATpath">📍 /</span>' +
+          '<span class="fcATpill fcATpath"> 🔗 /</span>' +
           '<span class="fcATchev">▴</span>' +
         '</div>' +
       '</div>' +
