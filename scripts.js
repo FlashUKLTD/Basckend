@@ -15,36 +15,6 @@
 window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
 
   /* =========================
-     1) ADMIN MANAGE BUTTON
-     ========================= */
-  adminManage: {
-    enabled: true,
-    selector: 'a[href*="/admin/products/"][href$="/edit"]',
-    text: "⚙️ Manage Competition",
-    styles: {
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "0.5rem",
-      fontWeight: "700",
-      background: "linear-gradient(90deg, #8181ec, #4f3ff7)", // blue → purple
-      color: "#ffffff",
-      boxShadow: "0 4px 12px rgba(129, 129, 236, 0.5)",
-      transition: "all 0.3s ease",
-      borderRadius: "0.75rem",
-      padding: "0.5rem 1rem",
-      border: "2px solid #8181ec"
-    },
-    hover: {
-      transform: "scale(1.05)",
-      boxShadow: "0 6px 20px rgba(129, 129, 236, 0.8)"
-    },
-    out: {
-      transform: "scale(1)",
-      boxShadow: "0 4px 12px rgba(129, 129, 236, 0.5)"
-    }
-  },
-
-  /* =========================
      2) LIVE BADGE (Instant Winners nav item)
      ========================= */
   liveBadge: {
@@ -90,8 +60,8 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
      ========================= */
   socials: {
     enabled: true,
-    facebook: "https://www.facebook.com/",
-    instagram: "https://www.instagram.com/flashcompetitionsni",
+    facebook: "https://www.facebook.com/flashcompetitions",
+    instagram: "https://www.instagram.com/flashcompetitionsuk",
 
     /* IMPORTANT: keep socials out of mobile sidebar */
     showOnMobile: true,
@@ -849,6 +819,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
