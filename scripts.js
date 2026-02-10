@@ -18,7 +18,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
      2) LIVE BADGE (Instant Winners nav item)
      ========================= */
   liveBadge: {
-    enabled: false,
+    enabled: true,
     anchorSelector: "#header-instant-list",
     wrapClass: "flash-live-wrap",
     dotClass: "flash-live-dot",
@@ -64,7 +64,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     instagram: "https://www.instagram.com/flashcompetitionsuk",
 
     /* IMPORTANT: keep socials out of mobile sidebar */
-    showOnMobile: true,
+    showOnMobile: false,
 
     desktopTargets: [
       "header nav",
@@ -98,11 +98,11 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     /* Order you want on desktop */
     items: [
       { id:"competitions", type:"dropdown", match:{ idEquals:"categories-header" }, label:"Competitions", enabled:true },
-       { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Entry Lists", enabled:true },
+       { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Ticket Lists", enabled:true },
       { id:"instant", type:"link", match:{ idEquals:"header-instant-list" }, label:"Winners", enabled:true },
       { id:"results", type:"link", match:{ idEquals:"header-results" }, label:"Results", enabled:false },
-      { id:"about", type:"link", match:{ idEquals:"header-about" }, label:"Meet the Team", enabled:true },
-      { id:"account", type:"link", match:{ hrefIncludes:"/account/settings" }, label:"Account", enabled:true }
+      { id:"about", type:"link", match:{ idEquals:"header-about" }, label:"Inside Flash", enabled:true },
+      { id:"account", type:"link", match:{ hrefIncludes:"/account/settings" }, label:"My Profile", enabled:true }
     ]
   },
 
@@ -973,6 +973,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
