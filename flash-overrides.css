@@ -54,11 +54,254 @@
   border-right: 1px solid rgba(139,92,255,.22) !important;
 }
 
+/* ✅ Remove outer circular glow wrapper */
+div.text-gray-50.cursor-pointer.flex.gap-2.items-center.text-sm.md\:text-base.w-2\/12{
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
 
+/* Optional: ensure no pseudo glow */
+div.text-gray-50.cursor-pointer.flex.gap-2.items-center.text-sm.md\:text-base.w-2\/12::before,
+div.text-gray-50.cursor-pointer.flex.gap-2.items-center.text-sm.md\:text-base.w-2\/12::after{
+    display:none !important;
+    content:none !important;
+}
+
+/* URL-based targeting for competition pages */
+body:has(a[href*="/competition/"]) section.splide[aria-labelledby="carousel-heading"]{
+    display:none !important;
+}
+<style id="fc-lists-premium">
+/* =========================================================
+   ⚡ Flash — Ticket Lists Page (Simple Premium)
+   - Injection only
+   - No animations
+   - Mobile-first
+   ========================================================= */
+:root{
+  --fc-bg0:#070815;
+  --fc-bg1:#0B0F22;
+
+  --fc-text: rgba(255,255,255,.92);
+  --fc-dim: rgba(255,255,255,.70);
+  --fc-dimmer: rgba(255,255,255,.55);
+
+  --fc-line: rgba(255,255,255,.10);
+  --fc-line2: rgba(255,255,255,.14);
+
+  --fc-ac1:#8B5CFF;
+  --fc-ac2:#2D7CFF;
+
+  --fc-r1: 14px;
+  --fc-r2: 22px;
+}
+
+/* === REMOVE THE BACKGROUND (keep premium borders/shadows) === */
+.fcLists{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Hero becomes a clean “glass” header without a blocky panel */
+.fcLists .fcLists-hero{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 0 12px !important;
+  margin-bottom: 12px !important;
+}
+
+/* Optional: add a subtle divider line instead of a background panel */
+.fcLists .fcLists-hero{
+  border-bottom: 1px solid rgba(255,255,255,.10) !important;
+}
+
+.fcLists .fcLists-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing:.2px;
+  color: rgba(255,255,255,.72);
+}
+.fcLists .fcLists-kicker::before{
+  content:"";
+  width:10px;height:10px;border-radius:999px;
+  background: linear-gradient(135deg, var(--fc-ac1), var(--fc-ac2));
+  box-shadow: 0 0 18px rgba(139,92,255,.20);
+}
+
+.fcLists .fcLists-title{
+  margin-top: 8px;
+  font-size: 22px;
+  line-height: 1.15;
+  font-weight: 950;
+  letter-spacing:.2px;
+  color: rgba(255,255,255,.96);
+}
+.fcLists .fcLists-title strong{
+  background: linear-gradient(90deg, var(--fc-ac1), var(--fc-ac2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+}
+
+.fcLists .fcLists-sub{
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,.66);
+}
+
+/* ===== Grid spacing polish ===== */
+.fcLists .grid{
+  gap: 12px !important;
+}
+@media (min-width: 640px){
+  .fcLists .grid{ gap: 14px !important; }
+}
+
+/* ===== Cards ===== */
+.fcLists [data-flux-card]{
+  position: relative;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)) !important;
+  box-shadow: 0 16px 52px rgba(0,0,0,.40) !important;
+  overflow:hidden;
+}
+
+/* Remove “hover border pop” noise; keep subtle */
+.fcLists [data-flux-card]:hover{
+  border-color: rgba(139,92,255,.18) !important;
+}
+
+/* Image */
+.fcLists [data-flux-card] img{
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 14px 36px rgba(0,0,0,.45);
+}
+
+/* Title */
+.fcLists [data-flux-heading]{
+  font-weight: 950 !important;
+  letter-spacing: .15px;
+  line-height: 1.15;
+  margin-bottom: 10px !important;
+}
+
+/* Meta grid → turn into pills */
+.fcLists .fcLists-meta{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.fcLists .fcLists-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 850;
+  color: rgba(255,255,255,.86);
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.12);
+}
+.fcLists .fcLists-pill b{
+  font-weight: 950;
+  color: rgba(255,255,255,.92);
+}
+.fcLists .fcLists-pill--price{
+  border-color: rgba(45,124,255,.18);
+  background: rgba(45,124,255,.08);
+}
+.fcLists .fcLists-pill--ends{
+  border-color: rgba(139,92,255,.18);
+  background: rgba(139,92,255,.08);
+}
+
+/* Hide the original small labels (“Price”, “Ends”) to reduce clutter */
+.fcLists [data-flux-subheading]{
+  display:none !important;
+}
+
+/* Mobile tighten */
+@media (max-width: 640px){
+  .fcLists{ padding: 10px; border-radius: 20px; }
+  .fcLists .fcLists-title{ font-size: 20px; }
+}
 
 /*login and signup button*/
 
+/* =========================================
+   FLASH – Glass Mobile Login Button (Icon + Text)
+   ========================================= */
 
+@media (max-width: 1023px){
+
+  /* Hide original login/register */
+  .fc-authwrap > a[href*="/login"]:not(.fc-mobile-account),
+  .fc-authwrap > a[href*="/register"]:not(.fc-mobile-account){
+    display:none !important;
+  }
+
+  /* Glass button */
+  .fc-mobile-account{
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+
+    padding:0 12px;
+    height:38px;
+    border-radius:14px;
+
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.2px;
+    color:#ffffff;
+
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,0.25);
+
+    box-shadow:
+      0 4px 20px rgba(0,0,0,0.4),
+      inset 0 0 0 1px rgba(255,255,255,0.05);
+
+    transition:all .25s ease;
+  }
+
+  .fc-mobile-account:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,0.12);
+    border-color:rgba(255,255,255,0.4);
+  }
+
+  .fc-mobile-account svg{
+    width:16px;
+    height:16px;
+    stroke:#ffffff;
+    opacity:.95;
+  }
+}
+
+/* Hide injected button on desktop */
+@media (min-width:1024px){
+  .fc-mobile-account{
+    display:none !important;
+  }
+}
 
 
 
@@ -5527,6 +5770,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
