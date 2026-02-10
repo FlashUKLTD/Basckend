@@ -73,13 +73,7 @@ div.text-gray-50.cursor-pointer.flex.gap-2.items-center.text-sm.md\:text-base.w-
 body:has(a[href*="/competition/"]) section.splide[aria-labelledby="carousel-heading"]{
     display:none !important;
 }
-<style id="fc-lists-premium">
-/* =========================================================
-   ⚡ Flash — Ticket Lists Page (Simple Premium)
-   - Injection only
-   - No animations
-   - Mobile-first
-   ========================================================= */
+
 :root{
   --fc-bg0:#070815;
   --fc-bg1:#0B0F22;
@@ -5770,6 +5764,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
