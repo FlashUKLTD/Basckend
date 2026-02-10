@@ -101,7 +101,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
        { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Ticket Lists", enabled:true },
       { id:"instant", type:"link", match:{ idEquals:"header-instant-list" }, label:"Winners", enabled:true },
       { id:"results", type:"link", match:{ idEquals:"header-results" }, label:"Results", enabled:false },
-      { id:"about", type:"link", match:{ idEquals:"header-about" }, label:"", enabled:true },
+      { id:"about", type:"link", match:{ idEquals:"header-about" }, label:"INSIDE", enabled:true },
       { id:"account", type:"link", match:{ hrefIncludes:"/account/settings" }, label:"My Profile", enabled:true }
     ]
   },
@@ -973,6 +973,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
