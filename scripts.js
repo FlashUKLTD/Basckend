@@ -148,7 +148,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "competitions_dropdown",
         type: "dropdown",
         match: { idEquals: "categories-header" },
-        label: "Competitions",
+        label: "All Competitions",
         enabled: true,
         icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9a2 2 0 0 0 0 6v4h16v-4a2 2 0 0 0 0-6V5H4z"/><path d="M9 8v8"/><path d="M12 8v8"/></svg>'
       },
@@ -179,7 +179,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "entrylists",
         type: "link",
         match: { idEquals: "header-entry-list" },
-        label: "Entry Lists",
+        label: "Participant Lists",
         enabled: true,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
@@ -190,7 +190,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "about",
         type: "link",
         match: { idEquals: "header-about" },
-        label: "The Team",
+        label: "Our Story",
         enabled: true,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
@@ -205,7 +205,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "account",
         type: "link",
         match: { hrefIncludes: "/account/settings" },
-        label: "My Account",
+        label: "Account Centre",
         enabled: true,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
@@ -973,6 +973,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
