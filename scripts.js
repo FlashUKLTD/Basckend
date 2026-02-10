@@ -18,7 +18,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
      2) LIVE BADGE (Instant Winners nav item)
      ========================= */
   liveBadge: {
-    enabled: true,
+    enabled: false,
     anchorSelector: "#header-instant-list",
     wrapClass: "flash-live-wrap",
     dotClass: "flash-live-dot",
@@ -973,6 +973,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
