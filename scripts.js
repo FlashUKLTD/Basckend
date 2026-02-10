@@ -409,8 +409,12 @@ document.addEventListener("DOMContentLoaded", function() {
 /*SCRIPTS*/
 
 
-<script id="fc-lists-premium-js">
+/* =========================================================
+   FLASH – Lists Page Enhancement
+   ========================================================= */
+
 (function(){
+
   function esc(s){
     return String(s||"")
       .replace(/&/g,'&amp;')
@@ -420,116 +424,95 @@ document.addEventListener("DOMContentLoaded", function() {
       .replace(/'/g,'&#39;');
   }
 
-  function initOne(root){
-    if(!root || root.dataset.fcListsInit === "1") return;
-    root.dataset.fcListsInit = "1";
+  function initLists(){
+    var nodes = document.querySelectorAll('[wire\\:snapshot*="tenant.page.lists"]');
 
-    // main container
-    var container = root.querySelector('.max-w-7xl');
-    if(!container) return;
+    nodes.forEach(function(root){
+      if(root.dataset.fcListsInit === "1") return;
+      root.dataset.fcListsInit = "1";
 
-    // wrap page
-    var shell = document.createElement('div');
-    shell.className = 'fcLists';
+      var container = root.querySelector('.max-w-7xl');
+      if(!container) return;
 
-    // rebuild hero from existing header
-    var heroSrc = container.querySelector('.max-w-2xl.text-center');
-    var hero = null;
-    if(heroSrc){
-      var kicker = "Live";
-      var title = "Ticket Lists";
-      var sub = "";
+      var cards = container.querySelectorAll('[data-flux-card]');
+      cards.forEach(function(card){
+        if(card.dataset.fcCardMeta === "1") return;
+        card.dataset.fcCardMeta = "1";
 
-      var p = heroSrc.querySelector('p');
-      if(p && p.textContent) kicker = p.textContent.trim();
+        var metaGrid = card.querySelector('.grid.grid-cols-2.gap-3');
+        if(!metaGrid) return;
 
-      var h1 = heroSrc.querySelector('h1');
-      if(h1 && h1.textContent) title = h1.textContent.trim();
+        var priceVal = "";
+        var endsVal = "";
 
-      var ps = heroSrc.querySelectorAll('p');
-      if(ps && ps.length > 1 && ps[1].textContent) sub = ps[1].textContent.trim();
-
-      hero = document.createElement('div');
-      hero.className = 'fcLists-hero';
-      hero.innerHTML =
-        '<div class="fcLists-kicker">'+esc(kicker)+'</div>' +
-        '<div class="fcLists-title"><strong>'+esc(title)+'</strong></div>' +
-        (sub ? '<div class="fcLists-sub">'+esc(sub)+'</div>' : '');
-
-      // hide original to avoid duplicate
-      heroSrc.style.display = 'none';
-    }
-
-    // insert shell before container and move container inside (safe with Livewire)
-    container.parentNode.insertBefore(shell, container);
-    shell.appendChild(container);
-
-    // insert hero at top (inside container area so spacing matches)
-    if(hero){
-      // place hero just after the padding section that contains heroSrc
-      // safer: insert at the top of container
-      container.insertBefore(hero, container.firstChild);
-    }
-
-    // Convert each card "Price/Ends" block into clean pills
-    var cards = container.querySelectorAll('[data-flux-card]');
-    for(var i=0;i<cards.length;i++){
-      var card = cards[i];
-      if(card.dataset.fcCardMeta === "1") continue;
-      card.dataset.fcCardMeta = "1";
-
-      // Find the little 2-col grid that contains Price and Ends values
-      var metaGrid = card.querySelector('.grid.grid-cols-2.gap-3');
-      if(!metaGrid) continue;
-
-      // Extract values
-      var priceVal = "";
-      var endsVal = "";
-
-      // Price = first block's <p>
-      var blocks = metaGrid.querySelectorAll(':scope > div');
-      if(blocks && blocks.length){
+        var blocks = metaGrid.querySelectorAll(':scope > div');
         if(blocks[0]){
           var p1 = blocks[0].querySelector('p');
-          if(p1 && p1.textContent) priceVal = p1.textContent.trim();
+          if(p1) priceVal = p1.textContent.trim();
         }
         if(blocks[1]){
           var p2 = blocks[1].querySelector('p');
-          if(p2 && p2.textContent) endsVal = p2.textContent.trim();
+          if(p2) endsVal = p2.textContent.trim();
         }
-      }
 
-      // Replace metaGrid content with pills (keep same node to avoid layout issues)
-      metaGrid.classList.remove('grid','grid-cols-2','gap-3');
-      metaGrid.classList.add('fcLists-meta');
-
-      metaGrid.innerHTML =
-        '<span class="fcLists-pill fcLists-pill--price"><b>Price</b> '+esc(priceVal)+'</span>' +
-        '<span class="fcLists-pill fcLists-pill--ends"><b>Ends</b> '+esc(endsVal)+'</span>';
-    }
+        metaGrid.className = "fcLists-meta";
+        metaGrid.innerHTML =
+          '<span class="fcLists-pill fcLists-pill--price"><b>Price</b> '+esc(priceVal)+'</span>' +
+          '<span class="fcLists-pill fcLists-pill--ends"><b>Ends</b> '+esc(endsVal)+'</span>';
+      });
+    });
   }
 
-  function initAll(){
-    // Target livewire component by name in snapshot
-    var nodes = document.querySelectorAll('[wire\\:snapshot*="tenant.page.lists"]');
-    for(var i=0;i<nodes.length;i++) initOne(nodes[i]);
-  }
-
-  initAll();
-
-  // dynamic-load safety
-  var obs = new MutationObserver(function(){ initAll(); });
+  initLists();
+  const obs = new MutationObserver(initLists);
   obs.observe(document.documentElement, { childList:true, subtree:true });
 
-  // stop after settle
-  var stable = 0;
-  var t = setInterval(function(){
-    stable++;
-    if(stable >= 10){
-      clearInterval(t);
-      obs.disconnect();
-    }
-  }, 500);
+})();
+
+/* =========================================================
+   FLASH – Inject Mobile Glass Login Button
+   ========================================================= */
+
+(function(){
+
+  const LOGIN_URL = "https://flashcompetitions.com/login";
+
+  function injectButton(){
+
+    const wrap = document.querySelector(
+      'div.flex.flex-1.items-center.justify-end.gap-x-1.border.lg\\:ml-12.px-1.py-1.rounded-xl.border-slate-500\\/50'
+    );
+
+    if(!wrap) return;
+
+    wrap.classList.add("fc-authwrap");
+
+    if(wrap.querySelector(".fc-mobile-account")) return;
+
+    const btn = document.createElement("a");
+    btn.href = LOGIN_URL;
+    btn.className = "fc-mobile-account";
+    btn.setAttribute("aria-label","Login");
+
+    btn.innerHTML = `
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M4 20a8 8 0 0116 0" />
+      </svg>
+      <span>Login</span>
+    `;
+
+    wrap.appendChild(btn);
+  }
+
+  injectButton();
+  document.addEventListener("DOMContentLoaded", injectButton);
+
+  const observer = new MutationObserver(injectButton);
+  observer.observe(document.documentElement, { childList:true, subtree:true });
+
 })();
 
 (() => {
@@ -990,6 +973,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
