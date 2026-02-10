@@ -168,7 +168,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "instant",
         type: "link",
         match: { idEquals: "header-instant-list" },
-        label: "Instant Winners",
+        label: "Live Winners",
         enabled: true,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
@@ -190,7 +190,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "about",
         type: "link",
         match: { idEquals: "header-about" },
-        label: "Our Story",
+        label: "Inside Flash",
         enabled: true,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
@@ -205,7 +205,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "account",
         type: "link",
         match: { hrefIncludes: "/account/settings" },
-        label: "Account Centre",
+        label: "My Profile",
         enabled: true,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
@@ -973,6 +973,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
