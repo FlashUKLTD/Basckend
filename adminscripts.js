@@ -5,7 +5,10 @@
   window.FLASH_EMPLOYEE_MENU = window.FLASH_EMPLOYEE_MENU || {
     desktopMin: 901,
 
-    /* default open links in new tab */
+    /* Admin bar OFF automatically by default */
+    hideAdminBarByDefault: true,
+
+    /* Open links in new tab by default */
     defaultNewTab: true,
 
     employeeLinks: [
@@ -20,41 +23,42 @@
       { title:"Draw Number Tool", desc:"Public draw tool", ico:"🎲", url:"https://flashcompetitions.com/i/draw-number" },
       { title:"Admin Dashboard",  desc:"Admin home",      ico:"🛠️", url:"https://flashcompetitions.com/admin" },
       { title:"Manage Comps",     desc:"Products",        ico:"🏁", url:"https://flashcompetitions.com/admin/products" },
+      { title:"Instant Winners",  desc:"Prize list",      ico:"🎁", url:"https://flashcompetitions.com/admin/instant-winners" },
       { title:"Orders",           desc:"Sales",           ico:"🧾", url:"https://flashcompetitions.com/admin/orders" },
       { title:"Coupons",          desc:"Discount codes",  ico:"🏷️", url:"https://flashcompetitions.com/admin/coupons" }
     ],
 
     adminGroups: [
-      { title:"Competitions", ico:"🏁", links:[
+      { title:"Competitions", pill:"Core", links:[
         ["Competitions", "/admin/products", "Manage comps", "🏁"],
-        ["Instant Winners", "/admin/instant-winners", "IW prizes", "🎁"],
+        ["Categories", "/admin/product-categories", "Organise drops", "🗂️"],
         ["Winners", "/admin/winners", "Results log", "🏆"],
         ["Draw Number Tool", "https://flashcompetitions.com/i/draw-number", "Public draw tool", "🎲"]
       ]},
-      { title:"Sales", ico:"🛒", links:[
+      { title:"Sales", pill:"Revenue", links:[
         ["Orders", "/admin/orders", "Sales & fulfilment", "🧾"],
         ["Coupons", "/admin/coupons", "Discount codes", "🏷️"]
       ]},
-      { title:"Users", ico:"👥", links:[
-        ["Users", "/admin/users", "Accounts", "👤"]
+      { title:"Users", pill:"Accounts", links:[
+        ["Users", "/admin/users", "Accounts & access", "👤"]
       ]},
-      { title:"Settings", ico:"⚙️", links:[
+      { title:"Settings", pill:"Site", links:[
         ["Branding", "/admin/settings/branding-settings", "Logos & style", "🎨"],
-        ["Checkout", "/admin/settings/checkout-settings", "Payments", "🧾"],
+        ["Checkout", "/admin/settings/checkout-settings", "Payments & flow", "🧾"],
         ["Marketing", "/admin/settings/marketing-settings", "Promos", "📣"],
-        ["SEO", "/admin/settings/seo-settings", "Search", "🔎"]
+        ["SEO", "/admin/settings/seo-settings", "Search settings", "🔎"]
       ]}
     ]
   };
 
   var CFG = window.FLASH_EMPLOYEE_MENU;
 
-  var KEY_OPEN = "fcM_open_v1";
-  var KEY_TAB = "fcM_tab_v1";
-  var KEY_NEW_TAB = "fcM_newtab_v1";
-  var KEY_HIDE_RAFFLEX = "fcM_hidebar_v1";
-  var KEY_PINS = "fcM_pins_v1";
-  var KEY_RECENTS = "fcM_recents_v1";
+  var KEY_OPEN = "fcE_open_v2";
+  var KEY_TAB = "fcE_tab_v2";
+  var KEY_NEW_TAB = "fcE_newtab_v2";
+  var KEY_HIDE_BAR = "fcE_hidebar_v2";
+  var KEY_PINS = "fcE_pins_v2";
+  var KEY_RECENTS = "fcE_recents_v2";
 
   var RAFFLEX_BAR_SELECTOR = 'div[wire\\:id][class*="bg-zinc-900"][class*="border-b"]';
 
@@ -74,7 +78,7 @@
     try{ lsSet(key, JSON.stringify(obj)); }catch(_){}
   }
 
-  function hideRafflexBar(shouldHide){
+  function hideAdminBar(shouldHide){
     var bars = qsa(RAFFLEX_BAR_SELECTOR);
     for(var i=0;i<bars.length;i++){
       bars[i].style.display = shouldHide ? "none" : "";
@@ -96,10 +100,17 @@
     return v === "1";
   }
 
+  function ensureHideBarDefault(){
+    var v = lsGet(KEY_HIDE_BAR);
+    if(v === null){
+      lsSet(KEY_HIDE_BAR, (CFG.hideAdminBarByDefault ? "1":"0"));
+    }
+  }
+
   function getPins(){ return readJSON(KEY_PINS, []); }
   function setPins(a){ writeJSON(KEY_PINS, (a||[]).slice(0,20)); }
   function getRecents(){ return readJSON(KEY_RECENTS, []); }
-  function setRecents(a){ writeJSON(KEY_RECENTS, (a||[]).slice(0,8)); }
+  function setRecents(a){ writeJSON(KEY_RECENTS, (a||[]).slice(0,10)); }
 
   function pushRecent(item){
     var r = getRecents();
@@ -121,454 +132,511 @@
 
   function getAllLinksFlat(){
     var out = [];
-
     (CFG.flashTools||[]).forEach(function(it){ out.push(it); });
     (CFG.employeeLinks||[]).forEach(function(it){ out.push(it); });
-
     (CFG.adminGroups||[]).forEach(function(g){
       (g.links||[]).forEach(function(L){
         out.push({ title:L[0], desc:L[2], ico:(L[3]||"🔗"), url:absUrl(L[1]) });
       });
     });
-
     return out;
   }
 
+  function getTab(){ return lsGet(KEY_TAB) || "quick"; }
+  function setTab(t){ lsSet(KEY_TAB, t); }
+
   function build(){
-    if(qs(".fcM")) return;
+    if(qs(".fcE")) return;
 
     var root = document.createElement("div");
-    root.className = "fcM";
+    root.className = "fcE";
     root.innerHTML =
-      '<div class="fcM-launch" title="Employee Menu">⚙️</div>' +
+      '<div class="fcE-fab" aria-label="Open employee menu" title="Employee Menu">' +
+        '<div class="fcE-fabIcon">⚙️</div>' +
+      '</div>' +
 
-      '<div class="fcM-panel" role="dialog" aria-label="Employee Menu">' +
-        '<div class="fcM-head">' +
-          '<div class="fcM-brand">' +
-            '<div class="fcM-avatar">⚙️</div>' +
-            '<div class="fcM-title"><b>Employee Menu</b><span id="fcM-path">/</span></div>' +
+      '<div class="fcE-panelWrap" role="dialog" aria-label="Employee Menu">' +
+        '<div class="fcE-head">' +
+          '<div class="fcE-headL">' +
+            '<div class="fcE-badge">⚙️</div>' +
+            '<div class="fcE-title"><b>Employee Menu</b><span id="fcE-path">/</span></div>' +
           '</div>' +
-          '<button class="fcM-close" type="button" aria-label="Close">×</button>' +
-        '</div>' +
-
-        '<div class="fcM-searchWrap">' +
-          '<div class="fcM-search">' +
-            '<i>🔎</i>' +
-            '<input class="fcM-input" type="text" placeholder="Keyword">' +
+          '<div class="fcE-headR">' +
+            '<span class="fcE-chip" id="fcE-chipTab">Quick</span>' +
+            '<button class="fcE-close" type="button" aria-label="Close">×</button>' +
           '</div>' +
         '</div>' +
 
-        '<div class="fcM-body">' +
-          '<div class="fcM-nav">' +
-            '<div class="fcM-sectionLabel">Overview</div>' +
-            '<div class="fcM-item" data-tab="quick"><div class="fcM-left"><div class="fcM-ico">✨</div><div class="fcM-texts"><b>Quick</b><span>Pins + recents</span></div></div></div>' +
-            '<div class="fcM-item" data-tab="employee"><div class="fcM-left"><div class="fcM-ico">👔</div><div class="fcM-texts"><b>Employee</b><span>Outlook, Teams…</span></div></div></div>' +
-            '<div class="fcM-item" data-tab="admin"><div class="fcM-left"><div class="fcM-ico">🧭</div><div class="fcM-texts"><b>Admin</b><span>Shortcuts</span></div></div></div>' +
-            '<div class="fcM-item" data-tab="competition"><div class="fcM-left"><div class="fcM-ico">🏁</div><div class="fcM-texts"><b>Competition</b><span>Tools</span></div></div></div>' +
-            '<div class="fcM-item" data-tab="prefs"><div class="fcM-left"><div class="fcM-ico">⚙️</div><div class="fcM-texts"><b>Settings</b><span>Menu prefs</span></div></div></div>' +
+        '<div class="fcE-searchWrap">' +
+          '<div class="fcE-search"><i>🔎</i><input class="fcE-input" type="text" placeholder="Search links, tools, pages…"></div>' +
+        '</div>' +
 
-            '<div class="fcM-content" id="fcM-content"></div>' +
-          '</div>' +
+        '<div class="fcE-tabs">' +
+          '<div class="fcE-tab" data-tab="quick"><span class="dot"></span> Quick</div>' +
+          '<div class="fcE-tab" data-tab="employee"><span class="dot"></span> Employee</div>' +
+          '<div class="fcE-tab" data-tab="admin"><span class="dot"></span> Admin</div>' +
+          '<div class="fcE-tab" data-tab="competition"><span class="dot"></span> Competition</div>' +
+          '<div class="fcE-tab" data-tab="prefs"><span class="dot"></span> Settings</div>' +
+        '</div>' +
+
+        '<div class="fcE-body" id="fcE-body"></div>' +
+
+        '<div class="fcE-foot">' +
+          '<div class="k">Open <span class="fcE-kbd">Enter</span> • Close <span class="fcE-kbd">Esc</span></div>' +
+          '<div class="k">New tab: <span class="fcE-kbd" id="fcE-newtabKbd">ON</span></div>' +
         '</div>' +
       '</div>';
 
     document.body.appendChild(root);
 
-    var launch = qs(".fcM-launch", root);
-    var panel = qs(".fcM-panel", root);
-    var close = qs(".fcM-close", root);
-    var input = qs(".fcM-input", root);
+    root.__fab = qs(".fcE-fab", root);
+    root.__wrap = qs(".fcE-panelWrap", root);
+    root.__close = qs(".fcE-close", root);
+    root.__input = qs(".fcE-input", root);
+    root.__body = qs("#fcE-body", root);
+    root.__chip = qs("#fcE-chipTab", root);
+    root.__path = qs("#fcE-path", root);
+    root.__newtab = qs("#fcE-newtabKbd", root);
 
-    function setPath(){
-      var p = qs("#fcM-path", root);
-      if(p) p.textContent = location.pathname || "/";
+    // Restore open state
+    var open = lsGet(KEY_OPEN) === "1";
+    if(root.__wrap) root.__wrap.classList.toggle("is-open", open);
+
+    // Click handlers
+    if(root.__fab){
+      root.__fab.addEventListener("click", function(){
+        var nowOpen = !(root.__wrap && root.__wrap.classList.contains("is-open"));
+        if(root.__wrap) root.__wrap.classList.toggle("is-open", nowOpen);
+        lsSet(KEY_OPEN, nowOpen ? "1":"0");
+        if(nowOpen){
+          render();
+          try{ root.__input && root.__input.focus(); }catch(_){}
+        }
+      });
+    }
+    if(root.__close){
+      root.__close.addEventListener("click", function(){
+        if(root.__wrap) root.__wrap.classList.remove("is-open");
+        lsSet(KEY_OPEN, "0");
+      });
     }
 
-    function setOpen(open){
-      if(panel) panel.classList.toggle("is-open", open);
-      lsSet(KEY_OPEN, open ? "1":"0");
+    // Tabs
+    var tabs = qsa(".fcE-tab[data-tab]", root);
+    for(var i=0;i<tabs.length;i++){
+      tabs[i].addEventListener("click", function(){
+        setTab(this.getAttribute("data-tab"));
+        render();
+      });
     }
 
-    function getTab(){ return lsGet(KEY_TAB) || "quick"; }
-    function setTab(t){
-      lsSet(KEY_TAB, t);
-      var items = qsa(".fcM-item[data-tab]", root);
-      for(var i=0;i<items.length;i++){
-        items[i].classList.toggle("is-active", items[i].getAttribute("data-tab") === t);
+    // Search
+    if(root.__input){
+      root.__input.addEventListener("input", function(){ render(); });
+      root.__input.addEventListener("keydown", function(e){
+        if(e.key === "Escape"){
+          if(root.__wrap) root.__wrap.classList.remove("is-open");
+          lsSet(KEY_OPEN, "0");
+        }
+      });
+    }
+
+    // Global esc to close
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){
+        var r = qs(".fcE");
+        if(!r) return;
+        var w = qs(".fcE-panelWrap", r);
+        if(w && w.classList.contains("is-open")){
+          w.classList.remove("is-open");
+          lsSet(KEY_OPEN, "0");
+        }
       }
-      render();
-    }
+    });
 
-    function linkRow(it, pinned){
-      var pin = pinned ? "📌" : "＋";
-      var pinTitle = pinned ? "Unpin" : "Pin";
+    // Render now
+    render();
+  }
+
+  function setActiveTabUI(root, tab){
+    var tabs = qsa(".fcE-tab[data-tab]", root);
+    for(var i=0;i<tabs.length;i++){
+      tabs[i].classList.toggle("is-on", tabs[i].getAttribute("data-tab") === tab);
+    }
+    if(root.__chip) root.__chip.textContent =
+      tab === "quick" ? "Quick" :
+      tab === "employee" ? "Employee" :
+      tab === "admin" ? "Admin" :
+      tab === "competition" ? "Competition" : "Settings";
+  }
+
+  function rowHTML(it, pinned){
+    var pinOn = pinned ? "is-on" : "";
+    var pinText = pinned ? "📌" : "＋";
+    return '' +
+      '<div class="fcE-row" data-open="'+encodeURIComponent(it.url||"")+'" data-title="'+encodeURIComponent(it.title||"Link")+'">' +
+        '<div class="fcE-rowL">' +
+          '<div class="fcE-ico">'+(it.ico||"🔗")+'</div>' +
+          '<div class="fcE-texts"><b>'+ (it.title||"Link") +'</b><span>'+ (it.desc||"") +'</span></div>' +
+        '</div>' +
+        '<div class="fcE-actions">' +
+          '<div class="fcE-pin '+pinOn+'" data-pin="'+encodeURIComponent(it.url||"")+'" title="Pin">'+pinText+'</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function render(){
+    var root = qs(".fcE");
+    if(!root) return;
+
+    // Path
+    if(root.__path) root.__path.textContent = location.pathname || "/";
+
+    // New tab label
+    if(root.__newtab) root.__newtab.textContent = getNewTab() ? "ON" : "OFF";
+
+    var tab = getTab();
+    setActiveTabUI(root, tab);
+
+    var q = norm((root.__input && root.__input.value) || "");
+    var pins = getPins();
+
+    var html = "";
+
+    function card(title, pill, inner){
       return '' +
-        '<div class="fcM-item" data-open="'+encodeURIComponent(it.url||"")+'" data-title="'+encodeURIComponent(it.title||"Link")+'">' +
-          '<div class="fcM-left">' +
-            '<div class="fcM-ico">'+(it.ico||"🔗")+'</div>' +
-            '<div class="fcM-texts"><b>'+ (it.title||"Link") +'</b><span>'+ (it.desc||"") +'</span></div>' +
-          '</div>' +
-          '<div class="fcM-pill" data-pin="'+encodeURIComponent(it.url||"")+'" title="'+pinTitle+'">'+pin+'</div>' +
+        '<div class="fcE-card">' +
+          '<div class="fcE-cardHead"><b>'+title+'</b><span>'+pill+'</span></div>' +
+          inner +
         '</div>';
     }
 
-    function renderQuick(q){
-      var pins = getPins();
-      var rec = getRecents();
+    // QUICK
+    if(tab === "quick"){
       var all = getAllLinksFlat();
-
-      // pinned objects
       var pinnedItems = [];
-      for(var i=0;i<pins.length;i++){
+      var pinsArr = getPins();
+
+      for(var i=0;i<pinsArr.length;i++){
         for(var j=0;j<all.length;j++){
-          if(all[j].url === pins[i]) { pinnedItems.push(all[j]); break; }
+          if(all[j].url === pinsArr[i]) { pinnedItems.push(all[j]); break; }
         }
       }
 
-      var out = '';
-      out += '<div class="fcM-card"><div class="fcM-cardTitle">Pinned</div>';
-      if(!pinnedItems.length) out += '<div class="fcM-muted">Pin links to keep them here.</div>';
-      pinnedItems.filter(function(it){ return matches(it,q); }).forEach(function(it){
-        out += linkRow(it, true);
-      });
-      out += '</div>';
+      var rec = getRecents();
 
-      out += '<div class="fcM-card"><div class="fcM-cardTitle">Recents</div>';
-      if(!rec.length) out += '<div class="fcM-muted">Links you open will show here.</div>';
-      rec.filter(function(it){ return matches(it,q); }).forEach(function(it){
-        out += linkRow({ title:it.title, desc:it.url.replace(/^https?:\/\/(www\.)?/,""), ico:"🕘", url:it.url }, pins.indexOf(it.url)!==-1);
-      });
-      out += '</div>';
+      var pinInner = "";
+      if(!pinnedItems.length){
+        pinInner = '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">Pin your key links and they’ll appear here.</div>';
+      }else{
+        pinnedItems.filter(function(it){ return matches(it,q); }).forEach(function(it){
+          pinInner += rowHTML(it, true);
+        });
+      }
 
-      out += '<div class="fcM-card"><div class="fcM-cardTitle">Flash Tools</div>';
+      var recInner = "";
+      if(!rec.length){
+        recInner = '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">Links you open will show here.</div>';
+      }else{
+        rec.filter(function(it){ return matches(it,q); }).forEach(function(it){
+          var it2 = { title: it.title, desc: it.url.replace(/^https?:\/\/(www\.)?/,""), ico:"🕘", url: it.url };
+          recInner += rowHTML(it2, pins.indexOf(it2.url)!==-1);
+        });
+      }
+
+      var toolsInner = "";
       (CFG.flashTools||[]).filter(function(it){ return matches(it,q); }).forEach(function(it){
-        out += linkRow(it, pins.indexOf(it.url)!==-1);
+        toolsInner += rowHTML(it, pins.indexOf(it.url)!==-1);
       });
-      out += '</div>';
 
-      return out;
+      html += card("Pinned", (pinnedItems.length ? (pinnedItems.length+"") : "0"), pinInner);
+      html += card("Recents", (rec.length ? (rec.length+"") : "0"), recInner);
+      html += card("Flash Tools", "Fast", toolsInner || '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px;">No matches.</div>');
     }
 
-    function renderEmployee(q){
-      var pins = getPins();
-      var out = '<div class="fcM-card"><div class="fcM-cardTitle">Employee Links</div>';
+    // EMPLOYEE
+    if(tab === "employee"){
+      var empInner = "";
       (CFG.employeeLinks||[]).filter(function(it){ return matches(it,q); }).forEach(function(it){
-        out += linkRow(it, pins.indexOf(it.url)!==-1);
+        empInner += rowHTML(it, pins.indexOf(it.url)!==-1);
       });
-      out += '</div>';
-      return out;
+      html += card("Employee Links", "Work", empInner || '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px;">No matches.</div>');
     }
 
-    function renderAdmin(q){
-      var pins = getPins();
-      var out = '';
+    // ADMIN
+    if(tab === "admin"){
       (CFG.adminGroups||[]).forEach(function(g){
-        var rows = '';
+        var inner = "";
         (g.links||[]).forEach(function(L){
           var it = { title:L[0], desc:L[2], ico:(L[3]||"🔗"), url:absUrl(L[1]) };
-          if(matches(it,q)) rows += linkRow(it, pins.indexOf(it.url)!==-1);
+          if(matches(it,q)) inner += rowHTML(it, pins.indexOf(it.url)!==-1);
         });
-        if(rows){
-          out += '<div class="fcM-card"><div class="fcM-cardTitle">'+(g.ico||"🧭")+' '+g.title+'</div>' + rows + '</div>';
+        if(inner){
+          html += card(g.title, (g.pill||"Group"), inner);
         }
       });
-      if(!out) out = '<div class="fcM-card"><div class="fcM-muted">No matches.</div></div>';
-      return out;
+      if(!html){
+        html = card("Admin", "Empty", '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px;">No matches.</div>');
+      }
     }
 
-    function renderPrefs(){
-      var hide = (lsGet(KEY_HIDE_RAFFLEX) === "1");
+    // COMPETITION
+    if(tab === "competition"){
+      if(!isCompetitionPage()){
+        html += card("Competition Tools", "/competition/*", '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">Open a competition page to use quick copy + notes.</div>');
+      }else{
+        html += card("Quick Copy", "One click",
+          '<div class="fcE-btnRow">' +
+            '<button class="fcE-btn" type="button" data-cc="url">Copy URL</button>' +
+            '<button class="fcE-btn" type="button" data-cc="title">Copy Title</button>' +
+          '</div>' +
+          '<div class="fcE-btnRow" style="margin-top:8px;">' +
+            '<button class="fcE-btn" type="button" data-cc="promo">Copy Promo</button>' +
+            '<button class="fcE-btn" type="button" data-cc="utm">Copy UTM URL</button>' +
+          '</div>' +
+          '<div class="fcE-toast" id="fcE-cc-toast">Ready.</div>'
+        );
+
+        html += card("Notes", "Saved",
+          '<textarea class="fcE-ta" id="fcE-notes" placeholder="Notes for this competition…"></textarea>' +
+          '<div class="fcE-btnRow" style="margin-top:8px;">' +
+            '<button class="fcE-btn" type="button" data-notes="copy">Copy</button>' +
+            '<button class="fcE-btn" type="button" data-notes="clear">Clear</button>' +
+          '</div>' +
+          '<div class="fcE-toast" id="fcE-notes-toast">Saved.</div>'
+        );
+      }
+    }
+
+    // SETTINGS
+    if(tab === "prefs"){
+      var hide = (lsGet(KEY_HIDE_BAR) === "1");
       var nt = getNewTab();
 
-      return '' +
-        '<div class="fcM-card">' +
-          '<div class="fcM-cardTitle">Preferences</div>' +
-          '<div class="fcM-btnRow">' +
-            '<button class="fcM-btn" type="button" data-pref="newtab">'+(nt ? "New Tab: ON" : "New Tab: OFF")+'</button>' +
-            '<button class="fcM-btn" type="button" data-pref="hidebar">'+(hide ? "Admin Bar: Hidden" : "Admin Bar: Shown")+'</button>' +
-          '</div>' +
-          '<div class="fcM-btnRow" style="margin-top:8px;">' +
-            '<button class="fcM-btn" type="button" data-pref="clearPins">Clear Pins</button>' +
-            '<button class="fcM-btn" type="button" data-pref="reset">Reset Menu</button>' +
-          '</div>' +
-          '<div class="fcM-toast" id="fcM-toast">Ready.</div>' +
-        '</div>';
-    }
-
-    function renderCompetition(q){
-      if(!isCompetitionPage()){
-        return '<div class="fcM-card"><div class="fcM-cardTitle">Competition Tools</div><div class="fcM-muted">Open a /competition/* page to use tools.</div></div>';
-      }
-
-      // minimal set: Copy URL / Copy Title / Copy Promo + Notes
-      return '' +
-        '<div class="fcM-card">' +
-          '<div class="fcM-cardTitle">Quick Copy</div>' +
-          '<div class="fcM-btnRow">' +
-            '<button class="fcM-btn" type="button" data-cc="url">Copy URL</button>' +
-            '<button class="fcM-btn" type="button" data-cc="title">Copy Title</button>' +
-          '</div>' +
-          '<div class="fcM-btnRow" style="margin-top:8px;">' +
-            '<button class="fcM-btn" type="button" data-cc="promo">Copy Promo</button>' +
-            '<button class="fcM-btn" type="button" data-cc="utm">Copy UTM URL</button>' +
-          '</div>' +
-          '<div class="fcM-toast" id="fcM-cc-toast">Ready.</div>' +
+      html += card("Preferences", "Saved",
+        '<div class="fcE-btnRow">' +
+          '<button class="fcE-btn" type="button" data-pref="newtab">'+(nt ? "New Tab: ON" : "New Tab: OFF")+'</button>' +
+          '<button class="fcE-btn" type="button" data-pref="hidebar">'+(hide ? "Admin Bar: Hidden" : "Admin Bar: Shown")+'</button>' +
         '</div>' +
-
-        '<div class="fcM-card">' +
-          '<div class="fcM-cardTitle">Notes</div>' +
-          '<textarea class="fcM-ta" id="fcM-notes" placeholder="Notes for this competition…"></textarea>' +
-          '<div class="fcM-btnRow" style="margin-top:8px;">' +
-            '<button class="fcM-btn" type="button" data-notes="copy">Copy</button>' +
-            '<button class="fcM-btn" type="button" data-notes="clear">Clear</button>' +
-          '</div>' +
-          '<div class="fcM-toast" id="fcM-notes-toast">Saved.</div>' +
-        '</div>';
+        '<div class="fcE-btnRow" style="margin-top:8px;">' +
+          '<button class="fcE-btn" type="button" data-pref="clearPins">Clear Pins</button>' +
+          '<button class="fcE-btn" type="button" data-pref="reset">Reset Menu</button>' +
+        '</div>' +
+        '<div class="fcE-toast" id="fcE-pref-toast">Ready.</div>'
+      );
     }
 
-    function render(){
-      setPath();
+    if(root.__body) root.__body.innerHTML = html || "";
 
-      var tab = getTab();
-      var q = norm((input && input.value) || "");
+    wire(root);
+  }
 
-      var content = qs("#fcM-content", root);
-      if(!content) return;
+  function copyToClipboard(text, cb){
+    function done(ok){ if(cb) cb(ok); }
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ fallback(text, done); });
+        return;
+      }
+    }catch(_){}
+    fallback(text, done);
+  }
+  function fallback(text, done){
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    ta.style.top = "-9999px";
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try{ document.execCommand("copy"); document.body.removeChild(ta); done(true); }
+    catch(e){ document.body.removeChild(ta); done(false); }
+  }
 
-      if(tab === "quick") content.innerHTML = renderQuick(q);
-      else if(tab === "employee") content.innerHTML = renderEmployee(q);
-      else if(tab === "admin") content.innerHTML = renderAdmin(q);
-      else if(tab === "competition") content.innerHTML = renderCompetition(q);
-      else content.innerHTML = renderPrefs();
+  function getCompTitle(){
+    var h = document.querySelector("h1") || document.querySelector('[data-testid="competition-title"]') || document.querySelector(".competition-title");
+    if(h && h.textContent) return h.textContent.trim();
+    var t = document.title || "";
+    return (t || "").replace(/\s+\|\s+.*$/,"").trim();
+  }
+  function buildUtmUrl(base){
+    var u = base || location.href;
+    var sep = u.indexOf("?") === -1 ? "?" : "&";
+    return u + sep + "utm_source=instagram&utm_medium=social&utm_campaign=competition";
+  }
+  function slugFromPath(){
+    var p = location.pathname || "";
+    var parts = p.split("/").filter(Boolean);
+    return parts.length ? parts[parts.length-1] : "";
+  }
 
-      wire();
+  function wire(root){
+    // Open links
+    var rows = qsa(".fcE-row[data-open]", root);
+    for(var i=0;i<rows.length;i++){
+      rows[i].addEventListener("click", function(e){
+        var target = e.target || null;
+        if(target && target.getAttribute && target.getAttribute("data-pin")) return;
+
+        var url = decodeURIComponent(this.getAttribute("data-open") || "");
+        var title = decodeURIComponent(this.getAttribute("data-title") || "Link");
+        if(!url) return;
+
+        pushRecent({ title:title, url:url });
+
+        var nt = getNewTab();
+        try{
+          if(nt) window.open(url, "_blank", "noopener");
+          else location.href = url;
+        }catch(_){
+          location.href = url;
+        }
+      });
     }
 
-    function copyToClipboard(text, cb){
-      function done(ok){ if(cb) cb(ok); }
-      try{
-        if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ fallback(text, done); });
+    // Pin actions
+    var pins = qsa("[data-pin]", root);
+    for(var p=0;p<pins.length;p++){
+      pins[p].addEventListener("click", function(e){
+        e.preventDefault(); e.stopPropagation();
+        var url = decodeURIComponent(this.getAttribute("data-pin") || "");
+        if(!url) return;
+
+        var cur = getPins();
+        var idx = cur.indexOf(url);
+        if(idx === -1) cur.unshift(url);
+        else cur.splice(idx,1);
+        setPins(cur);
+        render();
+      });
+    }
+
+    // Competition copy
+    var cc = qsa("[data-cc]", root);
+    for(var c=0;c<cc.length;c++){
+      cc[c].addEventListener("click", function(){
+        var kind = this.getAttribute("data-cc");
+        var toast = qs("#fcE-cc-toast", root);
+        function say(t){ if(toast) toast.textContent = t; }
+
+        var title = getCompTitle();
+        var url = location.href;
+
+        var out = "";
+        if(kind === "url") out = url;
+        if(kind === "title") out = title;
+        if(kind === "promo") out = "⚡ Flash Competitions: " + title + " — Enter now: " + url;
+        if(kind === "utm") out = buildUtmUrl(url);
+
+        copyToClipboard(out, function(ok){ say(ok ? "Copied ✓" : "Copy failed"); });
+      });
+    }
+
+    // Notes
+    var notes = qs("#fcE-notes", root);
+    if(notes && isCompetitionPage()){
+      var KEY_NOTES = "fcE_notes_v2:" + (slugFromPath() || location.pathname);
+      try{ notes.value = lsGet(KEY_NOTES) || ""; }catch(_){}
+      var timer = null;
+      notes.addEventListener("input", function(){
+        if(timer) clearTimeout(timer);
+        timer = setTimeout(function(){
+          lsSet(KEY_NOTES, notes.value || "");
+          var t = qs("#fcE-notes-toast", root);
+          if(t) t.textContent = "Saved ✓";
+        }, 250);
+      });
+
+      var nBtns = qsa("[data-notes]", root);
+      for(var n=0;n<nBtns.length;n++){
+        nBtns[n].addEventListener("click", function(){
+          var kind = this.getAttribute("data-notes");
+          var toast = qs("#fcE-notes-toast", root);
+          function say(t){ if(toast) toast.textContent = t; }
+
+          if(kind === "copy"){
+            copyToClipboard(notes.value || "", function(ok){ say(ok ? "Copied ✓" : "Copy failed"); });
+            return;
+          }
+          if(kind === "clear"){
+            notes.value = "";
+            lsSet(KEY_NOTES, "");
+            say("Cleared ✓");
+            return;
+          }
+        });
+      }
+    }
+
+    // Prefs
+    var prefBtns = qsa("[data-pref]", root);
+    for(var k=0;k<prefBtns.length;k++){
+      prefBtns[k].addEventListener("click", function(){
+        var kind = this.getAttribute("data-pref");
+        var toast = qs("#fcE-pref-toast", root);
+        function say(t){ if(toast) toast.textContent = t; }
+
+        if(kind === "newtab"){
+          var on = !getNewTab();
+          lsSet(KEY_NEW_TAB, on ? "1":"0");
+          say(on ? "New tab ON" : "New tab OFF");
+          render();
           return;
         }
-      }catch(_){}
-      fallback(text, done);
-    }
-    function fallback(text, done){
-      var ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      ta.style.top = "-9999px";
-      document.body.appendChild(ta);
-      ta.focus(); ta.select();
-      try{ document.execCommand("copy"); document.body.removeChild(ta); done(true); }
-      catch(e){ document.body.removeChild(ta); done(false); }
-    }
-
-    function getCompTitle(){
-      var h = document.querySelector("h1") || document.querySelector('[data-testid="competition-title"]') || document.querySelector(".competition-title");
-      if(h && h.textContent) return h.textContent.trim();
-      var t = document.title || "";
-      return (t || "").replace(/\s+\|\s+.*$/,"").trim();
-    }
-    function buildUtmUrl(base){
-      var u = base || location.href;
-      var sep = u.indexOf("?") === -1 ? "?" : "&";
-      return u + sep + "utm_source=instagram&utm_medium=social&utm_campaign=competition";
-    }
-
-    function slugFromPath(){
-      var p = location.pathname || "";
-      var parts = p.split("/").filter(Boolean);
-      return parts.length ? parts[parts.length-1] : "";
-    }
-
-    function wire(){
-      // side nav click
-      var items = qsa(".fcM-item[data-tab]", root);
-      for(var i=0;i<items.length;i++){
-        items[i].onclick = (function(el){
-          return function(){ setTab(el.getAttribute("data-tab")); };
-        })(items[i]);
-      }
-
-      // link open click
-      var opens = qsa('.fcM-item[data-open]', root);
-      for(var j=0;j<opens.length;j++){
-        opens[j].addEventListener("click", function(e){
-          // if pin pill clicked, ignore here
-          var target = e.target || null;
-          if(target && target.getAttribute && target.getAttribute("data-pin")) return;
-
-          var url = decodeURIComponent(this.getAttribute("data-open") || "");
-          var title = decodeURIComponent(this.getAttribute("data-title") || "Link");
-          if(!url) return;
-
-          pushRecent({ title:title, url:url });
-
-          var nt = getNewTab();
-          try{
-            if(nt) window.open(url, "_blank", "noopener");
-            else location.href = url;
-          }catch(_){
-            location.href = url;
-          }
-        });
-      }
-
-      // pin pill click
-      var pins = qsa("[data-pin]", root);
-      for(var k=0;k<pins.length;k++){
-        pins[k].addEventListener("click", function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          var url = decodeURIComponent(this.getAttribute("data-pin") || "");
-          if(!url) return;
-
-          var cur = getPins();
-          var idx = cur.indexOf(url);
-          if(idx === -1) cur.unshift(url);
-          else cur.splice(idx,1);
-          setPins(cur);
+        if(kind === "hidebar"){
+          var cur = (lsGet(KEY_HIDE_BAR) === "1");
+          var next = !cur;
+          lsSet(KEY_HIDE_BAR, next ? "1":"0");
+          hideAdminBar(next);
+          say(next ? "Admin bar hidden" : "Admin bar shown");
           render();
-        });
-      }
-
-      // prefs buttons
-      var prefBtns = qsa("[data-pref]", root);
-      for(var p=0;p<prefBtns.length;p++){
-        prefBtns[p].addEventListener("click", function(){
-          var kind = this.getAttribute("data-pref");
-          var toast = qs("#fcM-toast", root);
-          function say(t){ if(toast) toast.textContent = t; }
-
-          if(kind === "newtab"){
-            var on = !getNewTab();
-            lsSet(KEY_NEW_TAB, on ? "1":"0");
-            say(on ? "New tab ON" : "New tab OFF");
-            render();
-            return;
-          }
-          if(kind === "hidebar"){
-            var cur = (lsGet(KEY_HIDE_RAFFLEX) === "1");
-            var next = !cur;
-            lsSet(KEY_HIDE_RAFFLEX, next ? "1":"0");
-            hideRafflexBar(next);
-            say(next ? "Admin bar hidden" : "Admin bar shown");
-            render();
-            return;
-          }
-          if(kind === "clearPins"){
-            setPins([]);
-            say("Pins cleared");
-            render();
-            return;
-          }
-          if(kind === "reset"){
-            lsSet(KEY_OPEN, "0");
-            lsSet(KEY_TAB, "quick");
-            lsSet(KEY_NEW_TAB, (CFG.defaultNewTab ? "1":"0"));
-            lsSet(KEY_HIDE_RAFFLEX, "0");
-            setPins([]);
-            setRecents([]);
-            hideRafflexBar(false);
-            say("Reset");
-            render();
-            return;
-          }
-        });
-      }
-
-      // competition tools
-      var cc = qsa("[data-cc]", root);
-      for(var c=0;c<cc.length;c++){
-        cc[c].addEventListener("click", function(){
-          var kind = this.getAttribute("data-cc");
-          var toast = qs("#fcM-cc-toast", root);
-          function say(t){ if(toast) toast.textContent = t; }
-
-          var title = getCompTitle();
-          var url = location.href;
-
-          var out = "";
-          if(kind === "url") out = url;
-          if(kind === "title") out = title;
-          if(kind === "promo") out = "⚡ Flash Competitions: " + title + " — Enter now: " + url;
-          if(kind === "utm") out = buildUtmUrl(url);
-
-          copyToClipboard(out, function(ok){ say(ok ? "Copied" : "Copy failed"); });
-        });
-      }
-
-      // notes
-      var notes = qs("#fcM-notes", root);
-      if(notes && isCompetitionPage()){
-        var KEY_NOTES = "fcM_notes_v1:" + (slugFromPath() || location.pathname);
-        try{ notes.value = lsGet(KEY_NOTES) || ""; }catch(_){}
-        var timer = null;
-        notes.addEventListener("input", function(){
-          if(timer) clearTimeout(timer);
-          timer = setTimeout(function(){
-            lsSet(KEY_NOTES, notes.value || "");
-            var t = qs("#fcM-notes-toast", root);
-            if(t) t.textContent = "Saved";
-          }, 250);
-        });
-
-        var nBtns = qsa("[data-notes]", root);
-        for(var n=0;n<nBtns.length;n++){
-          nBtns[n].addEventListener("click", function(){
-            var kind = this.getAttribute("data-notes");
-            var toast = qs("#fcM-notes-toast", root);
-            function say(t){ if(toast) toast.textContent = t; }
-
-            if(kind === "copy"){
-              copyToClipboard(notes.value || "", function(ok){ say(ok ? "Copied" : "Copy failed"); });
-              return;
-            }
-            if(kind === "clear"){
-              notes.value = "";
-              lsSet(KEY_NOTES, "");
-              say("Cleared");
-              return;
-            }
-          });
+          return;
         }
-      }
+        if(kind === "clearPins"){
+          setPins([]);
+          say("Pins cleared");
+          render();
+          return;
+        }
+        if(kind === "reset"){
+          lsSet(KEY_OPEN, "0");
+          lsSet(KEY_TAB, "quick");
+          lsSet(KEY_NEW_TAB, (CFG.defaultNewTab ? "1":"0"));
+          lsSet(KEY_HIDE_BAR, (CFG.hideAdminBarByDefault ? "1":"0"));
+          setPins([]);
+          setRecents([]);
+          hideAdminBar(lsGet(KEY_HIDE_BAR) === "1");
+          say("Reset ✓");
+          render();
+          return;
+        }
+      });
     }
-
-    // open/close wiring
-    launch.addEventListener("click", function(){ setOpen(true); });
-    close.addEventListener("click", function(){ setOpen(false); });
-
-    // restore state
-    setPath();
-    setOpen(lsGet(KEY_OPEN) === "1");
-    setTab(getTab());
-
-    if(input){
-      input.addEventListener("input", function(){ render(); });
-    }
-
-    root.__render = render;
   }
 
   function ensure(){
     if(!isDesktop()){
-      hideRafflexBar(true);
+      // Still hide bar on mobile if desired
+      ensureHideBarDefault();
+      hideAdminBar(lsGet(KEY_HIDE_BAR) === "1");
       return;
     }
-    build();
-    hideRafflexBar(lsGet(KEY_HIDE_RAFFLEX) === "1");
 
-    var root = qs(".fcM");
-    if(root && root.__render) root.__render();
+    ensureHideBarDefault();
+    build();
+    hideAdminBar(lsGet(KEY_HIDE_BAR) === "1");
+
+    // If currently open, keep updated
+    var r = qs(".fcE");
+    if(r){
+      var w = qs(".fcE-panelWrap", r);
+      if(w && w.classList.contains("is-open")) render();
+    }
   }
 
   function hookHistory(){
-    if(window.__fcM_histHooked_v1) return;
-    window.__fcM_histHooked_v1 = true;
+    if(window.__fcE_histHooked_v2) return;
+    window.__fcE_histHooked_v2 = true;
 
     var _push = history.pushState;
     var _rep = history.replaceState;
@@ -588,7 +656,7 @@
     hookHistory();
     ensure();
 
-    var tries = 0, max = 20;
+    var tries = 0, max = 22;
     var t = setInterval(function(){
       tries++;
       ensure();
@@ -600,7 +668,7 @@
       var now = isDesktop();
       if(now !== last){
         last = now;
-        setTimeout(ensure, 120);
+        setTimeout(ensure, 140);
       }
     });
   }
