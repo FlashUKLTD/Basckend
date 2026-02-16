@@ -13,7 +13,6 @@
     employeeLinks: [
       { title:"Outlook Mail",    desc:"Inbox (Microsoft 365)", ico:"📧", url:"https://outlook.office.com/mail/" },
       { title:"Outlook Calendar",desc:"Calendar view",         ico:"📅", url:"https://outlook.office.com/calendar/" },
-      { title:"Microsoft Teams", desc:"Chats + meetings",      ico:"💬", url:"https://teams.microsoft.com/" },
       { title:"OneDrive",        desc:"Files & folders",       ico:"☁️", url:"https://onedrive.live.com/" },
       { title:"Microsoft 365",   desc:"Office home",           ico:"🧩", url:"https://www.office.com/" }
       // Add more: Notion/Slack/Docs/Drive/Zendesk/Stripe/etc
