@@ -135,12 +135,13 @@
   function buildShortcutsHTML(){
     var cats = [
       {
-        title: "🏁 Competitions",
+        title: "Competitions",
         links: [
           ["Competitions", "/admin/products", "Manage comps"],
           ["Categories", "/admin/product-categories", "Organise drops"],
           ["Instant Winners", "/admin/instant-winners", "IW prizes"],
           ["Winners", "/admin/winners", "Results log"]
+          ["Live Draw", "/i/draw-number", "Results log"]
         ]
       },
       {
