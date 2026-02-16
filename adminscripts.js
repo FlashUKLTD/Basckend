@@ -34,7 +34,7 @@
         ["Categories", "/admin/product-categories", "Organise drops", "🧩"],
         ["Instant Winners", "/admin/instant-winners", "IW prizes", "🎁"],
         ["Winners", "/admin/winners", "Results log", "🏆"],
-        ["Draw Number Tool", "https://flashcompetitions.com/i/draw-number", "Public draw number page", "🎲"]
+        ["Live Draw", "https://flashcompetitions.com/i/draw-number", "Public draw number page", "🎲"]
       ]},
       { title:"🛒 Sales", links:[
         ["Orders", "/admin/orders", "Sales & fulfilment", "🧾"],
