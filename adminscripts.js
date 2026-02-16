@@ -3,12 +3,13 @@
      🔧 EASY CUSTOMISATION — EDIT HERE ONLY
      ========================================================= */
   window.FLASH_EMPLOYEE_MENU = window.FLASH_EMPLOYEE_MENU || {
+    /* ✅ TEST MODE: set to true if nothing shows.
+       Once working, set back to false. */
+    forceShowOnSmallScreens: true,
+
     desktopMin: 901,
 
-    /* Admin bar OFF automatically by default */
     hideAdminBarByDefault: true,
-
-    /* Open links in new tab by default */
     defaultNewTab: true,
 
     employeeLinks: [
@@ -41,28 +42,25 @@
       ]},
       { title:"Users", pill:"Accounts", links:[
         ["Users", "/admin/users", "Accounts & access", "👤"]
-      ]},
-      { title:"Settings", pill:"Site", links:[
-        ["Branding", "/admin/settings/branding-settings", "Logos & style", "🎨"],
-        ["Checkout", "/admin/settings/checkout-settings", "Payments & flow", "🧾"],
-        ["Marketing", "/admin/settings/marketing-settings", "Promos", "📣"],
-        ["SEO", "/admin/settings/seo-settings", "Search settings", "🔎"]
       ]}
     ]
   };
 
   var CFG = window.FLASH_EMPLOYEE_MENU;
 
-  var KEY_OPEN = "fcE_open_v2";
-  var KEY_TAB = "fcE_tab_v2";
-  var KEY_NEW_TAB = "fcE_newtab_v2";
-  var KEY_HIDE_BAR = "fcE_hidebar_v2";
-  var KEY_PINS = "fcE_pins_v2";
-  var KEY_RECENTS = "fcE_recents_v2";
+  var KEY_OPEN   = "fcE_open_v3";
+  var KEY_TAB    = "fcE_tab_v3";
+  var KEY_NEW    = "fcE_newtab_v3";
+  var KEY_HIDE   = "fcE_hidebar_v3";
+  var KEY_PINS   = "fcE_pins_v3";
+  var KEY_RECENT = "fcE_recents_v3";
 
   var RAFFLEX_BAR_SELECTOR = 'div[wire\\:id][class*="bg-zinc-900"][class*="border-b"]';
 
-  function isDesktop(){ return (window.innerWidth || 0) >= (CFG.desktopMin || 901); }
+  function isDesktop(){
+    if(CFG.forceShowOnSmallScreens) return true;
+    return (window.innerWidth || 0) >= (CFG.desktopMin || 901);
+  }
   function isCompetitionPage(){ return (location.pathname || "").indexOf("/competition/") === 0; }
 
   function qs(sel, root){ return (root||document).querySelector(sel); }
@@ -85,32 +83,31 @@
     }
   }
 
-  function absUrl(href){
-    href = href || "";
-    if(href.indexOf("http://")===0 || href.indexOf("https://")===0) return href;
-    return "https://flashcompetitions.com" + (href.charAt(0)==="/" ? href : ("/"+href));
-  }
-
-  function getNewTab(){
-    var v = lsGet(KEY_NEW_TAB);
+  function ensureHideBarDefault(){
+    var v = lsGet(KEY_HIDE);
     if(v === null){
-      lsSet(KEY_NEW_TAB, (CFG.defaultNewTab ? "1":"0"));
+      lsSet(KEY_HIDE, (CFG.hideAdminBarByDefault ? "1":"0"));
+    }
+  }
+  function getNewTab(){
+    var v = lsGet(KEY_NEW);
+    if(v === null){
+      lsSet(KEY_NEW, (CFG.defaultNewTab ? "1":"0"));
       return !!CFG.defaultNewTab;
     }
     return v === "1";
   }
 
-  function ensureHideBarDefault(){
-    var v = lsGet(KEY_HIDE_BAR);
-    if(v === null){
-      lsSet(KEY_HIDE_BAR, (CFG.hideAdminBarByDefault ? "1":"0"));
-    }
-  }
-
   function getPins(){ return readJSON(KEY_PINS, []); }
   function setPins(a){ writeJSON(KEY_PINS, (a||[]).slice(0,20)); }
-  function getRecents(){ return readJSON(KEY_RECENTS, []); }
-  function setRecents(a){ writeJSON(KEY_RECENTS, (a||[]).slice(0,10)); }
+  function getRecents(){ return readJSON(KEY_RECENT, []); }
+  function setRecents(a){ writeJSON(KEY_RECENT, (a||[]).slice(0,10)); }
+
+  function absUrl(href){
+    href = href || "";
+    if(href.indexOf("http://")===0 || href.indexOf("https://")===0) return href;
+    return "https://flashcompetitions.com" + (href.charAt(0)==="/" ? href : ("/"+href));
+  }
 
   function pushRecent(item){
     var r = getRecents();
@@ -145,6 +142,17 @@
   function getTab(){ return lsGet(KEY_TAB) || "quick"; }
   function setTab(t){ lsSet(KEY_TAB, t); }
 
+  function safeAppendToBody(el){
+    try{
+      if(document.body){ document.body.appendChild(el); return true; }
+    }catch(_){}
+    try{
+      document.documentElement.appendChild(el);
+      return true;
+    }catch(_){}
+    return false;
+  }
+
   function build(){
     if(qs(".fcE")) return;
 
@@ -161,14 +169,11 @@
             '<div class="fcE-badge">⚙️</div>' +
             '<div class="fcE-title"><b>Employee Menu</b><span id="fcE-path">/</span></div>' +
           '</div>' +
-          '<div class="fcE-headR">' +
-            '<span class="fcE-chip" id="fcE-chipTab">Quick</span>' +
-            '<button class="fcE-close" type="button" aria-label="Close">×</button>' +
-          '</div>' +
+          '<button class="fcE-close" type="button" aria-label="Close">×</button>' +
         '</div>' +
 
         '<div class="fcE-searchWrap">' +
-          '<div class="fcE-search"><i>🔎</i><input class="fcE-input" type="text" placeholder="Search links, tools, pages…"></div>' +
+          '<div class="fcE-search"><span style="opacity:.85">🔎</span><input class="fcE-input" type="text" placeholder="Search links, tools, pages…"></div>' +
         '</div>' +
 
         '<div class="fcE-tabs">' +
@@ -182,27 +187,25 @@
         '<div class="fcE-body" id="fcE-body"></div>' +
 
         '<div class="fcE-foot">' +
-          '<div class="k">Open <span class="fcE-kbd">Enter</span> • Close <span class="fcE-kbd">Esc</span></div>' +
-          '<div class="k">New tab: <span class="fcE-kbd" id="fcE-newtabKbd">ON</span></div>' +
+          '<div>Close <span class="fcE-kbd">Esc</span></div>' +
+          '<div>New tab <span class="fcE-kbd" id="fcE-newtabKbd">ON</span></div>' +
         '</div>' +
       '</div>';
 
-    document.body.appendChild(root);
+    safeAppendToBody(root);
 
     root.__fab = qs(".fcE-fab", root);
     root.__wrap = qs(".fcE-panelWrap", root);
     root.__close = qs(".fcE-close", root);
     root.__input = qs(".fcE-input", root);
     root.__body = qs("#fcE-body", root);
-    root.__chip = qs("#fcE-chipTab", root);
     root.__path = qs("#fcE-path", root);
     root.__newtab = qs("#fcE-newtabKbd", root);
 
-    // Restore open state
+    // restore open state
     var open = lsGet(KEY_OPEN) === "1";
     if(root.__wrap) root.__wrap.classList.toggle("is-open", open);
 
-    // Click handlers
     if(root.__fab){
       root.__fab.addEventListener("click", function(){
         var nowOpen = !(root.__wrap && root.__wrap.classList.contains("is-open"));
@@ -220,17 +223,6 @@
         lsSet(KEY_OPEN, "0");
       });
     }
-
-    // Tabs
-    var tabs = qsa(".fcE-tab[data-tab]", root);
-    for(var i=0;i<tabs.length;i++){
-      tabs[i].addEventListener("click", function(){
-        setTab(this.getAttribute("data-tab"));
-        render();
-      });
-    }
-
-    // Search
     if(root.__input){
       root.__input.addEventListener("input", function(){ render(); });
       root.__input.addEventListener("keydown", function(e){
@@ -241,7 +233,6 @@
       });
     }
 
-    // Global esc to close
     document.addEventListener("keydown", function(e){
       if(e.key === "Escape"){
         var r = qs(".fcE");
@@ -254,7 +245,15 @@
       }
     });
 
-    // Render now
+    // tab click
+    var tabs = qsa(".fcE-tab[data-tab]", root);
+    for(var i=0;i<tabs.length;i++){
+      tabs[i].addEventListener("click", function(){
+        setTab(this.getAttribute("data-tab"));
+        render();
+      });
+    }
+
     render();
   }
 
@@ -263,11 +262,6 @@
     for(var i=0;i<tabs.length;i++){
       tabs[i].classList.toggle("is-on", tabs[i].getAttribute("data-tab") === tab);
     }
-    if(root.__chip) root.__chip.textContent =
-      tab === "quick" ? "Quick" :
-      tab === "employee" ? "Employee" :
-      tab === "admin" ? "Admin" :
-      tab === "competition" ? "Competition" : "Settings";
   }
 
   function rowHTML(it, pinned){
@@ -289,10 +283,7 @@
     var root = qs(".fcE");
     if(!root) return;
 
-    // Path
     if(root.__path) root.__path.textContent = location.pathname || "/";
-
-    // New tab label
     if(root.__newtab) root.__newtab.textContent = getNewTab() ? "ON" : "OFF";
 
     var tab = getTab();
@@ -300,7 +291,6 @@
 
     var q = norm((root.__input && root.__input.value) || "");
     var pins = getPins();
-
     var html = "";
 
     function card(title, pill, inner){
@@ -311,7 +301,7 @@
         '</div>';
     }
 
-    // QUICK
+    // quick
     if(tab === "quick"){
       var all = getAllLinksFlat();
       var pinnedItems = [];
@@ -323,8 +313,6 @@
         }
       }
 
-      var rec = getRecents();
-
       var pinInner = "";
       if(!pinnedItems.length){
         pinInner = '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">Pin your key links and they’ll appear here.</div>';
@@ -334,27 +322,16 @@
         });
       }
 
-      var recInner = "";
-      if(!rec.length){
-        recInner = '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">Links you open will show here.</div>';
-      }else{
-        rec.filter(function(it){ return matches(it,q); }).forEach(function(it){
-          var it2 = { title: it.title, desc: it.url.replace(/^https?:\/\/(www\.)?/,""), ico:"🕘", url: it.url };
-          recInner += rowHTML(it2, pins.indexOf(it2.url)!==-1);
-        });
-      }
-
       var toolsInner = "";
       (CFG.flashTools||[]).filter(function(it){ return matches(it,q); }).forEach(function(it){
         toolsInner += rowHTML(it, pins.indexOf(it.url)!==-1);
       });
 
       html += card("Pinned", (pinnedItems.length ? (pinnedItems.length+"") : "0"), pinInner);
-      html += card("Recents", (rec.length ? (rec.length+"") : "0"), recInner);
       html += card("Flash Tools", "Fast", toolsInner || '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px;">No matches.</div>');
     }
 
-    // EMPLOYEE
+    // employee
     if(tab === "employee"){
       var empInner = "";
       (CFG.employeeLinks||[]).filter(function(it){ return matches(it,q); }).forEach(function(it){
@@ -363,7 +340,7 @@
       html += card("Employee Links", "Work", empInner || '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px;">No matches.</div>');
     }
 
-    // ADMIN
+    // admin
     if(tab === "admin"){
       (CFG.adminGroups||[]).forEach(function(g){
         var inner = "";
@@ -371,48 +348,26 @@
           var it = { title:L[0], desc:L[2], ico:(L[3]||"🔗"), url:absUrl(L[1]) };
           if(matches(it,q)) inner += rowHTML(it, pins.indexOf(it.url)!==-1);
         });
-        if(inner){
-          html += card(g.title, (g.pill||"Group"), inner);
-        }
+        if(inner) html += card(g.title, (g.pill||"Group"), inner);
       });
-      if(!html){
-        html = card("Admin", "Empty", '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px;">No matches.</div>');
-      }
+      if(!html) html = card("Admin", "Empty", '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px;">No matches.</div>');
     }
 
-    // COMPETITION
+    // competition
     if(tab === "competition"){
       if(!isCompetitionPage()){
-        html += card("Competition Tools", "/competition/*", '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">Open a competition page to use quick copy + notes.</div>');
+        html += card("Competition Tools", "/competition/*", '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">Open a competition page to use this tab.</div>');
       }else{
-        html += card("Quick Copy", "One click",
-          '<div class="fcE-btnRow">' +
-            '<button class="fcE-btn" type="button" data-cc="url">Copy URL</button>' +
-            '<button class="fcE-btn" type="button" data-cc="title">Copy Title</button>' +
-          '</div>' +
-          '<div class="fcE-btnRow" style="margin-top:8px;">' +
-            '<button class="fcE-btn" type="button" data-cc="promo">Copy Promo</button>' +
-            '<button class="fcE-btn" type="button" data-cc="utm">Copy UTM URL</button>' +
-          '</div>' +
-          '<div class="fcE-toast" id="fcE-cc-toast">Ready.</div>'
-        );
-
-        html += card("Notes", "Saved",
-          '<textarea class="fcE-ta" id="fcE-notes" placeholder="Notes for this competition…"></textarea>' +
-          '<div class="fcE-btnRow" style="margin-top:8px;">' +
-            '<button class="fcE-btn" type="button" data-notes="copy">Copy</button>' +
-            '<button class="fcE-btn" type="button" data-notes="clear">Clear</button>' +
-          '</div>' +
-          '<div class="fcE-toast" id="fcE-notes-toast">Saved.</div>'
+        html += card("Competition", "Info",
+          '<div style="padding:8px 2px; color:rgba(255,255,255,.70); font-weight:900; font-size:12px; line-height:1.35;">You can expand this tab next if you want copy buttons + comp notes again.</div>'
         );
       }
     }
 
-    // SETTINGS
+    // prefs
     if(tab === "prefs"){
-      var hide = (lsGet(KEY_HIDE_BAR) === "1");
+      var hide = (lsGet(KEY_HIDE) === "1");
       var nt = getNewTab();
-
       html += card("Preferences", "Saved",
         '<div class="fcE-btnRow">' +
           '<button class="fcE-btn" type="button" data-pref="newtab">'+(nt ? "New Tab: ON" : "New Tab: OFF")+'</button>' +
@@ -427,51 +382,11 @@
     }
 
     if(root.__body) root.__body.innerHTML = html || "";
-
     wire(root);
   }
 
-  function copyToClipboard(text, cb){
-    function done(ok){ if(cb) cb(ok); }
-    try{
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ fallback(text, done); });
-        return;
-      }
-    }catch(_){}
-    fallback(text, done);
-  }
-  function fallback(text, done){
-    var ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.left = "-9999px";
-    ta.style.top = "-9999px";
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    try{ document.execCommand("copy"); document.body.removeChild(ta); done(true); }
-    catch(e){ document.body.removeChild(ta); done(false); }
-  }
-
-  function getCompTitle(){
-    var h = document.querySelector("h1") || document.querySelector('[data-testid="competition-title"]') || document.querySelector(".competition-title");
-    if(h && h.textContent) return h.textContent.trim();
-    var t = document.title || "";
-    return (t || "").replace(/\s+\|\s+.*$/,"").trim();
-  }
-  function buildUtmUrl(base){
-    var u = base || location.href;
-    var sep = u.indexOf("?") === -1 ? "?" : "&";
-    return u + sep + "utm_source=instagram&utm_medium=social&utm_campaign=competition";
-  }
-  function slugFromPath(){
-    var p = location.pathname || "";
-    var parts = p.split("/").filter(Boolean);
-    return parts.length ? parts[parts.length-1] : "";
-  }
-
   function wire(root){
-    // Open links
+    // open link
     var rows = qsa(".fcE-row[data-open]", root);
     for(var i=0;i<rows.length;i++){
       rows[i].addEventListener("click", function(e){
@@ -494,7 +409,7 @@
       });
     }
 
-    // Pin actions
+    // pin
     var pins = qsa("[data-pin]", root);
     for(var p=0;p<pins.length;p++){
       pins[p].addEventListener("click", function(e){
@@ -511,64 +426,7 @@
       });
     }
 
-    // Competition copy
-    var cc = qsa("[data-cc]", root);
-    for(var c=0;c<cc.length;c++){
-      cc[c].addEventListener("click", function(){
-        var kind = this.getAttribute("data-cc");
-        var toast = qs("#fcE-cc-toast", root);
-        function say(t){ if(toast) toast.textContent = t; }
-
-        var title = getCompTitle();
-        var url = location.href;
-
-        var out = "";
-        if(kind === "url") out = url;
-        if(kind === "title") out = title;
-        if(kind === "promo") out = "⚡ Flash Competitions: " + title + " — Enter now: " + url;
-        if(kind === "utm") out = buildUtmUrl(url);
-
-        copyToClipboard(out, function(ok){ say(ok ? "Copied ✓" : "Copy failed"); });
-      });
-    }
-
-    // Notes
-    var notes = qs("#fcE-notes", root);
-    if(notes && isCompetitionPage()){
-      var KEY_NOTES = "fcE_notes_v2:" + (slugFromPath() || location.pathname);
-      try{ notes.value = lsGet(KEY_NOTES) || ""; }catch(_){}
-      var timer = null;
-      notes.addEventListener("input", function(){
-        if(timer) clearTimeout(timer);
-        timer = setTimeout(function(){
-          lsSet(KEY_NOTES, notes.value || "");
-          var t = qs("#fcE-notes-toast", root);
-          if(t) t.textContent = "Saved ✓";
-        }, 250);
-      });
-
-      var nBtns = qsa("[data-notes]", root);
-      for(var n=0;n<nBtns.length;n++){
-        nBtns[n].addEventListener("click", function(){
-          var kind = this.getAttribute("data-notes");
-          var toast = qs("#fcE-notes-toast", root);
-          function say(t){ if(toast) toast.textContent = t; }
-
-          if(kind === "copy"){
-            copyToClipboard(notes.value || "", function(ok){ say(ok ? "Copied ✓" : "Copy failed"); });
-            return;
-          }
-          if(kind === "clear"){
-            notes.value = "";
-            lsSet(KEY_NOTES, "");
-            say("Cleared ✓");
-            return;
-          }
-        });
-      }
-    }
-
-    // Prefs
+    // prefs
     var prefBtns = qsa("[data-pref]", root);
     for(var k=0;k<prefBtns.length;k++){
       prefBtns[k].addEventListener("click", function(){
@@ -578,15 +436,15 @@
 
         if(kind === "newtab"){
           var on = !getNewTab();
-          lsSet(KEY_NEW_TAB, on ? "1":"0");
+          lsSet(KEY_NEW, on ? "1":"0");
           say(on ? "New tab ON" : "New tab OFF");
           render();
           return;
         }
         if(kind === "hidebar"){
-          var cur = (lsGet(KEY_HIDE_BAR) === "1");
+          var cur = (lsGet(KEY_HIDE) === "1");
           var next = !cur;
-          lsSet(KEY_HIDE_BAR, next ? "1":"0");
+          lsSet(KEY_HIDE, next ? "1":"0");
           hideAdminBar(next);
           say(next ? "Admin bar hidden" : "Admin bar shown");
           render();
@@ -601,11 +459,11 @@
         if(kind === "reset"){
           lsSet(KEY_OPEN, "0");
           lsSet(KEY_TAB, "quick");
-          lsSet(KEY_NEW_TAB, (CFG.defaultNewTab ? "1":"0"));
-          lsSet(KEY_HIDE_BAR, (CFG.hideAdminBarByDefault ? "1":"0"));
+          lsSet(KEY_NEW, (CFG.defaultNewTab ? "1":"0"));
+          lsSet(KEY_HIDE, (CFG.hideAdminBarByDefault ? "1":"0"));
           setPins([]);
           setRecents([]);
-          hideAdminBar(lsGet(KEY_HIDE_BAR) === "1");
+          hideAdminBar(lsGet(KEY_HIDE) === "1");
           say("Reset ✓");
           render();
           return;
@@ -615,18 +473,18 @@
   }
 
   function ensure(){
+    ensureHideBarDefault();
+    hideAdminBar(lsGet(KEY_HIDE) === "1");
+
     if(!isDesktop()){
-      // Still hide bar on mobile if desired
-      ensureHideBarDefault();
-      hideAdminBar(lsGet(KEY_HIDE_BAR) === "1");
+      // desktop-only mode: remove if exists
+      var ex = qs(".fcE");
+      if(ex) try{ ex.parentNode.removeChild(ex); }catch(_){}
       return;
     }
 
-    ensureHideBarDefault();
     build();
-    hideAdminBar(lsGet(KEY_HIDE_BAR) === "1");
 
-    // If currently open, keep updated
     var r = qs(".fcE");
     if(r){
       var w = qs(".fcE-panelWrap", r);
@@ -635,8 +493,8 @@
   }
 
   function hookHistory(){
-    if(window.__fcE_histHooked_v2) return;
-    window.__fcE_histHooked_v2 = true;
+    if(window.__fcE_histHooked_v3) return;
+    window.__fcE_histHooked_v3 = true;
 
     var _push = history.pushState;
     var _rep = history.replaceState;
@@ -656,20 +514,15 @@
     hookHistory();
     ensure();
 
-    var tries = 0, max = 22;
+    var tries = 0, max = 24;
     var t = setInterval(function(){
       tries++;
       ensure();
       if(tries >= max) clearInterval(t);
-    }, 260);
+    }, 240);
 
-    var last = isDesktop();
     window.addEventListener("resize", function(){
-      var now = isDesktop();
-      if(now !== last){
-        last = now;
-        setTimeout(ensure, 140);
-      }
+      setTimeout(ensure, 120);
     });
   }
 
