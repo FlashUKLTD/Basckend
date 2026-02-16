@@ -2,26 +2,50 @@
   /* =========================================================
      🔧 EASY CUSTOMISATION — EDIT HERE ONLY
      ========================================================= */
-  window.FLASH_EMPLOYEE_MENU = window.FLASH_EMPLOYEE_MENU || {
+  window.FLASH_EMPLOYEE_MENU = window.FLASH_EMPLOYEE_MENU || {};
+
+  // Merge defaults (keep your existing data if already set)
+  var DEFAULTS = {
+    /* Desktop only */
     desktopMin: 901,
+
+    /* Drawer + launcher sizing */
+    drawerWidth: 460,             // px
+    drawerRight: 12,              // px
+    drawerTop: 12,                // px
+    drawerBottom: 12,             // px
+
+    launcherRight: 14,            // px
+    launcherBottom: 14,           // px
+
+    /* Launcher text */
+    launcherIcon: "⚙️",
+    launcherTitle: "Employee Menu",
+    launcherSubtitle: "Tools • Admin",
+    showLauncherSubtitle: true,
+
+    /* Behaviour */
     defaultNewTab: true,
 
+    /* Employee tools (edit/add) */
     employeeLinks: [
-      { title:"Outlook Mail",     desc:"Inbox (Microsoft 365)", ico:"📧", url:"https://outlook.office.com/mail/" },
-      { title:"Outlook Calendar", desc:"Calendar view",         ico:"📅", url:"https://outlook.office.com/calendar/" },
-      { title:"Microsoft Teams",  desc:"Chats + meetings",      ico:"💬", url:"https://teams.microsoft.com/" },
-      { title:"OneDrive",         desc:"Files & folders",       ico:"☁️", url:"https://onedrive.live.com/" },
-      { title:"Microsoft 365",    desc:"Office home",           ico:"🧩", url:"https://www.office.com/" }
+      { title:"Outlook Mail",     desc:"Inbox",     ico:"📧", url:"https://outlook.office.com/mail/" },
+      { title:"Outlook Calendar", desc:"Calendar",  ico:"📅", url:"https://outlook.office.com/calendar/" },
+      { title:"Microsoft Teams",  desc:"Chats",     ico:"💬", url:"https://teams.microsoft.com/" },
+      { title:"OneDrive",         desc:"Files",     ico:"☁️", url:"https://onedrive.live.com/" },
+      { title:"Microsoft 365",    desc:"Office",    ico:"🧩", url:"https://www.office.com/" }
     ],
 
+    /* Internal Flash quick tools */
     flashTools: [
       { title:"Draw Number Tool",    desc:"Public draw number page", ico:"🎲", url:"https://flashcompetitions.com/i/draw-number" },
       { title:"Admin Dashboard",     desc:"Admin home",              ico:"🛠️", url:"https://flashcompetitions.com/admin" },
       { title:"Manage Competitions", desc:"Products list",           ico:"🏁", url:"https://flashcompetitions.com/admin/products" },
-      { title:"Orders",              desc:"Sales & fulfilment",      ico:"🧾", url:"https://flashcompetitions.com/admin/orders" },
+      { title:"Orders",              desc:"Sales",                   ico:"🧾", url:"https://flashcompetitions.com/admin/orders" },
       { title:"Coupons",             desc:"Discount codes",          ico:"🏷️", url:"https://flashcompetitions.com/admin/coupons" }
     ],
 
+    /* Admin navigation groups */
     adminGroups: [
       { title:"🏁 Competitions", links:[
         ["Competitions", "/admin/products", "Manage comps", "🏁"],
@@ -59,17 +83,27 @@
     ]
   };
 
-  var CFG = window.FLASH_EMPLOYEE_MENU;
+  // Shallow merge only (simple + safe)
+  function merge(a,b){
+    var o = {};
+    var k;
+    for(k in a){ if(Object.prototype.hasOwnProperty.call(a,k)) o[k]=a[k]; }
+    for(k in b){ if(Object.prototype.hasOwnProperty.call(b,k)) o[k]=b[k]; }
+    return o;
+  }
+
+  var CFG = merge(DEFAULTS, window.FLASH_EMPLOYEE_MENU || {});
+  window.FLASH_EMPLOYEE_MENU = CFG;
 
   /* =========================================================
-     Storage keys (v5)
+     Storage keys (v6)
      ========================================================= */
-  var KEY_OPEN      = "fcEMP_open_v5";
-  var KEY_TAB       = "fcEMP_tab_v5";
-  var KEY_NEW_TAB   = "fcEMP_newtab_v5";
-  var KEY_PINS      = "fcEMP_pins_v5";
-  var KEY_RECENTS   = "fcEMP_recent_v5";
-  var KEY_HIDE_BAR  = "fcEMP_hideRafflex_v5";
+  var KEY_OPEN      = "fcEMP_open_v6";
+  var KEY_TAB       = "fcEMP_tab_v6";
+  var KEY_NEW_TAB   = "fcEMP_newtab_v6";
+  var KEY_PINS      = "fcEMP_pins_v6";
+  var KEY_RECENTS   = "fcEMP_recent_v6";
+  var KEY_HIDE_BAR  = "fcEMP_hideRafflex_v6";
 
   var RAFFLEX_BAR_SELECTOR = 'div[wire\\:id][class*="bg-zinc-900"][class*="border-b"]';
 
@@ -126,12 +160,12 @@
       out.push(r[i]);
     }
     out.unshift({ title:item.title||"Link", url:item.url||"" });
-    out = out.slice(0, 8);
+    out = out.slice(0, 10);
     setRecents(out);
   }
 
   function safeStr(s){ return (s||"").toString(); }
-  function norm(s){ return safeStr(s).replace(/\s+/g," ").trim().toLowerCase(); }
+  function norm(s){ return safeStr(s).replace(/\\s+/g," ").trim().toLowerCase(); }
 
   function matchesQuery(item, q){
     if(!q) return true;
@@ -166,10 +200,10 @@
 
   function section(title, pill, inner){
     return '' +
-      '<div class="fcEMP5-sec">' +
-        '<div class="fcEMP5-secHead">' +
-          '<div class="fcEMP5-secTitle">'+title+'</div>' +
-          '<div class="fcEMP5-secPill">'+pill+'</div>' +
+      '<div class="fcEMP6-sec">' +
+        '<div class="fcEMP6-secHead">' +
+          '<div class="fcEMP6-secTitle">'+title+'</div>' +
+          '<div class="fcEMP6-pill">'+pill+'</div>' +
         '</div>' +
         inner +
       '</div>';
@@ -180,40 +214,34 @@
     var desc  = safeStr(item.desc || "");
     var ico   = safeStr(item.ico || "🔗");
     var url   = safeStr(item.url || "#");
-    var pinClass = pinned ? "fcEMP5-pin is-on" : "fcEMP5-pin";
+    var pinClass = pinned ? "fcEMP6-pin is-on" : "fcEMP6-pin";
 
     return '' +
-      '<div class="fcEMP5-link" data-emp-url="'+encodeURIComponent(url)+'" data-emp-title="'+encodeURIComponent(title)+'">' +
-        '<div class="fcEMP5-linkTop">' +
-          '<div class="fcEMP5-linkMain">' +
-            '<div class="fcEMP5-ico">'+ico+'</div>' +
+      '<div class="fcEMP6-link" data-emp-url="'+encodeURIComponent(url)+'" data-emp-title="'+encodeURIComponent(title)+'">' +
+        '<div class="fcEMP6-linkTop">' +
+          '<div class="fcEMP6-linkMain">' +
+            '<div class="fcEMP6-ico">'+ico+'</div>' +
             '<span title="'+title+'">'+title+'</span>' +
           '</div>' +
           '<div class="'+pinClass+'" data-emp-pin="'+encodeURIComponent(url)+'" title="Pin/unpin">📌</div>' +
         '</div>' +
-        (desc ? '<small>'+desc+'</small>' : '<small style="opacity:.65;">'+url.replace(/^https?:\/\/(www\.)?/,'')+'</small>') +
+        (desc ? '<small>'+desc+'</small>' : '<small style="opacity:.65;">'+url.replace(/^https?:\\/\\/(www\\.)?/,'')+'</small>') +
       '</div>';
   }
 
   function getActiveTab(){ return lsGet(KEY_TAB) || "quick"; }
+
   function setActiveTab(tab){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     if(!root) return;
-    var tabs = qsa(".fcEMP5-tab", root);
+    var tabs = qsa(".fcEMP6-tab", root);
     for(var i=0;i<tabs.length;i++){
       tabs[i].classList.toggle("is-active", tabs[i].getAttribute("data-emp-tab") === tab);
     }
   }
 
-  function updateCrumb(){
-    var root = qs(".fcEMP5");
-    if(!root) return;
-    var crumb = qs(".fcEMP5-launchCrumb", root);
-    if(crumb) crumb.textContent = "📍 " + (location.pathname || "/");
-  }
-
   function updateToggles(){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     if(!root) return;
     var nt = getNewTab();
     var hb = (lsGet(KEY_HIDE_BAR) === "1");
@@ -231,14 +259,13 @@
     }
   }
 
-  function buildQuick(){
-    var root = qs(".fcEMP5");
+  function buildPinned(){
+    var root = qs(".fcEMP6");
     var q = "";
-    var input = root ? qs(".fcEMP5-input", root) : null;
+    var input = root ? qs(".fcEMP6-input", root) : null;
     if(input) q = norm(input.value || "");
 
     var pins = getPins();
-    var recents = getRecents();
     var all = getAllLinksFlat();
 
     var pinnedItems = [];
@@ -248,65 +275,73 @@
       }
     }
 
-    var filteredPinned  = pinnedItems.filter(function(it){ return matchesQuery(it, q); });
+    pinnedItems = pinnedItems.filter(function(it){ return matchesQuery(it, q); });
+
+    if(!pins.length){
+      return section("📌 Pinned", "Empty", '<div class="fcEMP6-muted">Pin links from any tab using 📌.</div>');
+    }
+
+    if(!pinnedItems.length){
+      return section("📌 Pinned", "No matches", '<div class="fcEMP6-muted">No pinned links match your search.</div>');
+    }
+
+    return section("📌 Pinned", (pinnedItems.length + " links"),
+      '<div class="fcEMP6-grid">' +
+        pinnedItems.map(function(it){ return linkHTML(it, true); }).join("") +
+      '</div>'
+    );
+  }
+
+  function buildQuick(){
+    var root = qs(".fcEMP6");
+    var q = "";
+    var input = root ? qs(".fcEMP6-input", root) : null;
+    if(input) q = norm(input.value || "");
+
+    var pins = getPins();
+    var recents = getRecents();
     var filteredTools   = (CFG.flashTools||[]).filter(function(it){ return matchesQuery(it, q); });
     var filteredRecents = recents.filter(function(it){ return matchesQuery(it, q); });
 
     var out = "";
 
-    out += section("📌 Pinned", "Fast access",
-      filteredPinned.length
-        ? '<div class="fcEMP5-grid">' + filteredPinned.map(function(it){ return linkHTML(it, true); }).join("") + '</div>'
-        : '<div class="fcEMP5-muted">Pin your most-used links (📌). They’ll appear here for instant access.</div>'
+    // Quick tools
+    out += section("⚡ Flash Tools", (filteredTools.length ? filteredTools.length : "0"),
+      filteredTools.length
+        ? ('<div class="fcEMP6-grid">' + filteredTools.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") + '</div>')
+        : '<div class="fcEMP6-muted">No tools match your search.</div>'
     );
 
-    out += section("⚡ Flash Quick Tools", "Internal",
-      '<div class="fcEMP5-grid">' +
-        filteredTools.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") +
-      '</div>'
-    );
-
-    out += section("🕘 Recents", "Last used",
+    // Recents
+    out += section("🕘 Recents", (filteredRecents.length ? filteredRecents.length : "0"),
       filteredRecents.length
-        ? '<div class="fcEMP5-grid">' + filteredRecents.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") + '</div>'
-        : '<div class="fcEMP5-muted">Your recently opened links will appear here.</div>'
-    );
-
-    out += section("💡 How to use", "Tips",
-      '<div class="fcEMP5-muted">' +
-        '• Search filters everything instantly.<br>' +
-        '• Click 📌 to pin favourites.<br>' +
-        '• Use the top icons to toggle New tab and Admin bar.' +
-      '</div>'
+        ? ('<div class="fcEMP6-grid">' + filteredRecents.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") + '</div>')
+        : '<div class="fcEMP6-muted">Your recently opened links will appear here.</div>'
     );
 
     return out;
   }
 
   function buildEmployee(){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     var q = "";
-    var input = root ? qs(".fcEMP5-input", root) : null;
+    var input = root ? qs(".fcEMP6-input", root) : null;
     if(input) q = norm(input.value || "");
 
     var pins = getPins();
     var emp = (CFG.employeeLinks||[]).filter(function(it){ return matchesQuery(it, q); });
 
-    return '' +
-      section("👔 Employee Links", "Work",
-        '<div class="fcEMP5-grid">' +
-          emp.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") +
-        '</div>'
-      ) +
-      section("➕ Add more", "Custom",
-        '<div class="fcEMP5-muted">Edit <b>FLASH_EMPLOYEE_MENU.employeeLinks</b> to add Slack, Notion, Stripe, Zendesk, suppliers, anything.</div>'
-      );
+    return section("👔 Employee", (emp.length ? emp.length : "0"),
+      emp.length
+        ? ('<div class="fcEMP6-grid">' + emp.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") + '</div>')
+        : '<div class="fcEMP6-muted">No employee links match your search.</div>'
+    );
   }
 
   function buildAdmin(){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     var q = "";
-    var input = root ? qs(".fcEMP5-input", root) : null;
+    var input = root ? qs(".fcEMP6-input", root) : null;
     if(input) q = norm(input.value || "");
 
     var pins = getPins();
@@ -318,112 +353,107 @@
       var links = [];
       for(var j=0;j<(g.links||[]).length;j++){
         var L = g.links[j];
-        var name = L[0], href = L[1], hint = L[2], ico = L[3] || "🔗";
-        var item = { title:name, desc:hint, ico:ico, url: absUrl(href) };
+        var item = { title:L[0], desc:L[2], ico:(L[3]||"🔗"), url: absUrl(L[1]) };
         if(matchesQuery(item, q)) links.push(item);
       }
       if(!links.length) continue;
 
-      out += section(g.title, "Admin",
-        '<div class="fcEMP5-grid">' +
+      out += section(g.title, links.length,
+        '<div class="fcEMP6-grid">' +
           links.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") +
         '</div>'
       );
     }
 
     if(!out){
-      out = section("🧭 Admin", "No matches",
-        '<div class="fcEMP5-muted">No admin links match your search.</div>'
-      );
+      out = section("🧭 Admin", "0", '<div class="fcEMP6-muted">No admin links match your search.</div>');
     }
     return out;
   }
 
   function buildCompetition(){
     if(!isCompetitionPage()){
-      return section("🏁 Competition tools", "Only on /competition/*",
-        '<div class="fcEMP5-muted">Open a competition page to see Health + Instant Copy + Social kit + Notes.</div>'
+      return section("🏁 Competition", "Open /competition/*",
+        '<div class="fcEMP6-muted">Open a competition page to see Health + Copy + Social + Notes.</div>'
       );
     }
 
     return '' +
-      section("🏁 Competition Health", "Best-effort",
-        '<div class="fcEMP5-hRow">' +
-          '<span class="fcEMP5-dot" id="fcEMP5dot"></span>' +
-          '<div class="fcEMP5-hText">' +
-            '<div class="fcEMP5-hMain" id="fcEMP5hMain">Scanning…</div>' +
-            '<div class="fcEMP5-hSub" id="fcEMP5hSub">Checking title, price, timers, and CTA visibility.</div>' +
+      section("🏁 Health", "Scan",
+        '<div class="fcEMP6-hRow">' +
+          '<span class="fcEMP6-dot" id="fcEMP6dot"></span>' +
+          '<div style="min-width:0;">' +
+            '<div style="font-weight:980; font-size:12.3px;" id="fcEMP6hMain">Scanning…</div>' +
+            '<div style="color:var(--fcEMP-d); font-weight:850; font-size:11.5px; line-height:1.3;" id="fcEMP6hSub">Checking title, price, timers, and CTA.</div>' +
           '</div>' +
         '</div>' +
-        '<div class="fcEMP5-grid2" style="margin-top:10px;">' +
-          '<div class="fcEMP5-card"><div class="fcEMP5-label">Title</div><div class="fcEMP5-value" id="fcEMP5valTitle">—</div></div>' +
-          '<div class="fcEMP5-card"><div class="fcEMP5-label">URL</div><div class="fcEMP5-value" id="fcEMP5valUrl">—</div></div>' +
-          '<div class="fcEMP5-card"><div class="fcEMP5-label">Price</div><div class="fcEMP5-value" id="fcEMP5valPrice">—</div></div>' +
-          '<div class="fcEMP5-card"><div class="fcEMP5-label">Countdown / End</div><div class="fcEMP5-value" id="fcEMP5valEnd">—</div></div>' +
+        '<div class="fcEMP6-grid2" style="margin-top:10px;">' +
+          '<div class="fcEMP6-card"><div class="fcEMP6-label">Title</div><div class="fcEMP6-value" id="fcEMP6valTitle">—</div></div>' +
+          '<div class="fcEMP6-card"><div class="fcEMP6-label">URL</div><div class="fcEMP6-value" id="fcEMP6valUrl">—</div></div>' +
+          '<div class="fcEMP6-card"><div class="fcEMP6-label">Price</div><div class="fcEMP6-value" id="fcEMP6valPrice">—</div></div>' +
+          '<div class="fcEMP6-card"><div class="fcEMP6-label">Countdown / End</div><div class="fcEMP6-value" id="fcEMP6valEnd">—</div></div>' +
         '</div>'
       ) +
 
-      section("📋 Instant Copy", "One-click",
-        '<div class="fcEMP5-btnRow">' +
-          '<button class="fcEMP5-btn" type="button" data-emp-copy="url">🔗 Copy URL</button>' +
-          '<button class="fcEMP5-btn" type="button" data-emp-copy="title">🏷️ Copy title</button>' +
-          '<button class="fcEMP5-btn" type="button" data-emp-copy="titleurl">✨ Copy title + URL</button>' +
-          '<button class="fcEMP5-btn" type="button" data-emp-copy="promo">📣 Copy promo line</button>' +
+      section("📋 Copy", "One-click",
+        '<div class="fcEMP6-btnRow">' +
+          '<button class="fcEMP6-btn" type="button" data-emp-copy="url">🔗 URL</button>' +
+          '<button class="fcEMP6-btn" type="button" data-emp-copy="title">🏷️ Title</button>' +
+          '<button class="fcEMP6-btn" type="button" data-emp-copy="titleurl">✨ Title + URL</button>' +
+          '<button class="fcEMP6-btn" type="button" data-emp-copy="promo">📣 Promo</button>' +
         '</div>' +
-        '<div class="fcEMP5-toast" id="fcEMP5toast">Ready.</div>'
+        '<div class="fcEMP6-toast" id="fcEMP6toast">Ready.</div>'
       ) +
 
-      section("📣 Social / IG kit", "Fast content",
-        '<div class="fcEMP5-btnRow">' +
-          '<button class="fcEMP5-btn" type="button" data-emp-social="ig_titles">🧠 Copy 3 IG titles</button>' +
-          '<button class="fcEMP5-btn" type="button" data-emp-social="ig_captions">📝 Copy 3 IG captions</button>' +
-          '<button class="fcEMP5-btn" type="button" data-emp-social="ig_story">📲 Copy IG story text</button>' +
-          '<button class="fcEMP5-btn" type="button" data-emp-social="share_pack">📦 Copy share pack</button>' +
+      section("📣 Social", "Copy + preview",
+        '<div class="fcEMP6-btnRow">' +
+          '<button class="fcEMP6-btn" type="button" data-emp-social="ig_titles">🧠 IG titles</button>' +
+          '<button class="fcEMP6-btn" type="button" data-emp-social="ig_captions">📝 IG captions</button>' +
+          '<button class="fcEMP6-btn" type="button" data-emp-social="ig_story">📲 IG story</button>' +
+          '<button class="fcEMP6-btn" type="button" data-emp-social="share_pack">📦 Share pack</button>' +
         '</div>' +
-        '<textarea class="fcEMP5-ta" id="fcEMP5socialPreview" placeholder="Click a Social button… preview shows here"></textarea>' +
-        '<div class="fcEMP5-toast" id="fcEMP5socialToast">Ready.</div>'
+        '<textarea class="fcEMP6-ta" id="fcEMP6socialPreview" placeholder="Click a Social button… preview here"></textarea>' +
+        '<div class="fcEMP6-toast" id="fcEMP6socialToast">Ready.</div>'
       ) +
 
-      section("🗒️ Quick notes", "Per comp",
-        '<textarea class="fcEMP5-ta" id="fcEMP5notes" placeholder="Notes for this competition… (saved automatically)"></textarea>' +
-        '<div class="fcEMP5-btnRow" style="margin-top:10px;">' +
-          '<button class="fcEMP5-btn" type="button" data-emp-notes="copy">📋 Copy notes</button>' +
-          '<button class="fcEMP5-btn" type="button" data-emp-notes="clear">🗑️ Clear notes</button>' +
+      section("🗒️ Notes", "Saved per comp",
+        '<textarea class="fcEMP6-ta" id="fcEMP6notes" placeholder="Notes for this competition… (auto-saved)"></textarea>' +
+        '<div class="fcEMP6-btnRow" style="margin-top:10px;">' +
+          '<button class="fcEMP6-btn" type="button" data-emp-notes="copy">📋 Copy</button>' +
+          '<button class="fcEMP6-btn" type="button" data-emp-notes="clear">🗑️ Clear</button>' +
         '</div>' +
-        '<div class="fcEMP5-toast" id="fcEMP5notesToast">Saved.</div>'
+        '<div class="fcEMP6-toast" id="fcEMP6notesToast">Saved.</div>'
       );
   }
 
   function buildPrefs(){
     var hide = (lsGet(KEY_HIDE_BAR) === "1");
     var nt = getNewTab();
-    return '' +
-      section("⚙️ Preferences", "Saved",
-        '<div class="fcEMP5-sec" style="margin:0; box-shadow:none; background:rgba(0,0,0,.14); border-color:rgba(255,255,255,.10)">' +
-          '<div class="fcEMP5-muted" style="margin-bottom:10px;">These settings are saved per browser.</div>' +
-          '<div class="fcEMP5-btnRow">' +
-            '<button class="fcEMP5-btn" type="button" data-emp-pref="toggleNewTab">'+(nt ? "↗ New tab: ON" : "↗ New tab: OFF")+'</button>' +
-            '<button class="fcEMP5-btn" type="button" data-emp-pref="toggleHideBar">'+(hide ? "👁 Admin bar: HIDDEN" : "👁 Admin bar: SHOWN")+'</button>' +
-            '<button class="fcEMP5-btn" type="button" data-emp-pref="clearPins">📌 Clear pinned</button>' +
-            '<button class="fcEMP5-btn" type="button" data-emp-pref="reset">🗑️ Reset menu data</button>' +
-          '</div>' +
-          '<div class="fcEMP5-toast" id="fcEMP5prefToast">Ready.</div>' +
-        '</div>'
-      );
+
+    return section("⚙️ Preferences", "Saved",
+      '<div class="fcEMP6-btnRow">' +
+        '<button class="fcEMP6-btn" type="button" data-emp-pref="toggleNewTab">'+(nt ? "↗ New tab: ON" : "↗ New tab: OFF")+'</button>' +
+        '<button class="fcEMP6-btn" type="button" data-emp-pref="toggleHideBar">'+(hide ? "👁 Admin bar: HIDDEN" : "👁 Admin bar: SHOWN")+'</button>' +
+        '<button class="fcEMP6-btn" type="button" data-emp-pref="clearPins">📌 Clear pinned</button>' +
+        '<button class="fcEMP6-btn" type="button" data-emp-pref="reset">🗑️ Reset</button>' +
+      '</div>' +
+      '<div class="fcEMP6-toast" id="fcEMP6prefToast">Ready.</div>'
+    );
   }
 
   function render(){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     if(!root) return;
 
     var tab = getActiveTab();
     setActiveTab(tab);
 
-    var content = qs(".fcEMP5-content", root);
+    var content = qs(".fcEMP6-content", root);
     if(!content) return;
 
     var html = "";
-    if(tab === "quick") html = buildQuick();
+    if(tab === "pinned") html = buildPinned();
+    else if(tab === "quick") html = buildQuick();
     else if(tab === "employee") html = buildEmployee();
     else if(tab === "admin") html = buildAdmin();
     else if(tab === "competition") html = buildCompetition();
@@ -437,7 +467,7 @@
   }
 
   function wireCommonLinks(){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     if(!root) return;
 
     // pin toggle
@@ -453,14 +483,14 @@
         var idx = cur.indexOf(url);
         if(idx === -1) cur.unshift(url);
         else cur.splice(idx,1);
-        cur = cur.slice(0, 20);
+        cur = cur.slice(0, 30);
         setPins(cur);
         render();
       });
     }
 
     // click card => open
-    var cards = qsa(".fcEMP5-link[data-emp-url]", root);
+    var cards = qsa(".fcEMP6-link[data-emp-url]", root);
     for(var j=0;j<cards.length;j++){
       cards[j].addEventListener("click", function(){
         var url = decodeURIComponent(this.getAttribute("data-emp-url") || "");
@@ -482,10 +512,10 @@
   }
 
   function wirePrefs(){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     if(!root) return;
 
-    function ptoast(t){ var el = document.getElementById("fcEMP5prefToast"); if(el) el.textContent = t; }
+    function ptoast(t){ var el = document.getElementById("fcEMP6prefToast"); if(el) el.textContent = t; }
 
     var btns = qsa("[data-emp-pref]", root);
     for(var i=0;i<btns.length;i++){
@@ -527,7 +557,7 @@
           setRecents([]);
           lsSet(KEY_HIDE_BAR, "0");
           hideRafflexBar(false);
-          ptoast("Reset ✓ (menu refreshed)");
+          ptoast("Reset ✓");
           updateToggles();
           render();
           return;
@@ -537,14 +567,14 @@
   }
 
   /* =========================================================
-     Competition tools wiring (same behaviour, IDs updated)
+     Competition wiring (same logic, IDs updated)
      ========================================================= */
   function wireCompetitionTools(){
     if(!isCompetitionPage()) return;
 
-    function toast(msg){ var el = document.getElementById("fcEMP5toast"); if(el) el.textContent = msg; }
-    function socialToast(msg){ var el = document.getElementById("fcEMP5socialToast"); if(el) el.textContent = msg; }
-    function notesToast(msg){ var el = document.getElementById("fcEMP5notesToast"); if(el) el.textContent = msg; }
+    function toast(msg){ var el = document.getElementById("fcEMP6toast"); if(el) el.textContent = msg; }
+    function socialToast(msg){ var el = document.getElementById("fcEMP6socialToast"); if(el) el.textContent = msg; }
+    function notesToast(msg){ var el = document.getElementById("fcEMP6notesToast"); if(el) el.textContent = msg; }
 
     function copyToClipboard(text, cb){
       function done(ok){ if(cb) cb(ok); }
@@ -568,11 +598,11 @@
       catch(e){ document.body.removeChild(ta); done(false); }
     }
 
-    function qs(sel, root){ return (root||document).querySelector(sel); }
-    function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel) || []); }
+    function qs2(sel, root){ return (root||document).querySelector(sel); }
+    function qsa2(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel) || []); }
 
     function getTitle(){
-      var h = qs("h1") || qs('[data-testid="competition-title"]') || qs(".competition-title");
+      var h = qs2("h1") || qs2('[data-testid="competition-title"]') || qs2(".competition-title");
       if(h && h.textContent) return h.textContent.trim();
       var t = document.title || "";
       return (t || "").replace(/\\s+\\|\\s+.*$/,"").trim();
@@ -625,7 +655,7 @@
         return /\\bfree\\s*(delivery|shipping|postage|returns?|gift|trial)\\b/i.test(t||"");
       }
 
-      var nodes = qsa("[class*='ticket'],[class*='entry'],[class*='price'],[id*='ticket'],[id*='entry'],[id*='price'],button,a,select,option,label").slice(0, 1600);
+      var nodes = qsa2("[class*='ticket'],[class*='entry'],[class*='price'],[id*='ticket'],[id*='entry'],[id*='price'],button,a,select,option,label").slice(0, 1600);
       var candidates = [];
 
       for(var i=0;i<nodes.length;i++){
@@ -679,10 +709,10 @@
     }
 
     function findEndOrCountdown(){
-      var timeEl = qs('time[datetime]');
+      var timeEl = qs2('time[datetime]');
       if(timeEl && timeEl.getAttribute("datetime")) return timeEl.getAttribute("datetime");
 
-      var nodes = qsa("body *").slice(0, 1800);
+      var nodes = qsa2("body *").slice(0, 1800);
       for(var i=0;i<nodes.length;i++){
         var t = (nodes[i].textContent||"").trim();
         if(!t) continue;
@@ -695,7 +725,7 @@
     }
 
     function ctaPresent(){
-      var nodes = qsa("button, a").slice(0, 220);
+      var nodes = qsa2("button, a").slice(0, 220);
       for(var i=0;i<nodes.length;i++){
         var tx = (nodes[i].textContent||"").trim().toLowerCase();
         if(!tx) continue;
@@ -711,9 +741,9 @@
       if(el) el.textContent = val || "—";
     }
     function setHealth(level, main, sub){
-      var dot = document.getElementById("fcEMP5dot");
-      var mainEl = document.getElementById("fcEMP5hMain");
-      var subEl = document.getElementById("fcEMP5hSub");
+      var dot = document.getElementById("fcEMP6dot");
+      var mainEl = document.getElementById("fcEMP6hMain");
+      var subEl = document.getElementById("fcEMP6hSub");
       if(dot){
         dot.classList.remove("ok","warn","bad");
         if(level) dot.classList.add(level);
@@ -736,7 +766,7 @@
     }
 
     function inferWinnersFromText(){
-      var nodes = qsa("body *").slice(0, 1400);
+      var nodes = qsa2("body *").slice(0, 1400);
       for(var i=0;i<nodes.length;i++){
         var tx = (nodes[i].textContent||"").trim();
         if(!tx || tx.length > 80) continue;
@@ -802,10 +832,10 @@
       var end = findEndOrCountdown();
       var cta = ctaPresent();
 
-      setText("fcEMP5valTitle", title);
-      setText("fcEMP5valUrl", url);
-      setText("fcEMP5valPrice", price || "—");
-      setText("fcEMP5valEnd", end || "—");
+      setText("fcEMP6valTitle", title);
+      setText("fcEMP6valUrl", url);
+      setText("fcEMP6valPrice", price || "—");
+      setText("fcEMP6valEnd", end || "—");
 
       var missing = [];
       if(!title) missing.push("title");
@@ -817,15 +847,15 @@
       else if(missing.length <= 2) setHealth("warn", "Looks ok ⚠️", "Missing: " + missing.join(", ") + ".");
       else setHealth("bad", "Needs attention ❗", "Missing: " + missing.join(", ") + ".");
 
-      window.__fcEMP5_compData = { title:title||"", url:url||"", price:price||"", end:end||"" };
+      window.__fcEMP6_compData = { title:title||"", url:url||"", price:price||"", end:end||"" };
     }
 
     // copy buttons
-    var copyBtns = qsa("[data-emp-copy]");
+    var copyBtns = qsa2("[data-emp-copy]");
     for(var i=0;i<copyBtns.length;i++){
       copyBtns[i].addEventListener("click", function(){
         var kind = this.getAttribute("data-emp-copy");
-        var d = window.__fcEMP5_compData || {};
+        var d = window.__fcEMP6_compData || {};
         var out = "";
         if(kind === "url") out = d.url || location.href;
         if(kind === "title") out = d.title || "";
@@ -840,12 +870,12 @@
     }
 
     // social buttons
-    var preview = document.getElementById("fcEMP5socialPreview");
-    var socialBtns = qsa("[data-emp-social]");
+    var preview = document.getElementById("fcEMP6socialPreview");
+    var socialBtns = qsa2("[data-emp-social]");
     for(var s=0;s<socialBtns.length;s++){
       socialBtns[s].addEventListener("click", function(){
         var kind = this.getAttribute("data-emp-social");
-        var d = window.__fcEMP5_compData || {};
+        var d = window.__fcEMP6_compData || {};
         var pack = socialPack(d);
         var out = pack[kind] || ((d.title||"") + "\\n" + (d.url||location.href));
         if(preview) preview.value = out;
@@ -854,7 +884,7 @@
     }
 
     // notes
-    var notes = document.getElementById("fcEMP5notes");
+    var notes = document.getElementById("fcEMP6notes");
     if(notes){
       var slug = slugFromPath() || location.pathname;
       var KEY_NOTES = "fcEMP_notes_v1:" + slug;
@@ -870,13 +900,13 @@
         }, 250);
       });
 
-      var copyN = qs('[data-emp-notes="copy"]');
+      var copyN = qs2('[data-emp-notes="copy"]');
       if(copyN){
         copyN.addEventListener("click", function(){
           copyToClipboard(notes.value || "", function(ok){ notesToast(ok ? "Notes copied ✓" : "Copy failed"); });
         });
       }
-      var clearN = qs('[data-emp-notes="clear"]');
+      var clearN = qs2('[data-emp-notes="clear"]');
       if(clearN){
         clearN.addEventListener("click", function(){
           notes.value = "";
@@ -892,81 +922,99 @@
   }
 
   function buildUI(){
-    if(qs(".fcEMP5")) return;
+    if(qs(".fcEMP6")) return;
 
     var root = document.createElement("div");
-    root.className = "fcEMP5";
+    root.className = "fcEMP6";
     root.innerHTML =
-      '<div class="fcEMP5-backdrop" data-emp-close="1"></div>' +
+      '<div class="fcEMP6-backdrop" data-emp-close="1"></div>' +
 
-      '<div class="fcEMP5-drawer" aria-label="Employee Hub Drawer">' +
-        '<div class="fcEMP5-head">' +
-          '<div class="fcEMP5-brand">' +
-            '<div class="fcEMP5-launchIco">⚡</div>' +
-            '<div style="min-width:0;">' +
-              '<b>Flash — Employee Hub</b>' +
-              '<small title="Current page">Current: '+(location.pathname||"/")+'</small>' +
-            '</div>' +
+      '<div class="fcEMP6-drawer" aria-label="Employee Hub Drawer">' +
+        '<div class="fcEMP6-head">' +
+          '<div class="fcEMP6-headLeft">' +
+            '<div class="fcEMP6-launchIco">⚡</div>' +
+            '<div class="fcEMP6-headTitle">Flash — Employee Hub</div>' +
           '</div>' +
-          '<div class="fcEMP5-actions">' +
-            '<div class="fcEMP5-iconBtn" data-emp-action="newtab" title="New tab toggle">↗</div>' +
-            '<div class="fcEMP5-iconBtn" data-emp-action="hidebar" title="Admin bar toggle">👁</div>' +
-            '<div class="fcEMP5-close" data-emp-close="1" title="Close">✕</div>' +
+          '<div class="fcEMP6-headRight">' +
+            '<div class="fcEMP6-ib" data-emp-action="newtab" title="New tab toggle">↗</div>' +
+            '<div class="fcEMP6-ib" data-emp-action="hidebar" title="Admin bar toggle">👁</div>' +
+            '<div class="fcEMP6-ib" data-emp-close="1" title="Close">✕</div>' +
           '</div>' +
         '</div>' +
 
-        '<div class="fcEMP5-search">' +
-          '<input class="fcEMP5-input" type="text" placeholder="Search links… (outlook, orders, coupons)">' +
-          '<div class="fcEMP5-chip" data-emp-action="clear" title="Clear search">✕</div>' +
+        '<div class="fcEMP6-search">' +
+          '<input class="fcEMP6-input" type="text" placeholder="Search…">' +
+          '<div class="fcEMP6-clear" data-emp-action="clear" title="Clear">✕</div>' +
         '</div>' +
 
-        '<div class="fcEMP5-main">' +
-          '<div class="fcEMP5-rail">' +
-            '<div class="fcEMP5-tab" data-emp-tab="quick" data-tip="Quick">✨</div>' +
-            '<div class="fcEMP5-tab" data-emp-tab="employee" data-tip="Employee">👔</div>' +
-            '<div class="fcEMP5-tab" data-emp-tab="admin" data-tip="Admin">🧭</div>' +
-            '<div class="fcEMP5-tab" data-emp-tab="competition" data-tip="Competition">🏁</div>' +
+        '<div class="fcEMP6-main">' +
+          '<div class="fcEMP6-rail">' +
+            '<div class="fcEMP6-tab" data-emp-tab="pinned" data-tip="Pinned">📌</div>' +
+            '<div class="fcEMP6-tab" data-emp-tab="quick" data-tip="Quick">⚡</div>' +
+            '<div class="fcEMP6-tab" data-emp-tab="employee" data-tip="Employee">👔</div>' +
+            '<div class="fcEMP6-tab" data-emp-tab="admin" data-tip="Admin">🧭</div>' +
+            '<div class="fcEMP6-tab" data-emp-tab="competition" data-tip="Competition">🏁</div>' +
             '<div style="flex:1;"></div>' +
-            '<div class="fcEMP5-tab" data-emp-tab="prefs" data-tip="Prefs">⚙️</div>' +
+            '<div class="fcEMP6-tab" data-emp-tab="prefs" data-tip="Prefs">⚙️</div>' +
           '</div>' +
-          '<div class="fcEMP5-content"></div>' +
+          '<div class="fcEMP6-content"></div>' +
         '</div>' +
       '</div>' +
 
-      '<div class="fcEMP5-launch" aria-label="Open employee hub">' +
-        '<div class="fcEMP5-launchIco">⚙️</div>' +
-        '<div class="fcEMP5-launchTxt">' +
-          '<b>Employee Menu</b>' +
-          '<span>Quick tools • Links • Admin</span>' +
+      '<div class="fcEMP6-launch" aria-label="Open employee hub">' +
+        '<div class="fcEMP6-launchIco" data-emp-launch-ico></div>' +
+        '<div class="fcEMP6-launchTxt">' +
+          '<b data-emp-launch-title></b>' +
+          '<span data-emp-launch-sub></span>' +
         '</div>' +
-        '<span class="fcEMP5-launchCrumb" title="Current page">📍 '+(location.pathname||"/")+'</span>' +
-        '<span class="fcEMP5-launchChevron">▴</span>' +
+        '<span class="fcEMP6-chev">▴</span>' +
       '</div>';
 
     document.body.appendChild(root);
 
-    // open state
+    // Apply easy customisation to launcher + positions
+    var launch = qs(".fcEMP6-launch", root);
+    var drawer = qs(".fcEMP6-drawer", root);
+
+    if(launch){
+      launch.style.right = (CFG.launcherRight || 14) + "px";
+      launch.style.bottom = (CFG.launcherBottom || 14) + "px";
+    }
+    if(drawer){
+      drawer.style.width = (CFG.drawerWidth || 460) + "px";
+      drawer.style.right = (CFG.drawerRight || 12) + "px";
+      drawer.style.top = (CFG.drawerTop || 12) + "px";
+      drawer.style.bottom = (CFG.drawerBottom || 12) + "px";
+    }
+
+    var icoEl = qs("[data-emp-launch-ico]", root);
+    var titleEl = qs("[data-emp-launch-title]", root);
+    var subEl = qs("[data-emp-launch-sub]", root);
+
+    if(icoEl) icoEl.textContent = CFG.launcherIcon || "⚙️";
+    if(titleEl) titleEl.textContent = CFG.launcherTitle || "Employee Menu";
+    if(subEl){
+      subEl.textContent = CFG.launcherSubtitle || "";
+      subEl.style.display = (CFG.showLauncherSubtitle === false) ? "none" : "";
+    }
+
+    // Open state
     var open = (lsGet(KEY_OPEN) === "1");
     setOpen(open);
 
-    // set tab
+    // Tab state
     var tab = getActiveTab();
     setActiveTab(tab);
 
-    // handlers
-    var launch = qs(".fcEMP5-launch", root);
-    var drawer = qs(".fcEMP5-drawer", root);
-    var backdrop = qs(".fcEMP5-backdrop", root);
-    var chev = qs(".fcEMP5-launchChevron", root);
-    var input = qs(".fcEMP5-input", root);
+    var backdrop = qs(".fcEMP6-backdrop", root);
+    var chev = qs(".fcEMP6-chev", root);
+    var input = qs(".fcEMP6-input", root);
 
     function setChevron(isOpen){ if(chev) chev.textContent = isOpen ? "▾" : "▴"; }
 
     function setOpen(isOpen){
-      var d = qs(".fcEMP5-drawer", root);
-      var b = qs(".fcEMP5-backdrop", root);
-      if(d) d.classList.toggle("is-open", !!isOpen);
-      if(b) b.classList.toggle("is-open", !!isOpen);
+      if(drawer) drawer.classList.toggle("is-open", !!isOpen);
+      if(backdrop) backdrop.classList.toggle("is-open", !!isOpen);
       setChevron(!!isOpen);
       lsSet(KEY_OPEN, isOpen ? "1" : "0");
       if(isOpen){
@@ -976,7 +1024,6 @@
       }
     }
 
-    // expose for internal use
     root.__setOpen = setOpen;
 
     if(launch){
@@ -995,7 +1042,7 @@
       });
     }
 
-    // esc
+    // esc close
     window.addEventListener("keydown", function(e){
       if(e && e.key === "Escape"){
         if(drawer && drawer.classList.contains("is-open")) setOpen(false);
@@ -1003,7 +1050,7 @@
     });
 
     // tabs
-    var tabs = qsa(".fcEMP5-tab", root);
+    var tabs = qsa(".fcEMP6-tab", root);
     for(var t=0;t<tabs.length;t++){
       tabs[t].addEventListener("click", function(){
         var id = this.getAttribute("data-emp-tab");
@@ -1055,31 +1102,30 @@
   }
 
   function setOpen(state){
-    var root = qs(".fcEMP5");
+    var root = qs(".fcEMP6");
     if(root && root.__setOpen) root.__setOpen(!!state);
   }
 
   function ensure(){
-    // Desktop-only: remove UI on mobile sizes
-    var existing = qs(".fcEMP5");
+    // Desktop-only
+    var existing = qs(".fcEMP6");
     if(!isDesktop()){
       if(existing) existing.remove();
       return;
     }
 
     buildUI();
-    updateCrumb();
     hideRafflexBar(lsGet(KEY_HIDE_BAR) === "1");
 
-    // If we are on competition tab, refresh on SPA route changes
+    // refresh on competition tab after SPA nav
     if(getActiveTab() === "competition"){
       render();
     }
   }
 
   function hookHistory(){
-    if(window.__fcEMP_histHooked_v5) return;
-    window.__fcEMP_histHooked_v5 = true;
+    if(window.__fcEMP_histHooked_v6) return;
+    window.__fcEMP_histHooked_v6 = true;
 
     var _push = history.pushState;
     var _rep = history.replaceState;
