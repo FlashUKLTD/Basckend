@@ -22,6 +22,12 @@
     }
   }
 
+  function absUrl(href){
+    href = href || "";
+    if(href.indexOf("http://") === 0 || href.indexOf("https://") === 0) return href;
+    return "https://flashcompetitions.com" + (href.charAt(0)==="/" ? href : ("/"+href));
+  }
+
   function buildDock(){
     if(qs(".fcATdock")) return;
 
@@ -37,7 +43,7 @@
           '</div>' +
         '</div>' +
         '<div class="fcATfabRight">' +
-          '<span class="fcATpill fcATpath"> 🔗 /</span>' +
+          '<span class="fcATpill fcATpath">📍 /</span>' +
           '<span class="fcATchev">▴</span>' +
         '</div>' +
       '</div>' +
@@ -135,13 +141,13 @@
   function buildShortcutsHTML(){
     var cats = [
       {
-        title: "Competitions",
+        title: "🏁 Competitions",
         links: [
           ["Competitions", "/admin/products", "Manage comps"],
           ["Categories", "/admin/product-categories", "Organise drops"],
           ["Instant Winners", "/admin/instant-winners", "IW prizes"],
-          ["Winners", "/admin/winners", "Results log"]
-          ["Live Draw", "/i/draw-number", "Results log"]
+          ["Winners", "/admin/winners", "Results log"],
+          ["Draw Number Tool", "https://flashcompetitions.com/i/draw-number", "Public draw number page"]
         ]
       },
       {
@@ -199,7 +205,7 @@
         var name = cats[i].links[j][0];
         var href = cats[i].links[j][1];
         var hint = cats[i].links[j][2];
-        out += '<a class="fcATlink" href="https://flashcompetitions.com'+href+'"><span>'+name+'</span><small>'+hint+'</small></a>';
+        out += '<a class="fcATlink" href="'+absUrl(href)+'"><span>'+name+'</span><small>'+hint+'</small></a>';
       }
       out +=   '</div></div>';
       out += '</div>';
@@ -226,7 +232,7 @@
   }
 
   /* =========================
-     COMPETITION TOOLS (UPGRADED)
+     COMPETITION TOOLS
      ========================= */
 
   function buildCompetitionHTML(){
@@ -269,7 +275,7 @@
 
       '<div class="fcATx">' +
         '<div class="fcATxHead"><div class="fcATxTitle">📣 Social / IG kit</div><div class="fcATxPill">Fast content</div></div>' +
-        '<div class="fcATbtnRow">' +
+        '<div class="fcATbtnRow" style="grid-template-columns:1fr 1fr;">' +
           '<button class="fcATbtn" type="button" data-social="ig_titles">🧠 Copy 3 IG titles</button>' +
           '<button class="fcATbtn" type="button" data-social="ig_captions">📝 Copy 3 IG captions</button>' +
           '<button class="fcATbtn" type="button" data-social="ig_story">📲 Copy IG story text</button>' +
@@ -308,9 +314,7 @@
     }
 
     function copyToClipboard(text, cb){
-      function done(ok){
-        if(cb) cb(ok);
-      }
+      function done(ok){ if(cb) cb(ok); }
       try{
         if(navigator.clipboard && navigator.clipboard.writeText){
           navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ fallbackCopy(text, done); });
@@ -338,141 +342,123 @@
       return (t || "").replace(/\s+\|\s+.*$/,"").trim();
     }
 
+    /* ===== Price detector (your existing robust version) ===== */
     function findPriceText(){
-  function norm(s){ return (s||"").replace(/\s+/g," ").trim(); }
+      function norm(s){ return (s||"").replace(/\s+/g," ").trim(); }
 
-  function parsePricesFromText(t){
-    t = t || "";
-    var out = [];
+      function parsePricesFromText(t){
+        t = t || "";
+        var out = [];
 
-    // Explicit Free signals (tight)
-    if(/\bfree\s*entry\b/i.test(t) || /\bentry\s*free\b/i.test(t)) out.push({ kind:"free", label:"Free", pence: 0 });
+        if(/\bfree\s*entry\b/i.test(t) || /\bentry\s*free\b/i.test(t)) out.push({ kind:"free", label:"Free", pence: 0 });
+        var z = t.match(/£\s?0(?:\.00)?\b/);
+        if(z) out.push({ kind:"free", label:"Free", pence: 0 });
 
-    // £0 / £0.00
-    var z = t.match(/£\s?0(?:\.00)?\b/);
-    if(z) out.push({ kind:"free", label:"Free", pence: 0 });
+        var pm;
+        var reP = /(?:\b(\d{1,3})\s*p\b|\bp\s?(\d{1,3})\b)/ig;
+        while((pm = reP.exec(t))){
+          var p = parseInt(pm[1] || pm[2], 10);
+          if(!isNaN(p) && p >= 1 && p <= 99){
+            out.push({ kind:"pence", label: (p + "p"), pence: p });
+          }
+        }
 
-    // Pence: 10p / 10 p / p10
-    var pm;
-    var reP = /(?:\b(\d{1,3})\s*p\b|\bp\s?(\d{1,3})\b)/ig;
-    while((pm = reP.exec(t))){
-      var p = parseInt(pm[1] || pm[2], 10);
-      if(!isNaN(p) && p >= 1 && p <= 99){
-        out.push({ kind:"pence", label: (p + "p"), pence: p });
+        var m;
+        var re = /£\s?(\d{1,4})(?:\.(\d{1,2}))?/g;
+        while((m = re.exec(t))){
+          var pounds = parseInt(m[1], 10);
+          var dec = m[2] ? m[2].padEnd(2,"0") : "00";
+          var pence = (pounds * 100) + parseInt(dec, 10);
+          if(pence === 0){
+            out.push({ kind:"free", label:"Free", pence: 0 });
+          }else{
+            out.push({ kind:"pounds", label: ("£" + pounds + "." + dec), pence: pence });
+          }
+        }
+
+        return out;
       }
-    }
 
-    // Pounds: £1 / £1.00 / £ 2.50
-    var m;
-    var re = /£\s?(\d{1,4})(?:\.(\d{1,2}))?/g;
-    while((m = re.exec(t))){
-      var pounds = parseInt(m[1], 10);
-      var dec = m[2] ? m[2].padEnd(2,"0") : "00";
-      var pence = (pounds * 100) + parseInt(dec, 10);
-      if(pence === 0){
-        out.push({ kind:"free", label:"Free", pence: 0 });
-      }else{
-        out.push({ kind:"pounds", label: ("£" + pounds + "." + dec), pence: pence });
+      function hasEntryContext(t){
+        t = (t||"").toLowerCase();
+        return (
+          t.indexOf("entry") !== -1 ||
+          t.indexOf("per entry") !== -1 ||
+          t.indexOf("ticket") !== -1 ||
+          t.indexOf("tickets") !== -1 ||
+          t.indexOf("enter") !== -1 ||
+          t.indexOf("add to basket") !== -1 ||
+          t.indexOf("add to cart") !== -1
+        );
       }
-    }
 
-    return out;
-  }
-
-  function hasEntryContext(t){
-    t = (t||"").toLowerCase();
-    return (
-      t.indexOf("entry") !== -1 ||
-      t.indexOf("per entry") !== -1 ||
-      t.indexOf("ticket") !== -1 ||
-      t.indexOf("tickets") !== -1 ||
-      t.indexOf("enter") !== -1 ||
-      t.indexOf("add to basket") !== -1 ||
-      t.indexOf("add to cart") !== -1
-    );
-  }
-
-  function looksLikeUnrelatedFree(t){
-    // Ignore "free delivery/postage/returns" etc
-    return /\bfree\s*(delivery|shipping|postage|returns?|gift|trial)\b/i.test(t||"");
-  }
-
-  // 1) Focus scan: only nodes likely involved in entry/tickets/price UI
-  var nodes = qsa(
-    "[class*='ticket'],[class*='entry'],[class*='price'],[id*='ticket'],[id*='entry'],[id*='price'],button,a,select,option,label"
-  ).slice(0, 1600);
-
-  var candidates = [];
-
-  for(var i=0;i<nodes.length;i++){
-    var el = nodes[i];
-    var t = norm(el.textContent || "");
-    if(!t) continue;
-    if(t.length > 180) continue;
-
-    // Take the element + its parent text (often the price is in sibling)
-    var p = el.parentElement ? norm(el.parentElement.textContent || "") : "";
-    var combined = t + (p && p !== t ? (" • " + p) : "");
-
-    // Must have entry context somewhere nearby
-    if(!hasEntryContext(combined)) continue;
-
-    // Avoid common “free delivery” traps
-    if(looksLikeUnrelatedFree(combined)) {
-      // Still allow pence/£ prices in this block, just don't treat "FREE" as "Free"
-      combined = combined.replace(/\bfree\b/ig, "");
-    }
-
-    var prices = parsePricesFromText(combined);
-    for(var j=0;j<prices.length;j++){
-      // weight: prefer prices found in shorter, more "label-like" blocks
-      var score = 100;
-      score += Math.max(0, 30 - combined.length/8);
-      if(prices[j].kind === "free" && /\bfree\s*entry\b/i.test(combined)) score += 40;
-      candidates.push({ score: score, p: prices[j] });
-    }
-  }
-
-  // 2) Decide:
-  // - If we found any explicit "Free entry"/£0 in entry-context, return Free.
-  // - Else return the LOWEST price found in entry-context (prevents picking 30p when 10p exists).
-  if(candidates.length){
-    var hasExplicitFree = false;
-    for(var a=0;a<candidates.length;a++){
-      if(candidates[a].p.kind === "free" && candidates[a].score >= 120){
-        hasExplicitFree = true;
-        break;
+      function looksLikeUnrelatedFree(t){
+        return /\bfree\s*(delivery|shipping|postage|returns?|gift|trial)\b/i.test(t||"");
       }
+
+      var nodes = qsa(
+        "[class*='ticket'],[class*='entry'],[class*='price'],[id*='ticket'],[id*='entry'],[id*='price'],button,a,select,option,label"
+      ).slice(0, 1600);
+
+      var candidates = [];
+
+      for(var i=0;i<nodes.length;i++){
+        var el = nodes[i];
+        var t = norm(el.textContent || "");
+        if(!t) continue;
+        if(t.length > 180) continue;
+
+        var p = el.parentElement ? norm(el.parentElement.textContent || "") : "";
+        var combined = t + (p && p !== t ? (" • " + p) : "");
+
+        if(!hasEntryContext(combined)) continue;
+
+        if(looksLikeUnrelatedFree(combined)) {
+          combined = combined.replace(/\bfree\b/ig, "");
+        }
+
+        var prices = parsePricesFromText(combined);
+        for(var j=0;j<prices.length;j++){
+          var score = 100;
+          score += Math.max(0, 30 - combined.length/8);
+          if(prices[j].kind === "free" && /\bfree\s*entry\b/i.test(combined)) score += 40;
+          candidates.push({ score: score, p: prices[j] });
+        }
+      }
+
+      if(candidates.length){
+        var hasExplicitFree = false;
+        for(var a=0;a<candidates.length;a++){
+          if(candidates[a].p.kind === "free" && candidates[a].score >= 120){
+            hasExplicitFree = true;
+            break;
+          }
+        }
+        if(hasExplicitFree) return "Free";
+
+        var min = null;
+        for(var b=0;b<candidates.length;b++){
+          var pp = candidates[b].p;
+          if(pp.kind === "free") continue;
+          if(min === null || pp.pence < min.pence) min = pp;
+        }
+        if(min) return min.label;
+
+        return candidates.sort(function(x,y){ return y.score - x.score; })[0].p.label || "";
+      }
+
+      var bodyText = (document.body && document.body.innerText) ? document.body.innerText : "";
+      if(/\bfree\s*entry\b/i.test(bodyText) || /\bentry\s*free\b/i.test(bodyText) || /£\s?0(?:\.00)?\b/.test(bodyText)) return "Free";
+
+      var pWhole = bodyText.match(/\b(\d{1,2})\s*p\b/i);
+      if(pWhole){
+        var v = parseInt(pWhole[1],10);
+        if(!isNaN(v)) return v + "p";
+      }
+      var mWhole = bodyText.match(/£\s?\d+(?:\.\d{1,2})?/);
+      if(mWhole && mWhole[0]) return mWhole[0].replace(/\s+/g,"");
+      return "";
     }
-    if(hasExplicitFree) return "Free";
-
-    // Choose the minimum non-zero price (the actual entry price is almost always the lowest)
-    var min = null;
-    for(var b=0;b<candidates.length;b++){
-      var pp = candidates[b].p;
-      if(pp.kind === "free") continue;
-      if(min === null || pp.pence < min.pence) min = pp;
-    }
-    if(min) return min.label;
-
-    // fallback
-    return candidates.sort(function(x,y){ return y.score - x.score; })[0].p.label || "";
-  }
-
-  // 3) Fallback: very light scan for a single clear price (no "FREE anywhere" auto-win)
-  var bodyText = (document.body && document.body.innerText) ? document.body.innerText : "";
-  if(/\bfree\s*entry\b/i.test(bodyText) || /\bentry\s*free\b/i.test(bodyText) || /£\s?0(?:\.00)?\b/.test(bodyText)) return "Free";
-
-  var pWhole = bodyText.match(/\b(\d{1,2})\s*p\b/i);
-  if(pWhole){
-    var v = parseInt(pWhole[1],10);
-    if(!isNaN(v)) return v + "p";
-  }
-  var mWhole = bodyText.match(/£\s?\d+(?:\.\d{1,2})?/);
-  if(mWhole && mWhole[0]) return mWhole[0].replace(/\s+/g,"");
-  return "";
-}
-
 
     function findEndOrCountdown(){
       var timeEl = qs('time[datetime]');
@@ -523,12 +509,10 @@
       t = t || "";
       var m = t.match(/£\s?\d{1,6}(?:,\d{3})*(?:\.\d{1,2})?/);
       if(m && m[0]) return m[0].replace(/\s+/g,"");
-      // common words: "PS5", "iPhone" etc — fallback to "prize"
       return "";
     }
 
     function inferWinnersFromText(){
-      // best-effort scan for "3 winners" etc
       var nodes = qsa("body *").slice(0, 1400);
       for(var i=0;i<nodes.length;i++){
         var tx = (nodes[i].textContent||"").trim();
@@ -546,7 +530,6 @@
     }
 
     function buildUtmUrl(base){
-      // tweakable defaults
       var u = base || location.href;
       var sep = u.indexOf("?") === -1 ? "?" : "&";
       return u + sep + "utm_source=instagram&utm_medium=social&utm_campaign=competition";
@@ -559,7 +542,6 @@
       var prize = inferPrizeFromTitle(title);
       var winners = inferWinnersFromText();
 
-      var hook = prize ? ("WIN " + prize) : title.toUpperCase();
       var w = winners ? (winners + " WINNERS") : "";
 
       var igTitles = [
@@ -678,12 +660,8 @@
       var slug = slugFromPath() || location.pathname;
       var KEY_NOTES = "fcAT_notes_v1:" + slug;
 
-      // load
-      try{
-        ta.value = lsGet(KEY_NOTES) || "";
-      }catch(_){}
+      try{ ta.value = lsGet(KEY_NOTES) || ""; }catch(_){}
 
-      // autosave
       var saveTimer = null;
       ta.addEventListener("input", function(){
         if(saveTimer) clearTimeout(saveTimer);
@@ -693,7 +671,6 @@
         }, 250);
       });
 
-      // buttons
       var copyBtn = qs('[data-notes="copy"]');
       if(copyBtn){
         copyBtn.addEventListener("click", function(){
