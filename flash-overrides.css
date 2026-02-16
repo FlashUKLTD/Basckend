@@ -491,7 +491,7 @@ a:focus-visible{
     display: none !important;
 }
 
-::root{
+:root{
   --fcE-bg0:#070815;
   --fcE-bg1:#0B0F22;
   --fcE-text:rgba(255,255,255,.92);
@@ -5367,6 +5367,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
