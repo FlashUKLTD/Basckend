@@ -1,12 +1,86 @@
 (function(){
-  var DESKTOP_MIN = 901;
-  var KEY_OPEN = "fcAT_open_v2";
-  var KEY_TAB = "fcAT_tab_v2";
-  var KEY_HIDE_RAFFLEX = "fcAT_hideRafflex_v2";
+  /* =========================================================
+     🔧 EASY CUSTOMISATION — EDIT HERE ONLY
+     ========================================================= */
+  window.FLASH_EMPLOYEE_MENU = window.FLASH_EMPLOYEE_MENU || {
+    /* Show only on desktop */
+    desktopMin: 901,
+
+    /* When you click links, open in new tab by default? (user can toggle in UI) */
+    defaultNewTab: true,
+
+    /* Employee tools (edit/add) */
+    employeeLinks: [
+      { title:"Outlook Mail",    desc:"Inbox (Microsoft 365)", ico:"📧", url:"https://outlook.office.com/mail/" },
+      { title:"Outlook Calendar",desc:"Calendar view",         ico:"📅", url:"https://outlook.office.com/calendar/" },
+      { title:"Microsoft Teams", desc:"Chats + meetings",      ico:"💬", url:"https://teams.microsoft.com/" },
+      { title:"OneDrive",        desc:"Files & folders",       ico:"☁️", url:"https://onedrive.live.com/" },
+      { title:"Microsoft 365",   desc:"Office home",           ico:"🧩", url:"https://www.office.com/" }
+      // Add more: Notion/Slack/Docs/Drive/Zendesk/Stripe/etc
+    ],
+
+    /* Internal Flash quick tools */
+    flashTools: [
+      { title:"Draw Number Tool", desc:"Public draw number page", ico:"🎲", url:"https://flashcompetitions.com/i/draw-number" },
+      { title:"Admin Dashboard",  desc:"Admin home",               ico:"🛠️", url:"https://flashcompetitions.com/admin" },
+      { title:"Manage Competitions", desc:"Products list",         ico:"🏁", url:"https://flashcompetitions.com/admin/products" },
+      { title:"Orders",           desc:"Sales & fulfilment",       ico:"🧾", url:"https://flashcompetitions.com/admin/orders" },
+      { title:"Coupons",          desc:"Discount codes",           ico:"🏷️", url:"https://flashcompetitions.com/admin/coupons" }
+    ],
+
+    /* Admin navigation groups (keeps your original structure) */
+    adminGroups: [
+      { title:"🏁 Competitions", links:[
+        ["Competitions", "/admin/products", "Manage comps", "🏁"],
+        ["Categories", "/admin/product-categories", "Organise drops", "🧩"],
+        ["Instant Winners", "/admin/instant-winners", "IW prizes", "🎁"],
+        ["Winners", "/admin/winners", "Results log", "🏆"],
+        ["Draw Number Tool", "https://flashcompetitions.com/i/draw-number", "Public draw number page", "🎲"]
+      ]},
+      { title:"🛒 Sales", links:[
+        ["Orders", "/admin/orders", "Sales & fulfilment", "🧾"],
+        ["Coupons", "/admin/coupons", "Discount codes", "🏷️"]
+      ]},
+      { title:"👥 Users", links:[
+        ["Users", "/admin/users", "Accounts & access", "👤"]
+      ]},
+      { title:"📄 Content", links:[
+        ["Dashboard", "/admin", "Admin home", "🛠️"],
+        ["Pages", "/admin/pages", "Site pages", "📄"]
+      ]},
+      { title:"📊 Insights", links:[
+        ["Analytics", "/admin/analytics", "Performance", "📈"]
+      ]},
+      { title:"⚙️ Settings", links:[
+        ["General ⚙️", "/admin/settings/general-settings", "Basics", "⚙️"],
+        ["Email ✉️", "/admin/settings/email-settings", "Mail templates", "✉️"],
+        ["Branding 🎨", "/admin/settings/branding-settings", "Logos & style", "🎨"],
+        ["Checkout 🧾", "/admin/settings/checkout-settings", "Payments & flow", "🧾"],
+        ["Marketing 📣", "/admin/settings/marketing-settings", "Promos", "📣"],
+        ["UX ✨", "/admin/settings/user-experience-settings", "Site feel", "✨"],
+        ["SEO 🔎", "/admin/settings/seo-settings", "Search settings", "🔎"],
+        ["Advanced 🧠", "/admin/settings/advanced-settings", "Power options", "🧠"],
+        ["Integrations 🔌", "/admin/settings/integration-settings", "Connections", "🔌"],
+        ["Settings (root)", "/admin/settings", "All settings", "⚙️"]
+      ]}
+    ]
+  };
+
+  var CFG = window.FLASH_EMPLOYEE_MENU;
+
+  /* =========================================================
+     Core
+     ========================================================= */
+  var KEY_OPEN = "fcEMP_open_v4";
+  var KEY_TAB  = "fcEMP_tab_v4";
+  var KEY_NEW_TAB = "fcEMP_newtab_v4";
+  var KEY_PINS = "fcEMP_pins_v4";
+  var KEY_RECENTS = "fcEMP_recent_v4";
+  var KEY_HIDE_RAFFLEX = "fcEMP_hideRafflex_v4";
 
   var RAFFLEX_BAR_SELECTOR = 'div[wire\\:id][class*="bg-zinc-900"][class*="border-b"]';
 
-  function isDesktop(){ return (window.innerWidth || 0) >= DESKTOP_MIN; }
+  function isDesktop(){ return (window.innerWidth || 0) >= (CFG.desktopMin || 901); }
   function isCompetitionPage(){ return (location.pathname || "").indexOf("/competition/") === 0; }
 
   function qs(sel, root){ return (root||document).querySelector(sel); }
@@ -15,6 +89,12 @@
   function lsGet(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(_){ } }
 
+  function absUrl(href){
+    href = href || "";
+    if(href.indexOf("http://") === 0 || href.indexOf("https://") === 0) return href;
+    return "https://flashcompetitions.com" + (href.charAt(0)==="/" ? href : ("/"+href));
+  }
+
   function hideRafflexBar(shouldHide){
     var bars = qsa(RAFFLEX_BAR_SELECTOR);
     for(var i=0;i<bars.length;i++){
@@ -22,296 +102,563 @@
     }
   }
 
-  function absUrl(href){
-    href = href || "";
-    if(href.indexOf("http://") === 0 || href.indexOf("https://") === 0) return href;
-    return "https://flashcompetitions.com" + (href.charAt(0)==="/" ? href : ("/"+href));
+  function readJSON(key, fallback){
+    try{
+      var v = lsGet(key);
+      if(!v) return fallback;
+      return JSON.parse(v);
+    }catch(_){ return fallback; }
+  }
+  function writeJSON(key, obj){
+    try{ lsSet(key, JSON.stringify(obj)); }catch(_){}
+  }
+
+  function getPins(){ return readJSON(KEY_PINS, []); }
+  function setPins(arr){ writeJSON(KEY_PINS, arr || []); }
+
+  function getRecents(){ return readJSON(KEY_RECENTS, []); }
+  function setRecents(arr){ writeJSON(KEY_RECENTS, arr || []); }
+
+  function getNewTab(){
+    var v = lsGet(KEY_NEW_TAB);
+    if(v === null || v === undefined){
+      lsSet(KEY_NEW_TAB, (CFG.defaultNewTab ? "1":"0"));
+      return !!CFG.defaultNewTab;
+    }
+    return v === "1";
+  }
+
+  function pushRecent(item){
+    // item: {title,url}
+    var r = getRecents();
+    // remove dup by url
+    var out = [];
+    for(var i=0;i<r.length;i++){
+      if(r[i] && r[i].url === item.url) continue;
+      out.push(r[i]);
+    }
+    out.unshift({ title:item.title||"Link", url:item.url||"" });
+    out = out.slice(0, 8);
+    setRecents(out);
   }
 
   function buildDock(){
-    if(qs(".fcATdock")) return;
+    if(qs(".fcEMPdock")) return;
 
     var dock = document.createElement("div");
-    dock.className = "fcATdock";
+    dock.className = "fcEMPdock";
     dock.innerHTML =
-      '<div class="fcATfab" aria-label="Open admin tools">' +
-        '<div class="fcATfabLeft">' +
-          '<div class="fcATbolt">⚙️</div>' +
-          '<div class="fcATfabText">' +
+      '<div class="fcEMPpill" aria-label="Open employee menu">' +
+        '<div class="fcEMPleft">' +
+          '<div class="fcEMPbadge">⚙️</div>' +
+          '<div class="fcEMPtitle">' +
             '<b>Employee Menu</b>' +
-            '<span class="fcATsub">Click to open • Desktop only</span>' +
+            '<span class="fcEMPsub">Quick tools • Links • Admin</span>' +
           '</div>' +
         '</div>' +
-        '<div class="fcATfabRight">' +
-          '<span class="fcATpill fcATpath">📍 /</span>' +
-          '<span class="fcATchev">▴</span>' +
+        '<div class="fcEMPr">' +
+          '<span class="fcEMPcrumb" title="Current page">📍 '+(location.pathname||"/")+'</span>' +
+          '<span class="fcEMPchev">▴</span>' +
         '</div>' +
       '</div>' +
 
-      '<div class="fcATpanelWrap">' +
-        '<div class="fcATpanel">' +
-          '<div class="fcAThead">' +
-            '<b class="fcATpanelTitle">Admin shortcuts</b>' +
-            '<div class="fcATselectWrap">' +
-              '<select class="fcATselect" aria-label="Choose tools section">' +
-                '<option value="shortcuts">🧭 Admin shortcuts</option>' +
-                '<option value="competition">🏁 Competition Tools</option>' +
-                '<option value="prefs">⚙️ Preferences</option>' +
-              '</select>' +
+      '<div class="fcEMPwrap">' +
+        '<div class="fcEMPpanel">' +
+          '<div class="fcEMPhead">' +
+            '<div class="fcEMPtopRow">' +
+              '<div class="fcEMPpanelTitle">⚡ Flash — Employee Hub</div>' +
+              '<div class="fcEMPmini">' +
+                '<div class="fcEMPchip" data-emp-action="newtab">↗ New tab</div>' +
+                '<div class="fcEMPchip" data-emp-action="hidebar">👁 Hide admin bar</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="fcEMPsearch">' +
+              '<input class="fcEMPinput" type="text" placeholder="Search links… (e.g. outlook, orders, coupons)">' +
+              '<div class="fcEMPchip" data-emp-action="clear">✕</div>' +
+            '</div>' +
+            '<div class="fcEMPtabs">' +
+              '<div class="fcEMPtab" data-emp-tab="quick">✨ Quick</div>' +
+              '<div class="fcEMPtab" data-emp-tab="employee">👔 Employee</div>' +
+              '<div class="fcEMPtab" data-emp-tab="admin">🧭 Admin</div>' +
+              '<div class="fcEMPtab" data-emp-tab="competition">🏁 Competition</div>' +
+              '<div class="fcEMPtab" data-emp-tab="prefs">⚙️ Preferences</div>' +
             '</div>' +
           '</div>' +
-          '<div class="fcATbody"></div>' +
+          '<div class="fcEMPbody"></div>' +
         '</div>' +
       '</div>';
 
     document.body.appendChild(dock);
 
+    dock.__wrap = qs(".fcEMPwrap", dock);
+    dock.__chev = qs(".fcEMPchev", dock);
+    dock.__crumb = qs(".fcEMPcrumb", dock);
+    dock.__body = qs(".fcEMPbody", dock);
+    dock.__input = qs(".fcEMPinput", dock);
+
+    // open state
     var open = lsGet(KEY_OPEN) === "1";
-    var wrap = qs(".fcATpanelWrap", dock);
-    var chev = qs(".fcATchev", dock);
-    if(wrap) wrap.classList.toggle("is-open", open);
-    if(chev) chev.textContent = open ? "▾" : "▴";
+    if(dock.__wrap) dock.__wrap.classList.toggle("is-open", open);
+    if(dock.__chev) dock.__chev.textContent = open ? "▾" : "▴";
 
-    var sel = qs(".fcATselect", dock);
-    var savedTab = lsGet(KEY_TAB) || "shortcuts";
-    if(sel) sel.value = savedTab;
+    // tab state
+    var savedTab = lsGet(KEY_TAB) || "quick";
+    setActiveTab(savedTab);
 
-    updatePathPill();
-    renderPanel(savedTab);
+    // chips state
+    updateTopChips();
 
-    var fab = qs(".fcATfab", dock);
-    if(fab){
-      fab.addEventListener("click", function(){
-        var nowOpen = !(wrap && wrap.classList.contains("is-open"));
-        if(wrap) wrap.classList.toggle("is-open", nowOpen);
-        if(chev) chev.textContent = nowOpen ? "▾" : "▴";
+    // click open/close
+    var pill = qs(".fcEMPpill", dock);
+    if(pill){
+      pill.addEventListener("click", function(){
+        var nowOpen = !(dock.__wrap && dock.__wrap.classList.contains("is-open"));
+        if(dock.__wrap) dock.__wrap.classList.toggle("is-open", nowOpen);
+        if(dock.__chev) dock.__chev.textContent = nowOpen ? "▾" : "▴";
         lsSet(KEY_OPEN, nowOpen ? "1" : "0");
       });
     }
 
-    if(sel){
-      sel.addEventListener("change", function(){
-        lsSet(KEY_TAB, sel.value);
-        renderPanel(sel.value);
+    // tab clicks
+    var tabs = qsa(".fcEMPtab", dock);
+    for(var i=0;i<tabs.length;i++){
+      tabs[i].addEventListener("click", function(e){
+        e.stopPropagation();
+        var t = this.getAttribute("data-emp-tab");
+        if(!t) return;
+        lsSet(KEY_TAB, t);
+        setActiveTab(t);
+        render();
       });
     }
 
-    dock.__body = qs(".fcATbody", dock);
-    dock.__title = qs(".fcATpanelTitle", dock);
-    dock.__select = sel;
+    // search input
+    if(dock.__input){
+      dock.__input.addEventListener("input", function(){
+        render();
+      });
+    }
+
+    // action chips
+    var act = qsa("[data-emp-action]", dock);
+    for(var j=0;j<act.length;j++){
+      act[j].addEventListener("click", function(e){
+        e.stopPropagation();
+        var kind = this.getAttribute("data-emp-action");
+        if(kind === "clear"){
+          if(dock.__input) dock.__input.value = "";
+          render();
+          return;
+        }
+        if(kind === "newtab"){
+          var on = !getNewTab();
+          lsSet(KEY_NEW_TAB, on ? "1":"0");
+          updateTopChips();
+          return;
+        }
+        if(kind === "hidebar"){
+          var current = (lsGet(KEY_HIDE_RAFFLEX) === "1");
+          var next = !current;
+          lsSet(KEY_HIDE_RAFFLEX, next ? "1":"0");
+          hideRafflexBar(next);
+          updateTopChips();
+          return;
+        }
+      });
+    }
+
+    render();
   }
 
-  function setTitle(t){
-    var dock = qs(".fcATdock");
+  function updateTopChips(){
+    var dock = qs(".fcEMPdock");
     if(!dock) return;
-    var el = dock.__title || qs(".fcATpanelTitle", dock);
-    if(el) el.textContent = t;
+
+    var newTabChip = qs('[data-emp-action="newtab"]', dock);
+    var hideChip = qs('[data-emp-action="hidebar"]', dock);
+
+    var nt = getNewTab();
+    if(newTabChip){
+      newTabChip.classList.toggle("is-on", nt);
+      newTabChip.textContent = nt ? "↗ New tab: ON" : "↗ New tab: OFF";
+    }
+
+    var hide = (lsGet(KEY_HIDE_RAFFLEX) === "1");
+    if(hideChip){
+      hideChip.classList.toggle("is-on", hide);
+      hideChip.textContent = hide ? "👁 Admin bar: HIDDEN" : "👁 Admin bar: SHOWN";
+    }
   }
-  function setBody(html){
-    var dock = qs(".fcATdock");
+
+  function setActiveTab(tab){
+    var dock = qs(".fcEMPdock");
     if(!dock) return;
-    var body = dock.__body || qs(".fcATbody", dock);
-    if(body) body.innerHTML = html;
-  }
-  function updatePathPill(){
-    var dock = qs(".fcATdock");
-    if(!dock) return;
-    var p = qs(".fcATpath", dock);
-    if(p) p.textContent = "📍 " + (location.pathname || "/");
+    var tabs = qsa(".fcEMPtab", dock);
+    for(var i=0;i<tabs.length;i++){
+      tabs[i].classList.toggle("is-active", tabs[i].getAttribute("data-emp-tab") === tab);
+    }
   }
 
-  function renderPanel(tab){
-    if(tab === "shortcuts"){
-      setTitle("🧭 Admin shortcuts");
-      setBody(buildShortcutsHTML());
-      wireCats();
-      return;
-    }
-    if(tab === "competition"){
-      setTitle("🏁 Competition tools");
-      setBody(buildCompetitionHTML());
-      wireCompetition();
-      return;
-    }
-    setTitle("⚙️ Preferences");
-    setBody(buildPrefsHTML());
-    wirePrefs();
+  function getActiveTab(){
+    return lsGet(KEY_TAB) || "quick";
   }
 
-  function buildShortcutsHTML(){
-    var cats = [
-      {
-        title: "🏁 Competitions",
-        links: [
-          ["Competitions", "/admin/products", "Manage comps"],
-          ["Categories", "/admin/product-categories", "Organise drops"],
-          ["Instant Winners", "/admin/instant-winners", "IW prizes"],
-          ["Winners", "/admin/winners", "Results log"],
-          ["Draw Number Tool", "https://flashcompetitions.com/i/draw-number", "Public draw number page"]
-        ]
-      },
-      {
-        title: "🛒 Sales",
-        links: [
-          ["Orders", "/admin/orders", "Sales & fulfilment"],
-          ["Coupons", "/admin/coupons", "Discount codes"]
-        ]
-      },
-      {
-        title: "👥 Users",
-        links: [
-          ["Users", "/admin/users", "Accounts & access"]
-        ]
-      },
-      {
-        title: "📄 Content",
-        links: [
-          ["Dashboard", "/admin", "Admin home"],
-          ["Pages", "/admin/pages", "Site pages"]
-        ]
-      },
-      {
-        title: "📊 Insights",
-        links: [
-          ["Analytics", "/admin/analytics", "Performance"]
-        ]
-      },
-      {
-        title: "⚙️ Settings",
-        links: [
-          ["General ⚙️", "/admin/settings/general-settings", "Basics"],
-          ["Email ✉️", "/admin/settings/email-settings", "Mail templates"],
-          ["Branding 🎨", "/admin/settings/branding-settings", "Logos & style"],
-          ["Checkout 🧾", "/admin/settings/checkout-settings", "Payments & flow"],
-          ["Marketing 📣", "/admin/settings/marketing-settings", "Promos"],
-          ["UX ✨", "/admin/settings/user-experience-settings", "Site feel"],
-          ["SEO 🔎", "/admin/settings/seo-settings", "Search settings"],
-          ["Advanced 🧠", "/admin/settings/advanced-settings", "Power options"],
-          ["Integrations 🔌", "/admin/settings/integration-settings", "Connections"],
-          ["Settings (root)", "/admin/settings", "All settings"]
-        ]
-      }
-    ];
-
-    var out = '';
-    out += '<div class="fcATx">';
-    out +=   '<div class="fcATxHead"><div class="fcATxTitle">🧭 Quick navigation</div><div class="fcATxPill">Grouped</div></div>';
-
-    for(var i=0;i<cats.length;i++){
-      out += '<div class="fcATcat" data-fcat="1">';
-      out +=   '<button class="fcATcatBtn" type="button"><span>'+cats[i].title+'</span><i>Toggle</i></button>';
-      out +=   '<div class="fcATcatBody"><div class="fcATlinks">';
-      for(var j=0;j<cats[i].links.length;j++){
-        var name = cats[i].links[j][0];
-        var href = cats[i].links[j][1];
-        var hint = cats[i].links[j][2];
-        out += '<a class="fcATlink" href="'+absUrl(href)+'"><span>'+name+'</span><small>'+hint+'</small></a>';
-      }
-      out +=   '</div></div>';
-      out += '</div>';
-    }
-
-    out += '</div>';
-    out += '<div class="fcATx"><div class="fcATxHead"><div class="fcATxTitle">💡 Tip</div><div class="fcATxPill">Minimal</div></div>';
-    out += '<div style="color:rgba(255,255,255,.72); font-weight:900; font-size:12.5px; line-height:1.45;">Expand only what you need — everything stays compact and scrolls if it grows.</div></div>';
-    return out;
+  function updateCrumb(){
+    var dock = qs(".fcEMPdock");
+    if(!dock || !dock.__crumb) return;
+    dock.__crumb.textContent = "📍 " + (location.pathname || "/");
   }
 
-  function wireCats(){
-    var dock = qs(".fcATdock");
-    if(!dock) return;
-    var cats = qsa('.fcATcat[data-fcat="1"]', dock);
-    for(var i=0;i<cats.length;i++){
-      (function(cat){
-        var btn = qs(".fcATcatBtn", cat);
-        if(!btn) return;
-        btn.addEventListener("click", function(){ cat.classList.toggle("is-open"); });
-      })(cats[i]);
-    }
-    if(cats[0]) cats[0].classList.add("is-open");
+  function safeStr(s){ return (s||"").toString(); }
+  function norm(s){ return safeStr(s).replace(/\s+/g," ").trim().toLowerCase(); }
+
+  function matchesQuery(item, q){
+    if(!q) return true;
+    var t = norm(item.title) + " " + norm(item.desc) + " " + norm(item.url);
+    return t.indexOf(q) !== -1;
   }
 
-  /* =========================
-     COMPETITION TOOLS
-     ========================= */
+  function linkHTML(item, pinned){
+    var title = safeStr(item.title || "Link");
+    var desc  = safeStr(item.desc || "");
+    var ico   = safeStr(item.ico || "🔗");
+    var url   = safeStr(item.url || "#");
 
-  function buildCompetitionHTML(){
-    if(!isCompetitionPage()){
-      return '' +
-        '<div class="fcATx">' +
-          '<div class="fcATxHead"><div class="fcATxTitle">🏁 Competition tools</div><div class="fcATxPill">Only on /competition/*</div></div>' +
-          '<div style="color:rgba(255,255,255,.72); font-weight:900; font-size:12.5px; line-height:1.45;">Open a competition page to see Competition Health + Instant Copy + Social kit.</div>' +
-        '</div>';
-    }
-
+    var pinClass = pinned ? "fcEMPpin is-on" : "fcEMPpin";
     return '' +
-      '<div class="fcATx">' +
-        '<div class="fcATxHead"><div class="fcATxTitle">🏁 Competition Health</div><div class="fcATxPill">Best-effort</div></div>' +
-        '<div class="fcAThealthRow">' +
-          '<span class="fcATdot" id="fcATdot"></span>' +
-          '<div class="fcAThealthText">' +
-            '<div class="fcAThealthMain" id="fcAThealthMain">Scanning…</div>' +
-            '<div class="fcAThealthSub" id="fcAThealthSub">Checking title, price, timers, and CTA visibility.</div>' +
+      '<div class="fcEMPlink" data-emp-url="'+encodeURIComponent(url)+'" data-emp-title="'+encodeURIComponent(title)+'">' +
+        '<div class="fcEMPlinkTop">' +
+          '<div class="fcEMPlinkMain">' +
+            '<div class="fcEMPico">'+ico+'</div>' +
+            '<span title="'+title+'">'+title+'</span>' +
           '</div>' +
+          '<div class="'+pinClass+'" data-emp-pin="'+encodeURIComponent(url)+'" title="Pin/unpin">📌</div>' +
         '</div>' +
-        '<div class="fcATgrid2" style="margin-top:10px;">' +
-          '<div class="fcATcard"><div class="fcATlabel">Title</div><div class="fcATvalue" id="fcATvalTitle">—</div></div>' +
-          '<div class="fcATcard"><div class="fcATlabel">URL</div><div class="fcATvalue" id="fcATvalUrl">—</div></div>' +
-          '<div class="fcATcard"><div class="fcATlabel">Price</div><div class="fcATvalue" id="fcATvalPrice">—</div></div>' +
-          '<div class="fcATcard"><div class="fcATlabel">Countdown / End</div><div class="fcATvalue" id="fcATvalEnd">—</div></div>' +
-        '</div>' +
-      '</div>' +
-
-      '<div class="fcATx">' +
-        '<div class="fcATxHead"><div class="fcATxTitle">📋 Instant Copy</div><div class="fcATxPill">One-click</div></div>' +
-        '<div class="fcATbtnRow">' +
-          '<button class="fcATbtn" type="button" data-copy="url">🔗 Copy URL</button>' +
-          '<button class="fcATbtn" type="button" data-copy="title">🏷️ Copy title</button>' +
-          '<button class="fcATbtn" type="button" data-copy="titleurl">✨ Copy title + URL</button>' +
-          '<button class="fcATbtn" type="button" data-copy="promo">📣 Copy promo line</button>' +
-        '</div>' +
-        '<div class="fcATtoast" id="fcATtoast">Ready.</div>' +
-      '</div>' +
-
-      '<div class="fcATx">' +
-        '<div class="fcATxHead"><div class="fcATxTitle">📣 Social / IG kit</div><div class="fcATxPill">Fast content</div></div>' +
-        '<div class="fcATbtnRow" style="grid-template-columns:1fr 1fr;">' +
-          '<button class="fcATbtn" type="button" data-social="ig_titles">🧠 Copy 3 IG titles</button>' +
-          '<button class="fcATbtn" type="button" data-social="ig_captions">📝 Copy 3 IG captions</button>' +
-          '<button class="fcATbtn" type="button" data-social="ig_story">📲 Copy IG story text</button>' +
-          '<button class="fcATbtn" type="button" data-social="share_pack">📦 Copy share pack</button>' +
-          '<button class="fcATbtn" type="button" data-social="utm_url">🔗 Copy UTM URL</button>' +
-        '</div>' +
-        '<textarea class="fcATta" id="fcATsocialPreview" placeholder="Click a Social button to generate copy… (Preview shows here)"></textarea>' +
-        '<div class="fcATtoast" id="fcATsocialToast">Ready.</div>' +
-      '</div>' +
-
-      '<div class="fcATx">' +
-        '<div class="fcATxHead"><div class="fcATxTitle">🗒️ Quick notes</div><div class="fcATxPill">Per comp</div></div>' +
-        '<textarea class="fcATta" id="fcATnotes" placeholder="Notes for this competition… (saved automatically)"></textarea>' +
-        '<div class="fcATbtnRow">' +
-          '<button class="fcATbtn" type="button" data-notes="copy">📋 Copy notes</button>' +
-          '<button class="fcATbtn" type="button" data-notes="clear">🗑️ Clear notes</button>' +
-        '</div>' +
-        '<div class="fcATtoast" id="fcATnotesToast">Saved.</div>' +
+        (desc ? '<small>'+desc+'</small>' : '<small style="opacity:.65;">'+url.replace(/^https?:\/\/(www\.)?/,'')+'</small>') +
       '</div>';
   }
 
-  function wireCompetition(){
+  function section(title, pill, inner){
+    return '' +
+      '<div class="fcEMPsec">' +
+        '<div class="fcEMPsecHead">' +
+          '<div class="fcEMPsecTitle">'+title+'</div>' +
+          '<div class="fcEMPsecPill">'+pill+'</div>' +
+        '</div>' +
+        inner +
+      '</div>';
+  }
+
+  function buildQuick(){
+    var q = "";
+    var dock = qs(".fcEMPdock");
+    if(dock && dock.__input) q = norm(dock.__input.value || "");
+
+    var pins = getPins();
+    var recents = getRecents();
+
+    // Build pinned objects by searching in all known link sets
+    var all = getAllLinksFlat();
+    var pinnedItems = [];
+    for(var i=0;i<pins.length;i++){
+      for(var j=0;j<all.length;j++){
+        if(all[j].url === pins[i]) { pinnedItems.push(all[j]); break; }
+      }
+    }
+
+    // Filter by search query
+    var filteredPinned = pinnedItems.filter(function(it){ return matchesQuery(it, q); });
+    var filteredTools  = (CFG.flashTools||[]).filter(function(it){ return matchesQuery(it, q); });
+    var filteredRecents= recents.filter(function(it){ return matchesQuery(it, q); });
+
+    var out = "";
+
+    // Pinned first
+    var pinInner = filteredPinned.length
+      ? '<div class="fcEMPgrid">' + filteredPinned.map(function(it){ return linkHTML(it, true); }).join("") + '</div>'
+      : '<div class="fcEMPmuted">Pin your most-used links (📌). They’ll appear here for instant access.</div>';
+    out += section("📌 Pinned", "Fast access", pinInner);
+
+    // Flash tools
+    out += section("⚡ Flash Quick Tools", "Internal", '<div class="fcEMPgrid">' +
+      filteredTools.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") +
+    '</div>');
+
+    // Recents
+    var recInner = filteredRecents.length
+      ? '<div class="fcEMPgrid">' + filteredRecents.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") + '</div>'
+      : '<div class="fcEMPmuted">Your recently opened links will appear here.</div>';
+    out += section("🕘 Recents", "Last used", recInner);
+
+    // Tiny helper
+    out += section("💡 How to use", "Tips",
+      '<div class="fcEMPmuted">' +
+        '• Use search to filter everything instantly.<br>' +
+        '• Click 📌 to pin favourites.<br>' +
+        '• Toggle “New tab” at the top to keep your admin session safe while opening tools.' +
+      '</div>'
+    );
+
+    return out;
+  }
+
+  function buildEmployee(){
+    var q = "";
+    var dock = qs(".fcEMPdock");
+    if(dock && dock.__input) q = norm(dock.__input.value || "");
+    var pins = getPins();
+
+    var emp = (CFG.employeeLinks||[]).filter(function(it){ return matchesQuery(it, q); });
+
+    return '' +
+      section("👔 Employee Links", "Work", '<div class="fcEMPgrid">' +
+        emp.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") +
+      '</div>') +
+
+      section("➕ Add more", "Custom",
+        '<div class="fcEMPmuted">You can add Slack, Notion, Stripe, Zendesk, Docs, Drive, Suppliers, anything — edit <b>FLASH_EMPLOYEE_MENU.employeeLinks</b>.</div>'
+      );
+  }
+
+  function buildAdmin(){
+    var q = "";
+    var dock = qs(".fcEMPdock");
+    if(dock && dock.__input) q = norm(dock.__input.value || "");
+    var pins = getPins();
+
+    var groups = CFG.adminGroups || [];
+    var out = '';
+
+    for(var i=0;i<groups.length;i++){
+      var g = groups[i];
+      var links = [];
+      for(var j=0;j<(g.links||[]).length;j++){
+        var L = g.links[j];
+        var name = L[0], href = L[1], hint = L[2], ico = L[3] || "🔗";
+        var item = { title:name, desc:hint, ico:ico, url: absUrl(href) };
+        if(matchesQuery(item, q)) links.push(item);
+      }
+
+      if(!links.length) continue;
+
+      out += section(g.title, "Admin",
+        '<div class="fcEMPgrid">' +
+          links.map(function(it){ return linkHTML(it, pins.indexOf(it.url)!==-1); }).join("") +
+        '</div>'
+      );
+    }
+
+    if(!out){
+      out = section("🧭 Admin", "No matches",
+        '<div class="fcEMPmuted">No admin links match your search.</div>'
+      );
+    }
+
+    return out;
+  }
+
+  /* =========================
+     Competition Tools (kept, cleaned)
+     ========================= */
+  function buildCompetition(){
+    if(!isCompetitionPage()){
+      return section("🏁 Competition tools", "Only on /competition/*",
+        '<div class="fcEMPmuted">Open a competition page to see Health + Instant Copy + Social kit + Notes.</div>'
+      );
+    }
+
+    return '' +
+      section("🏁 Competition Health", "Best-effort",
+        '<div class="fcEMPhRow">' +
+          '<span class="fcEMPdot" id="fcEMPdot"></span>' +
+          '<div class="fcEMPhText">' +
+            '<div class="fcEMPhMain" id="fcEMPhMain">Scanning…</div>' +
+            '<div class="fcEMPhSub" id="fcEMPhSub">Checking title, price, timers, and CTA visibility.</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="fcEMPgrid2" style="margin-top:10px;">' +
+          '<div class="fcEMPcard"><div class="fcEMPlabel">Title</div><div class="fcEMPvalue" id="fcEMPvalTitle">—</div></div>' +
+          '<div class="fcEMPcard"><div class="fcEMPlabel">URL</div><div class="fcEMPvalue" id="fcEMPvalUrl">—</div></div>' +
+          '<div class="fcEMPcard"><div class="fcEMPlabel">Price</div><div class="fcEMPvalue" id="fcEMPvalPrice">—</div></div>' +
+          '<div class="fcEMPcard"><div class="fcEMPlabel">Countdown / End</div><div class="fcEMPvalue" id="fcEMPvalEnd">—</div></div>' +
+        '</div>'
+      ) +
+
+      section("📋 Instant Copy", "One-click",
+        '<div class="fcEMPbtnRow">' +
+          '<button class="fcEMPbtn" type="button" data-emp-copy="url">🔗 Copy URL</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-copy="title">🏷️ Copy title</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-copy="titleurl">✨ Copy title + URL</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-copy="promo">📣 Copy promo line</button>' +
+        '</div>' +
+        '<div class="fcEMPtoast" id="fcEMPtoast">Ready.</div>'
+      ) +
+
+      section("📣 Social / IG kit", "Fast content",
+        '<div class="fcEMPbtnRow">' +
+          '<button class="fcEMPbtn" type="button" data-emp-social="ig_titles">🧠 Copy 3 IG titles</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-social="ig_captions">📝 Copy 3 IG captions</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-social="ig_story">📲 Copy IG story text</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-social="share_pack">📦 Copy share pack</button>' +
+        '</div>' +
+        '<textarea class="fcEMPta" id="fcEMPsocialPreview" placeholder="Click a Social button… preview shows here"></textarea>' +
+        '<div class="fcEMPtoast" id="fcEMPsocialToast">Ready.</div>'
+      ) +
+
+      section("🗒️ Quick notes", "Per comp",
+        '<textarea class="fcEMPta" id="fcEMPnotes" placeholder="Notes for this competition… (saved automatically)"></textarea>' +
+        '<div class="fcEMPbtnRow" style="margin-top:10px;">' +
+          '<button class="fcEMPbtn" type="button" data-emp-notes="copy">📋 Copy notes</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-notes="clear">🗑️ Clear notes</button>' +
+        '</div>' +
+        '<div class="fcEMPtoast" id="fcEMPnotesToast">Saved.</div>'
+      );
+  }
+
+  /* =========================
+     Preferences
+     ========================= */
+  function buildPrefs(){
+    var hide = (lsGet(KEY_HIDE_RAFFLEX) === "1");
+    var nt = getNewTab();
+
+    return '' +
+      section("⚙️ Preferences", "Saved",
+        '<div class="fcEMPsec" style="margin:0; box-shadow:none; background:rgba(0,0,0,.14); border-color:rgba(255,255,255,.10)">' +
+          '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">' +
+            '<div>' +
+              '<div style="font-weight:980; font-size:12.5px;">New tabs for links</div>' +
+              '<div class="fcEMPmuted" style="margin-top:3px;">Keeps your admin session safe while opening tools.</div>' +
+            '</div>' +
+            '<div class="fcEMPtoggle '+(nt ? "is-on":"")+'" data-emp-pref="newtab"></div>' +
+          '</div>' +
+          '<div style="height:10px;"></div>' +
+          '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">' +
+            '<div>' +
+              '<div style="font-weight:980; font-size:12.5px;">Hide Rafflex admin bar</div>' +
+              '<div class="fcEMPmuted" style="margin-top:3px;">Saved per browser.</div>' +
+            '</div>' +
+            '<div class="fcEMPtoggle '+(hide ? "is-on":"")+'" data-emp-pref="hidebar"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="fcEMPbtnRow" style="margin-top:10px;">' +
+          '<button class="fcEMPbtn" type="button" data-emp-pref="reset">🗑️ Reset menu data</button>' +
+          '<button class="fcEMPbtn" type="button" data-emp-pref="clearPins">📌 Clear pinned</button>' +
+        '</div>' +
+        '<div class="fcEMPtoast" id="fcEMPprefToast">Ready.</div>'
+      );
+  }
+
+  function getAllLinksFlat(){
+    var out = [];
+
+    // employee
+    var emp = CFG.employeeLinks || [];
+    for(var i=0;i<emp.length;i++){
+      out.push({ title:emp[i].title, desc:emp[i].desc, ico:emp[i].ico, url:emp[i].url });
+    }
+
+    // flash tools
+    var ft = CFG.flashTools || [];
+    for(var j=0;j<ft.length;j++){
+      out.push({ title:ft[j].title, desc:ft[j].desc, ico:ft[j].ico, url:ft[j].url });
+    }
+
+    // admin groups
+    var groups = CFG.adminGroups || [];
+    for(var g=0;g<groups.length;g++){
+      var links = groups[g].links || [];
+      for(var k=0;k<links.length;k++){
+        out.push({
+          title: links[k][0],
+          desc:  links[k][2],
+          ico:   links[k][3] || "🔗",
+          url:   absUrl(links[k][1])
+        });
+      }
+    }
+
+    return out;
+  }
+
+  function render(){
+    var dock = qs(".fcEMPdock");
+    if(!dock || !dock.__body) return;
+
+    var tab = getActiveTab();
+    setActiveTab(tab);
+
+    var html = "";
+    if(tab === "quick") html = buildQuick();
+    else if(tab === "employee") html = buildEmployee();
+    else if(tab === "admin") html = buildAdmin();
+    else if(tab === "competition") html = buildCompetition();
+    else html = buildPrefs();
+
+    dock.__body.innerHTML = html;
+
+    wireCommonLinks();
+    if(tab === "competition") wireCompetitionTools();
+    if(tab === "prefs") wirePrefs();
+  }
+
+  function wireCommonLinks(){
+    var dock = qs(".fcEMPdock");
+    if(!dock) return;
+
+    var pins = getPins();
+    var pinEls = qsa("[data-emp-pin]", dock);
+
+    // pin toggle
+    for(var i=0;i<pinEls.length;i++){
+      pinEls[i].addEventListener("click", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var url = decodeURIComponent(this.getAttribute("data-emp-pin") || "");
+        if(!url) return;
+
+        var cur = getPins();
+        var idx = cur.indexOf(url);
+        if(idx === -1) cur.unshift(url);
+        else cur.splice(idx,1);
+        cur = cur.slice(0, 20);
+        setPins(cur);
+        render();
+      });
+    }
+
+    // click entire card => open
+    var cards = qsa(".fcEMPlink[data-emp-url]", dock);
+    for(var j=0;j<cards.length;j++){
+      cards[j].addEventListener("click", function(){
+        var url = decodeURIComponent(this.getAttribute("data-emp-url") || "");
+        var title = decodeURIComponent(this.getAttribute("data-emp-title") || "Link");
+        if(!url) return;
+
+        pushRecent({ title:title, url:url });
+
+        var nt = getNewTab();
+        try{
+          if(nt) window.open(url, "_blank", "noopener");
+          else location.href = url;
+        }catch(_){
+          location.href = url;
+        }
+        // refresh recents UI quickly
+        setTimeout(function(){ render(); }, 50);
+      });
+    }
+  }
+
+  /* =========================
+     Competition Tool wiring (kept behaviour)
+     ========================= */
+  function wireCompetitionTools(){
     if(!isCompetitionPage()) return;
 
-    function toast(msg){
-      var el = document.getElementById("fcATtoast");
-      if(el) el.textContent = msg;
-    }
-    function socialToast(msg){
-      var el = document.getElementById("fcATsocialToast");
-      if(el) el.textContent = msg;
-    }
-    function notesToast(msg){
-      var el = document.getElementById("fcATnotesToast");
-      if(el) el.textContent = msg;
-    }
+    function toast(msg){ var el = document.getElementById("fcEMPtoast"); if(el) el.textContent = msg; }
+    function socialToast(msg){ var el = document.getElementById("fcEMPsocialToast"); if(el) el.textContent = msg; }
+    function notesToast(msg){ var el = document.getElementById("fcEMPnotesToast"); if(el) el.textContent = msg; }
 
     function copyToClipboard(text, cb){
       function done(ok){ if(cb) cb(ok); }
@@ -335,6 +682,9 @@
       catch(e){ document.body.removeChild(ta); done(false); }
     }
 
+    function qs(sel, root){ return (root||document).querySelector(sel); }
+    function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel) || []); }
+
     function getTitle(){
       var h = qs("h1") || qs('[data-testid="competition-title"]') || qs(".competition-title");
       if(h && h.textContent) return h.textContent.trim();
@@ -342,14 +692,12 @@
       return (t || "").replace(/\s+\|\s+.*$/,"").trim();
     }
 
-    /* ===== Price detector (your existing robust version) ===== */
     function findPriceText(){
-      function norm(s){ return (s||"").replace(/\s+/g," ").trim(); }
+      function norm2(s){ return (s||"").replace(/\s+/g," ").trim(); }
 
       function parsePricesFromText(t){
         t = t || "";
         var out = [];
-
         if(/\bfree\s*entry\b/i.test(t) || /\bentry\s*free\b/i.test(t)) out.push({ kind:"free", label:"Free", pence: 0 });
         var z = t.match(/£\s?0(?:\.00)?\b/);
         if(z) out.push({ kind:"free", label:"Free", pence: 0 });
@@ -369,13 +717,9 @@
           var pounds = parseInt(m[1], 10);
           var dec = m[2] ? m[2].padEnd(2,"0") : "00";
           var pence = (pounds * 100) + parseInt(dec, 10);
-          if(pence === 0){
-            out.push({ kind:"free", label:"Free", pence: 0 });
-          }else{
-            out.push({ kind:"pounds", label: ("£" + pounds + "." + dec), pence: pence });
-          }
+          if(pence === 0) out.push({ kind:"free", label:"Free", pence: 0 });
+          else out.push({ kind:"pounds", label: ("£" + pounds + "." + dec), pence: pence });
         }
-
         return out;
       }
 
@@ -391,31 +735,24 @@
           t.indexOf("add to cart") !== -1
         );
       }
-
       function looksLikeUnrelatedFree(t){
         return /\bfree\s*(delivery|shipping|postage|returns?|gift|trial)\b/i.test(t||"");
       }
 
-      var nodes = qsa(
-        "[class*='ticket'],[class*='entry'],[class*='price'],[id*='ticket'],[id*='entry'],[id*='price'],button,a,select,option,label"
-      ).slice(0, 1600);
-
+      var nodes = qsa("[class*='ticket'],[class*='entry'],[class*='price'],[id*='ticket'],[id*='entry'],[id*='price'],button,a,select,option,label").slice(0, 1600);
       var candidates = [];
 
       for(var i=0;i<nodes.length;i++){
         var el = nodes[i];
-        var t = norm(el.textContent || "");
+        var t = norm2(el.textContent || "");
         if(!t) continue;
         if(t.length > 180) continue;
 
-        var p = el.parentElement ? norm(el.parentElement.textContent || "") : "";
+        var p = el.parentElement ? norm2(el.parentElement.textContent || "") : "";
         var combined = t + (p && p !== t ? (" • " + p) : "");
 
         if(!hasEntryContext(combined)) continue;
-
-        if(looksLikeUnrelatedFree(combined)) {
-          combined = combined.replace(/\bfree\b/ig, "");
-        }
+        if(looksLikeUnrelatedFree(combined)) combined = combined.replace(/\bfree\b/ig, "");
 
         var prices = parsePricesFromText(combined);
         for(var j=0;j<prices.length;j++){
@@ -429,10 +766,7 @@
       if(candidates.length){
         var hasExplicitFree = false;
         for(var a=0;a<candidates.length;a++){
-          if(candidates[a].p.kind === "free" && candidates[a].score >= 120){
-            hasExplicitFree = true;
-            break;
-          }
+          if(candidates[a].p.kind === "free" && candidates[a].score >= 120){ hasExplicitFree = true; break; }
         }
         if(hasExplicitFree) return "Free";
 
@@ -443,13 +777,11 @@
           if(min === null || pp.pence < min.pence) min = pp;
         }
         if(min) return min.label;
-
         return candidates.sort(function(x,y){ return y.score - x.score; })[0].p.label || "";
       }
 
       var bodyText = (document.body && document.body.innerText) ? document.body.innerText : "";
       if(/\bfree\s*entry\b/i.test(bodyText) || /\bentry\s*free\b/i.test(bodyText) || /£\s?0(?:\.00)?\b/.test(bodyText)) return "Free";
-
       var pWhole = bodyText.match(/\b(\d{1,2})\s*p\b/i);
       if(pWhole){
         var v = parseInt(pWhole[1],10);
@@ -477,7 +809,7 @@
     }
 
     function ctaPresent(){
-      var nodes = qsa('button, a').slice(0, 220);
+      var nodes = qsa("button, a").slice(0, 220);
       for(var i=0;i<nodes.length;i++){
         var tx = (nodes[i].textContent||"").trim().toLowerCase();
         if(!tx) continue;
@@ -492,17 +824,22 @@
       var el = document.getElementById(id);
       if(el) el.textContent = val || "—";
     }
-
     function setHealth(level, main, sub){
-      var dot = document.getElementById("fcATdot");
-      var mainEl = document.getElementById("fcAThealthMain");
-      var subEl = document.getElementById("fcAThealthSub");
+      var dot = document.getElementById("fcEMPdot");
+      var mainEl = document.getElementById("fcEMPhMain");
+      var subEl = document.getElementById("fcEMPhSub");
       if(dot){
         dot.classList.remove("ok","warn","bad");
         if(level) dot.classList.add(level);
       }
       if(mainEl) mainEl.textContent = main;
       if(subEl) subEl.textContent = sub;
+    }
+
+    function slugFromPath(){
+      var p = location.pathname || "";
+      var parts = p.split("/").filter(Boolean);
+      return parts.length ? parts[parts.length-1] : "";
     }
 
     function inferPrizeFromTitle(t){
@@ -523,12 +860,6 @@
       return "";
     }
 
-    function slugFromPath(){
-      var p = location.pathname || "";
-      var parts = p.split("/").filter(Boolean);
-      return parts.length ? parts[parts.length-1] : "";
-    }
-
     function buildUtmUrl(base){
       var u = base || location.href;
       var sep = u.indexOf("?") === -1 ? "?" : "&";
@@ -541,7 +872,6 @@
       var price = d.price || "Live now";
       var prize = inferPrizeFromTitle(title);
       var winners = inferWinnersFromText();
-
       var w = winners ? (winners + " WINNERS") : "";
 
       var igTitles = [
@@ -575,8 +905,7 @@
         ig_captions: igCaptions.join("\n\n—\n\n"),
         ig_story: story,
         share_pack: sharePack,
-        utm_url: buildUtmUrl(url),
-        meta: { prize: prize, winners: winners, slug: slugFromPath() }
+        utm_url: buildUtmUrl(url)
       };
     }
 
@@ -587,10 +916,10 @@
       var end = findEndOrCountdown();
       var cta = ctaPresent();
 
-      setText("fcATvalTitle", title);
-      setText("fcATvalUrl", url);
-      setText("fcATvalPrice", price || "—");
-      setText("fcATvalEnd", end || "—");
+      setText("fcEMPvalTitle", title);
+      setText("fcEMPvalUrl", url);
+      setText("fcEMPvalPrice", price || "—");
+      setText("fcEMPvalEnd", end || "—");
 
       var missing = [];
       if(!title) missing.push("title");
@@ -598,91 +927,73 @@
       if(!end) missing.push("timer/end");
       if(!cta) missing.push("CTA");
 
-      if(missing.length === 0){
-        setHealth("ok", "Healthy ✅", "All key signals detected.");
-      }else if(missing.length <= 2){
-        setHealth("warn", "Looks ok ⚠️", "Missing: " + missing.join(", ") + ".");
-      }else{
-        setHealth("bad", "Needs attention ❗", "Missing: " + missing.join(", ") + ".");
-      }
+      if(missing.length === 0) setHealth("ok", "Healthy ✅", "All key signals detected.");
+      else if(missing.length <= 2) setHealth("warn", "Looks ok ⚠️", "Missing: " + missing.join(", ") + ".");
+      else setHealth("bad", "Needs attention ❗", "Missing: " + missing.join(", ") + ".");
 
-      window.__fcAT_compData = { title:title||"", url:url||"", price:price||"", end:end||"" };
+      window.__fcEMP_compData = { title:title||"", url:url||"", price:price||"", end:end||"" };
     }
 
-    function wireCopy(){
-      var btns = qsa('[data-copy]');
-      for(var i=0;i<btns.length;i++){
-        btns[i].addEventListener("click", function(){
-          var kind = this.getAttribute("data-copy");
-          var d = window.__fcAT_compData || {};
-          var out = "";
-          if(kind === "url") out = d.url || location.href;
-          if(kind === "title") out = d.title || "";
-          if(kind === "titleurl") out = (d.title ? d.title + " — " : "") + (d.url || location.href);
-          if(kind === "promo"){
-            var p = d.price || "Live now";
-            out = "⚡ Flash Competitions: " + (d.title || "Competition") + " — " + p + " — Enter now: " + (d.url || location.href);
-          }
-          if(!out) out = location.href;
-
-          copyToClipboard(out, function(ok){
-            toast(ok ? "Copied ✓" : "Copy failed");
-          });
-        });
-      }
+    // copy buttons
+    var copyBtns = qsa("[data-emp-copy]");
+    for(var i=0;i<copyBtns.length;i++){
+      copyBtns[i].addEventListener("click", function(){
+        var kind = this.getAttribute("data-emp-copy");
+        var d = window.__fcEMP_compData || {};
+        var out = "";
+        if(kind === "url") out = d.url || location.href;
+        if(kind === "title") out = d.title || "";
+        if(kind === "titleurl") out = (d.title ? d.title + " — " : "") + (d.url || location.href);
+        if(kind === "promo"){
+          var p = d.price || "Live now";
+          out = "⚡ Flash Competitions: " + (d.title || "Competition") + " — " + p + " — Enter now: " + (d.url || location.href);
+        }
+        if(!out) out = location.href;
+        copyToClipboard(out, function(ok){ toast(ok ? "Copied ✓" : "Copy failed"); });
+      });
     }
 
-    function wireSocial(){
-      var preview = document.getElementById("fcATsocialPreview");
-      var btns = qsa('[data-social]');
-      for(var i=0;i<btns.length;i++){
-        btns[i].addEventListener("click", function(){
-          var kind = this.getAttribute("data-social");
-          var d = window.__fcAT_compData || {};
-          var pack = socialPack(d);
-
-          var out = pack[kind] || "";
-          if(!out) out = (d.title||"") + "\n" + (d.url||location.href);
-
-          if(preview) preview.value = out;
-
-          copyToClipboard(out, function(ok){
-            socialToast(ok ? "Copied ✓ (and preview updated)" : "Copy failed");
-          });
-        });
-      }
+    // social buttons
+    var preview = document.getElementById("fcEMPsocialPreview");
+    var socialBtns = qsa("[data-emp-social]");
+    for(var s=0;s<socialBtns.length;s++){
+      socialBtns[s].addEventListener("click", function(){
+        var kind = this.getAttribute("data-emp-social");
+        var d = window.__fcEMP_compData || {};
+        var pack = socialPack(d);
+        var out = pack[kind] || ((d.title||"") + "\n" + (d.url||location.href));
+        if(preview) preview.value = out;
+        copyToClipboard(out, function(ok){ socialToast(ok ? "Copied ✓ (preview updated)" : "Copy failed"); });
+      });
     }
 
-    function wireNotes(){
-      var ta = document.getElementById("fcATnotes");
-      if(!ta) return;
-
+    // notes
+    var notes = document.getElementById("fcEMPnotes");
+    if(notes){
       var slug = slugFromPath() || location.pathname;
-      var KEY_NOTES = "fcAT_notes_v1:" + slug;
+      var KEY_NOTES = "fcEMP_notes_v1:" + slug;
 
-      try{ ta.value = lsGet(KEY_NOTES) || ""; }catch(_){}
+      try{ notes.value = lsGet(KEY_NOTES) || ""; }catch(_){}
 
       var saveTimer = null;
-      ta.addEventListener("input", function(){
+      notes.addEventListener("input", function(){
         if(saveTimer) clearTimeout(saveTimer);
         saveTimer = setTimeout(function(){
-          lsSet(KEY_NOTES, ta.value || "");
+          lsSet(KEY_NOTES, notes.value || "");
           notesToast("Saved ✓");
         }, 250);
       });
 
-      var copyBtn = qs('[data-notes="copy"]');
-      if(copyBtn){
-        copyBtn.addEventListener("click", function(){
-          copyToClipboard(ta.value || "", function(ok){
-            notesToast(ok ? "Notes copied ✓" : "Copy failed");
-          });
+      var copyN = qs('[data-emp-notes="copy"]');
+      if(copyN){
+        copyN.addEventListener("click", function(){
+          copyToClipboard(notes.value || "", function(ok){ notesToast(ok ? "Notes copied ✓" : "Copy failed"); });
         });
       }
-      var clearBtn = qs('[data-notes="clear"]');
-      if(clearBtn){
-        clearBtn.addEventListener("click", function(){
-          ta.value = "";
+      var clearN = qs('[data-emp-notes="clear"]');
+      if(clearN){
+        clearN.addEventListener("click", function(){
+          notes.value = "";
           lsSet(KEY_NOTES, "");
           notesToast("Cleared ✓");
         });
@@ -690,72 +1001,58 @@
     }
 
     scan();
-    wireCopy();
-    wireSocial();
-    wireNotes();
-
     setTimeout(scan, 600);
     setTimeout(scan, 1600);
   }
 
-  function buildPrefsHTML(){
-    var hideR = lsGet(KEY_HIDE_RAFFLEX) === "1";
-    return '' +
-      '<div class="fcATx">' +
-        '<div class="fcATxHead"><div class="fcATxTitle">⚙️ Preferences</div><div class="fcATxPill">Saved</div></div>' +
-        '<div class="fcATrow">' +
-          '<div class="fcATrowLabel"><b>Hide Rafflex admin bar</b><span>Saved per browser (recommended)</span></div>' +
-          '<div class="fcATtoggle '+(hideR ? "is-on":"")+'" data-pref-toggle="rafflex"></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="fcATx">' +
-        '<div class="fcATxHead"><div class="fcATxTitle">🧹 Utilities</div><div class="fcATxPill">Careful</div></div>' +
-        '<div class="fcATbtnRow">' +
-          '<button class="fcATbtn" type="button" data-pref="reset">🗑️ Reset saved preferences</button>' +
-          '<button class="fcATbtn" type="button" data-pref="showRafflex">👁️ Show Rafflex now</button>' +
-        '</div>' +
-        '<div class="fcATtoast" id="fcATprefToast">Ready.</div>' +
-      '</div>';
-  }
-
   function wirePrefs(){
-    function ptoast(t){
-      var el = document.getElementById("fcATprefToast");
-      if(el) el.textContent = t;
-    }
+    function ptoast(t){ var el = document.getElementById("fcEMPprefToast"); if(el) el.textContent = t; }
 
-    var togg = qs('[data-pref-toggle="rafflex"]');
-    if(togg){
-      togg.addEventListener("click", function(){
-        var on = !togg.classList.contains("is-on");
-        togg.classList.toggle("is-on", on);
-        lsSet(KEY_HIDE_RAFFLEX, on ? "1":"0");
-        hideRafflexBar(on);
-        ptoast(on ? "Rafflex hidden ✓" : "Rafflex shown ✓");
-      });
-    }
+    var toggles = qsa("[data-emp-pref]");
+    for(var i=0;i<toggles.length;i++){
+      toggles[i].addEventListener("click", function(){
+        var kind = this.getAttribute("data-emp-pref");
 
-    var reset = qs('[data-pref="reset"]');
-    if(reset){
-      reset.addEventListener("click", function(){
-        lsSet(KEY_HIDE_RAFFLEX, "0");
-        lsSet(KEY_OPEN, "1");
-        lsSet(KEY_TAB, "shortcuts");
-        hideRafflexBar(false);
-        ptoast("Reset ✓ (refresh if needed)");
-        var dock = qs(".fcATdock");
-        if(dock && dock.__select) dock.__select.value = "shortcuts";
-        renderPanel("shortcuts");
-      });
-    }
+        if(kind === "newtab"){
+          var on = !getNewTab();
+          lsSet(KEY_NEW_TAB, on ? "1":"0");
+          ptoast(on ? "New tab: ON ✓" : "New tab: OFF ✓");
+          updateTopChips();
+          render();
+          return;
+        }
 
-    var showR = qs('[data-pref="showRafflex"]');
-    if(showR){
-      showR.addEventListener("click", function(){
-        lsSet(KEY_HIDE_RAFFLEX, "0");
-        hideRafflexBar(false);
-        if(togg) togg.classList.remove("is-on");
-        ptoast("Rafflex shown ✓");
+        if(kind === "hidebar"){
+          var current = (lsGet(KEY_HIDE_RAFFLEX) === "1");
+          var next = !current;
+          lsSet(KEY_HIDE_RAFFLEX, next ? "1":"0");
+          hideRafflexBar(next);
+          ptoast(next ? "Admin bar hidden ✓" : "Admin bar shown ✓");
+          updateTopChips();
+          render();
+          return;
+        }
+
+        if(kind === "clearPins"){
+          setPins([]);
+          ptoast("Pinned cleared ✓");
+          render();
+          return;
+        }
+
+        if(kind === "reset"){
+          lsSet(KEY_OPEN, "1");
+          lsSet(KEY_TAB, "quick");
+          lsSet(KEY_NEW_TAB, (CFG.defaultNewTab ? "1":"0"));
+          setPins([]);
+          setRecents([]);
+          lsSet(KEY_HIDE_RAFFLEX, "0");
+          hideRafflexBar(false);
+          ptoast("Reset ✓ (menu refreshed)");
+          updateTopChips();
+          render();
+          return;
+        }
       });
     }
   }
@@ -767,20 +1064,20 @@
     }
 
     buildDock();
-    updatePathPill();
+    updateCrumb();
 
     hideRafflexBar(lsGet(KEY_HIDE_RAFFLEX) === "1");
 
-    var dock = qs(".fcATdock");
-    if(dock && dock.__select && dock.__select.value === "competition"){
-      setBody(buildCompetitionHTML());
-      wireCompetition();
+    var tab = getActiveTab();
+    if(tab === "competition"){
+      // refresh competition content if SPA navigated
+      render();
     }
   }
 
   function hookHistory(){
-    if(window.__fcAT_histHooked_v2) return;
-    window.__fcAT_histHooked_v2 = true;
+    if(window.__fcEMP_histHooked_v4) return;
+    window.__fcEMP_histHooked_v4 = true;
 
     var _push = history.pushState;
     var _rep = history.replaceState;
