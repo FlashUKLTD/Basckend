@@ -15,7 +15,7 @@
     ],
 
     flashTools: [
-      { title:"Draw Number Tool",    desc:"Public draw number page", ico:"🎲", url:"https://flashcompetitions.com/i/draw-number" },
+      { title:"Live Draw",    desc:"Live Draw", ico:"🎲", url:"https://flashcompetitions.com/i/live-draw-ticket" },
       { title:"Admin Dashboard",     desc:"Admin home",              ico:"🛠️", url:"https://flashcompetitions.com/admin" },
       { title:"Manage Competitions", desc:"Products list",           ico:"🏁", url:"https://flashcompetitions.com/admin/products" },
       { title:"Orders",              desc:"Sales & fulfilment",      ico:"🧾", url:"https://flashcompetitions.com/admin/orders" },
