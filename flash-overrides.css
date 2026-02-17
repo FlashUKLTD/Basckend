@@ -10,6 +10,175 @@
 
 }
 
+
+/* =========================================================
+   Entry Lists Grid
+   ========================================================= */
+:root{
+  --fc-bg0:#070815;
+  --fc-bg1:#0B0F22;
+  --fc-card: rgba(255,255,255,.06);
+  --fc-border: rgba(255,255,255,.14);
+  --fc-border2: rgba(255,255,255,.22);
+  --fc-text: rgba(255,255,255,.92);
+  --fc-dim: rgba(255,255,255,.72);
+
+  --fc-ac1:#8B5CFF;
+  --fc-ac2:#2D7CFF;
+  --fc-gold:#F6C24A;
+  --fc-green:#34D399;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ scroll-behavior:auto !important; }
+}
+
+/* --- Scope: ONLY grids we mark with JS --- */
+.fcListsGrid{
+  position:relative;
+  gap:14px !important;
+  row-gap:18px !important;
+  margin: 18px 0 26px !important;
+}
+@media (min-width: 640px){
+  .fcListsGrid{ gap:18px !important; }
+}
+@media (min-width: 1024px){
+  .fcListsGrid{ gap:20px !important; }
+}
+
+/* Card shell */
+.fcListsGrid [data-fc-card-meta]{
+  position:relative;
+  overflow:hidden;
+  border-radius:18px !important;
+  border:1px solid var(--fc-border) !important;
+  background:
+    radial-gradient(1200px 600px at 15% 0%, rgba(139,92,255,.14), transparent 55%),
+    radial-gradient(900px 500px at 90% 20%, rgba(45,124,255,.12), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03)),
+    linear-gradient(180deg, var(--fc-bg1), var(--fc-bg0)) !important;
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.55),
+    0 1px 0 rgba(255,255,255,.06) inset;
+  transform: translateZ(0);
+  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+
+/* soft “energy” edge */
+.fcListsGrid [data-fc-card-meta]::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:20px;
+  pointer-events:none;
+  background: linear-gradient(135deg, rgba(139,92,255,.45), rgba(45,124,255,.35), rgba(246,194,74,.25));
+  opacity:.22;
+  filter: blur(10px);
+}
+
+/* subtle diagonal sheen */
+.fcListsGrid [data-fc-card-meta]::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,.08) 50%, transparent 65%);
+  opacity:.0;
+  transform: translateX(-18%);
+  transition: opacity .25s ease, transform .6s ease;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .fcListsGrid [data-fc-card-meta]:hover{
+    border-color: var(--fc-border2) !important;
+    transform: translateY(-2px);
+    box-shadow:
+      0 24px 75px rgba(0,0,0,.62),
+      0 0 0 1px rgba(139,92,255,.16) inset;
+  }
+  .fcListsGrid [data-fc-card-meta]:hover::after{
+    opacity:.55;
+    transform: translateX(12%);
+  }
+}
+
+/* Make the full-card link keyboard-friendly */
+.fcListsGrid [data-fc-card-meta] > a.absolute.inset-0{
+  border-radius:18px;
+}
+.fcListsGrid [data-fc-card-meta] > a.absolute.inset-0:focus-visible{
+  outline: 2px solid rgba(246,194,74,.9);
+  outline-offset: 3px;
+}
+
+/* Image treatment */
+.fcListsGrid [data-fc-card-meta] img{
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  margin-bottom:12px !important;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* Title */
+.fcListsGrid [data-fc-card-meta] [data-flux-heading]{
+  color: var(--fc-text) !important;
+  font-weight: 800 !important;
+  letter-spacing: .2px;
+  line-height: 1.15;
+  font-size: 15px !important;
+  margin: 2px 0 10px !important;
+  text-wrap: balance;
+}
+
+/* Meta row */
+.fcListsGrid .fcLists-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top: 2px;
+}
+
+/* Pills */
+.fcListsGrid .fcLists-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: rgba(255,255,255,.88);
+  background: rgba(0,0,0,.28);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 10px 25px rgba(0,0,0,.28);
+}
+.fcListsGrid .fcLists-pill b{
+  font-weight: 800;
+  color: rgba(255,255,255,.92);
+}
+
+/* Price pill gets a premium gradient */
+.fcListsGrid .fcLists-pill--price{
+  background:
+    linear-gradient(90deg, rgba(139,92,255,.22), rgba(45,124,255,.18)) !important;
+  border-color: rgba(139,92,255,.28) !important;
+}
+
+/* Ends pill subtle */
+.fcListsGrid .fcLists-pill--ends{
+  background: rgba(255,255,255,.05) !important;
+}
+
+/* Improve padding without breaking your existing utility overrides */
+.fcListsGrid [data-fc-card-meta]{
+  padding: 10px !important;
+}
+@media (min-width: 768px){
+  .fcListsGrid [data-fc-card-meta]{ padding: 14px !important; }
+}
+
 /*COMPETITION PAGE*/
 
 :root{
@@ -5824,6 +5993,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
