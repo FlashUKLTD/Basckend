@@ -974,9 +974,49 @@ document.addEventListener("DOMContentLoaded", function() {
   }catch(_){}
 })();
 
+(() => {
+  const KEY="__fcCompTitlePriceV1__";
+  if (window[KEY]) return;
+  window[KEY]=true;
+
+  const apply = () => {
+    // Find the exact block by its unique combo: div.flex.justify-between.gap-x-5.flex-wrap.items-center
+    const row = document.querySelector('div.flex.justify-between.gap-x-5.flex-wrap.items-center');
+    if (!row) return;
+
+    // Ensure it’s the one containing the h1 + price p
+    const h = row.querySelector('h1.text-3xl');
+    const p = row.querySelector('p.text-3xl');
+    if (!h || !p) return;
+
+    row.classList.add('fcCompTitlePrice');
+  };
+
+  apply();
+  new MutationObserver(apply).observe(document.documentElement, {subtree:true, childList:true});
+})();
 
 
+(function(){
+  function enhance(){
+    // Find any grid wrapper that contains your list cards (data-fc-card-meta)
+    var grids = document.querySelectorAll('div.grid.grid-cols-2');
+    grids.forEach(function(g){
+      if (g.classList.contains('fcListsGrid')) return;
+      if (g.querySelector('[data-fc-card-meta]')) g.classList.add('fcListsGrid');
+    });
+  }
 
+  enhance();
+
+  // Lightweight re-run for dynamic loads (Rafflex/Livewire)
+  var t;
+  var mo = new MutationObserver(function(){
+    clearTimeout(t);
+    t = setTimeout(enhance, 60);
+  });
+  mo.observe(document.documentElement, {subtree:true, childList:true});
+})();
 
 
 
