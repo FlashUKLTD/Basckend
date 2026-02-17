@@ -464,37 +464,6 @@
 @media (prefers-reduced-motion: reduce){
   .fcCompScopeV8 *{ transition:none !important; }
 }
-</style>
-
-<script id="fc-comp-ticket-minimal-v8-js">
-/* =========================================================
-   ⚡ Flash — Scope Hook v8 (wrapper-only)
-   - Adds .fcCompScopeV8 ONLY to your wrapper div
-   - Idempotent + dynamic safe
-   ========================================================= */
-(() => {
-  const KEY="__fcCompScopeV8__";
-  if (window[KEY]) return;
-  window[KEY]=true;
-
-  const apply = () => {
-    const wrap = document.querySelector('div.pb-16.pt-3.sm\\:pt-6.sm\\:pb-20');
-    if (wrap) wrap.classList.add('fcCompScopeV8');
-  };
-
-  apply();
-  new MutationObserver(apply).observe(document.documentElement, {subtree:true, childList:true});
-})();
-</script>
-<style id="fc-comp-title-price-v1">
-/* =========================================================
-   ⚡ Flash — Competition Title + Price (Small Premium)
-   Targets ONLY:
-   <div class="flex justify-between gap-x-5 flex-wrap items-center">
-     <h1 class="text-3xl ...">...</h1>
-     <p class="text-3xl ...">1p</p>
-   </div>
-   ========================================================= */
 
 :root{
   --fc-text: rgba(255,255,255,.92);
@@ -5993,6 +5962,7 @@ html body
     transform: none !important;
   }
 }
+
 
 
 
