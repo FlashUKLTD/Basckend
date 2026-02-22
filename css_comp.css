@@ -1377,3 +1377,43 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysi
     gap: 10px !important;
   }
 }
+/* =========================================================
+   ✅ PATCH — FORCE BUNDLES TO SHOW ON MOBILE (CSS ONLY)
+   Paste at VERY BOTTOM of your CSS file
+   ========================================================= */
+
+/* Competition-page scope WITHOUT JS */
+:where(html, body):has(a[href*="/competition/"]){
+  /* no styles here; just used for scoping below */
+}
+
+/* Force the Ticket Bundles grid to exist + be visible */
+:where(html, body):has(a[href*="/competition/"])
+.lg\:col-span-6 .bg-gray-800.p-5.mt-5.rounded-lg.border-2.border-gray-700
+.grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2{
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Force each bundle card/label to show */
+:where(html, body):has(a[href*="/competition/"])
+.lg\:col-span-6 .bg-gray-800.p-5.mt-5.rounded-lg.border-2.border-gray-700
+.grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2 label{
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Mobile layout: 1 column (safe) */
+@media (max-width: 640px){
+  :where(html, body):has(a[href*="/competition/"])
+  .lg\:col-span-6 .bg-gray-800.p-5.mt-5.rounded-lg.border-2.border-gray-700
+  .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2{
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
