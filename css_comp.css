@@ -1348,59 +1348,60 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysi
   }
 }
 /* =========================================================
-   ✅ FIX: Ticket Bundles not showing on mobile
-   - Forces bundles grid + labels to display properly on small screens
-   - Works whether bundles are inside .fcBundleHost or still in original DOM
+   ✅ FIX (JS ON): Bundles hidden on MOBILE after move into .fcBundleHost
+   - Forces host/slot/grid/labels to render and sit above any clipping layers
+   - Works even if Rafflex changes wrappers slightly
    ========================================================= */
 
 @media (max-width: 820px){
 
-  /* 1) Make sure the bundles grid is actually displayed (some themes collapse it) */
-  .fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5
-  .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2{
-    display: grid !important;
-    grid-template-columns: 1fr !important; /* mobile: 1 per row */
-    gap: 10px !important;
+  /* 0) Make sure the ticket panel cannot clip the moved grid */
+  .fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5.rounded-lg.border-2.border-gray-700{
+    overflow: visible !important;
+  }
+
+  /* 1) The moved bundle host must be visible and above any pseudo layers */
+  .fc-comp-page .fcFastWrap,
+  .fc-comp-page .fcBundleHost,
+  .fc-comp-page .fcBundleHostTitle,
+  .fc-comp-page .fcBundleSlot{
+    display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     height: auto !important;
     overflow: visible !important;
     position: relative !important;
-    z-index: 5 !important;
+    z-index: 20 !important;
   }
 
-  /* 2) Ensure bundle labels/cards aren’t collapsing */
-  .fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5
-  .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2 label{
+  /* 2) The actual bundles grid (moved into the host slot) */
+  .fc-comp-page .fcBundleHost .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2{
+    display: grid !important;
+    grid-template-columns: 1fr !important; /* mobile: 1 per row */
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    position: relative !important;
+    z-index: 25 !important;
+  }
+
+  /* 3) Bundle cards/labels must not collapse */
+  .fc-comp-page .fcBundleHost .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2 label{
     display: block !important;
-    min-height: 78px !important;
+    min-height: 80px !important;
     visibility: visible !important;
     opacity: 1 !important;
     transform: none !important;
     position: relative !important;
-    z-index: 6 !important;
-  }
-
-  /* 3) If Rafflex wraps bundles in something weird on mobile, make sure parent can’t hide it */
-  .fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5{
-    overflow: visible !important;
-  }
-
-  /* 4) If your JS moves bundles into .fcBundleHost, ensure the host is visible */
-  .fc-comp-page .fcBundleHost{
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 6 !important;
-    overflow: visible !important;
+    z-index: 30 !important;
+    pointer-events: auto !important;
   }
 }
 
-/* Re-enable 2-column layout once sm breakpoint hits (matches Tailwind sm:) */
+/* Restore 2 columns once Tailwind "sm" applies (matches your class sm:grid-cols-2) */
 @media (min-width: 640px) and (max-width: 820px){
-  .fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5
-  .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2{
+  .fc-comp-page .fcBundleHost .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2{
     grid-template-columns: 1fr 1fr !important;
   }
 }
