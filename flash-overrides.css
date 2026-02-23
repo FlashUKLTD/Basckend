@@ -1971,11 +1971,11 @@ h1.text-4xl.font-bold.tracking-tight.text-center.sm\:text-3xl.mb-10.rounded-xl.b
 
 
 
-/* Hide the breadcrumb nav completely 
+/* Hide the breadcrumb nav completely */
 nav[aria-label="Breadcrumb"] {
     display: none !important;
 }
-*/
+
 /* REMOVE CATEGORIES FROM BROWSE ON HOME SCREEN */
 .mx-auto.max-w-7xl.px-2.lg\:px-8.relative {
     display: none !important;
@@ -5301,3 +5301,4 @@ html body
     transform: none !important;
   }
 }
+
