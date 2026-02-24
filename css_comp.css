@@ -1417,3 +1417,1771 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysi
     gap: 10px !important;
   }
 }
+/* Hide #header-about on desktop only */
+@media (min-width: 1024px){
+  #header-about{
+    display: none !important;
+  }
+}
+
+
+/* =========================================================
+   Entry Lists Grid
+   ========================================================= */
+:root{
+  --fc-bg0:#070815;
+  --fc-bg1:#0B0F22;
+  --fc-card: rgba(255,255,255,.06);
+  --fc-border: rgba(255,255,255,.14);
+  --fc-border2: rgba(255,255,255,.22);
+  --fc-text: rgba(255,255,255,.92);
+  --fc-dim: rgba(255,255,255,.72);
+
+  --fc-ac1:#8B5CFF;
+  --fc-ac2:#2D7CFF;
+  --fc-gold:#F6C24A;
+  --fc-green:#34D399;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ scroll-behavior:auto !important; }
+}
+
+/* --- Scope: ONLY grids we mark with JS --- */
+.fcListsGrid{
+  position:relative;
+  gap:14px !important;
+  row-gap:18px !important;
+  margin: 18px 0 26px !important;
+}
+@media (min-width: 640px){
+  .fcListsGrid{ gap:18px !important; }
+}
+@media (min-width: 1024px){
+  .fcListsGrid{ gap:20px !important; }
+}
+
+/* Card shell */
+.fcListsGrid [data-fc-card-meta]{
+  position:relative;
+  overflow:hidden;
+  border-radius:18px !important;
+  border:1px solid var(--fc-border) !important;
+  background:
+    radial-gradient(1200px 600px at 15% 0%, rgba(139,92,255,.14), transparent 55%),
+    radial-gradient(900px 500px at 90% 20%, rgba(45,124,255,.12), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03)),
+    linear-gradient(180deg, var(--fc-bg1), var(--fc-bg0)) !important;
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.55),
+    0 1px 0 rgba(255,255,255,.06) inset;
+  transform: translateZ(0);
+  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+
+/* soft “energy” edge */
+.fcListsGrid [data-fc-card-meta]::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:20px;
+  pointer-events:none;
+  background: linear-gradient(135deg, rgba(139,92,255,.45), rgba(45,124,255,.35), rgba(246,194,74,.25));
+  opacity:.22;
+  filter: blur(10px);
+}
+
+/* subtle diagonal sheen */
+.fcListsGrid [data-fc-card-meta]::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,.08) 50%, transparent 65%);
+  opacity:.0;
+  transform: translateX(-18%);
+  transition: opacity .25s ease, transform .6s ease;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .fcListsGrid [data-fc-card-meta]:hover{
+    border-color: var(--fc-border2) !important;
+    transform: translateY(-2px);
+    box-shadow:
+      0 24px 75px rgba(0,0,0,.62),
+      0 0 0 1px rgba(139,92,255,.16) inset;
+  }
+  .fcListsGrid [data-fc-card-meta]:hover::after{
+    opacity:.55;
+    transform: translateX(12%);
+  }
+}
+
+/* Make the full-card link keyboard-friendly */
+.fcListsGrid [data-fc-card-meta] > a.absolute.inset-0{
+  border-radius:18px;
+}
+.fcListsGrid [data-fc-card-meta] > a.absolute.inset-0:focus-visible{
+  outline: 2px solid rgba(246,194,74,.9);
+  outline-offset: 3px;
+}
+
+/* Image treatment */
+.fcListsGrid [data-fc-card-meta] img{
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  margin-bottom:12px !important;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* Title */
+.fcListsGrid [data-fc-card-meta] [data-flux-heading]{
+  color: var(--fc-text) !important;
+  font-weight: 800 !important;
+  letter-spacing: .2px;
+  line-height: 1.15;
+  font-size: 15px !important;
+  margin: 2px 0 10px !important;
+  text-wrap: balance;
+}
+
+/* Meta row */
+.fcListsGrid .fcLists-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top: 2px;
+}
+
+/* Pills */
+.fcListsGrid .fcLists-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: rgba(255,255,255,.88);
+  background: rgba(0,0,0,.28);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 10px 25px rgba(0,0,0,.28);
+}
+.fcListsGrid .fcLists-pill b{
+  font-weight: 800;
+  color: rgba(255,255,255,.92);
+}
+
+/* Price pill gets a premium gradient */
+.fcListsGrid .fcLists-pill--price{
+  background:
+    linear-gradient(90deg, rgba(139,92,255,.22), rgba(45,124,255,.18)) !important;
+  border-color: rgba(139,92,255,.28) !important;
+}
+
+/* Ends pill subtle */
+.fcListsGrid .fcLists-pill--ends{
+  background: rgba(255,255,255,.05) !important;
+}
+
+/* Improve padding without breaking your existing utility overrides */
+.fcListsGrid [data-fc-card-meta]{
+  padding: 10px !important;
+}
+@media (min-width: 768px){
+  .fcListsGrid [data-fc-card-meta]{ padding: 14px !important; }
+}
+
+/* =========================================================
+   ⚡ FLASH — COMP PAGE TOP (PRO / MINIMAL v2)
+   ✅ No DOM moves (keeps Splide/Livewire/Alpine intact)
+   ✅ Professional premium: clean panels, restrained radius,
+      subtle purple→blue accents (no pill spam)
+   ✅ Removes "Live countdown" badge (and header label stays subtle)
+========================================================= */
+
+:root{
+  --fc0:#070815;
+  --fc1:#0B0F22;
+
+  --t: rgba(255,255,255,.94);
+  --d: rgba(255,255,255,.72);
+  --dd:rgba(255,255,255,.56);
+
+  --ac1:#8B5CFF;
+  --ac2:#2D7CFF;
+
+  --rA: 14px; /* pro corners */
+  --rB: 18px;
+
+  --b1: rgba(255,255,255,.10);
+  --b2: rgba(255,255,255,.06);
+
+  --panel: rgba(0,0,0,.18);
+  --panel2: rgba(255,255,255,.03);
+
+  --shadow: 0 20px 70px rgba(0,0,0,.55);
+  --inset: 0 0 0 1px rgba(255,255,255,.05) inset;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .fcCompTopProV2 *, .fcCompTopProV2 *::before, .fcCompTopProV2 *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
+/* Scope */
+.fcCompTopProV2{}
+
+/* ===== Outer top grid: calmer “frame” ===== */
+.fcCompTopProV2 .lg\:grid.lg\:auto-rows-min.lg\:grid-cols-12.lg\:gap-x-8{
+  position: relative;
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid var(--b1);
+  background:
+    radial-gradient(900px 420px at 12% 0%, rgba(139,92,255,.10), transparent 60%),
+    radial-gradient(900px 520px at 92% 110%, rgba(45,124,255,.08), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  box-shadow: var(--shadow), var(--inset);
+}
+
+@media (min-width:1024px){
+  .fcCompTopProV2 .lg\:grid.lg\:auto-rows-min.lg\:grid-cols-12.lg\:gap-x-8{
+    padding: 18px;
+  }
+}
+
+/* ===== Right info column as a true pro panel ===== */
+.fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7{
+  border-radius: 20px;
+  border: 1px solid var(--b2);
+  background: var(--panel);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Title + price row */
+.fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7
+.flex.justify-between.gap-x-5.flex-wrap.items-center{
+  gap: 10px 14px !important;
+  align-items: baseline !important;
+}
+
+/* Competition name: clean premium */
+.fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7 h1{
+  margin: 0 !important;
+  font-weight: 950 !important;
+  line-height: 1.06 !important;
+  letter-spacing: .01em !important;
+  font-size: clamp(22px, 2.2vw, 34px) !important;
+
+  background: linear-gradient(90deg, rgba(255,255,255,.98), rgba(139,92,255,.80), rgba(45,124,255,.80));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  text-shadow: 0 14px 50px rgba(0,0,0,.55);
+}
+
+/* Price: NOT a pill. Make it “text + subtle tag” */
+.fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7
+.flex.justify-between.gap-x-5.flex-wrap.items-center > p{
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  gap: 10px !important;
+
+  font-weight: 950 !important;
+  letter-spacing: .02em !important;
+  color: rgba(255,255,255,.92) !important;
+  font-size: 18px !important;
+}
+.fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7
+.flex.justify-between.gap-x-5.flex-wrap.items-center > p::before{
+  content:"";
+  width: 9px; height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(139,92,255,.95), rgba(45,124,255,.95));
+  box-shadow: 0 0 0 3px rgba(45,124,255,.10);
+  opacity: .9;
+}
+
+/* Draw date line: clean divider */
+.fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7 .mt-2{
+  margin-top: 12px !important;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7 .mt-2 p{
+  margin: 0 !important;
+  color: rgba(255,255,255,.72) !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+}
+
+/* ===== Gallery: pro frame, less “toy” ===== */
+.fcCompTopProV2 #splide01 .splide__track{
+  border-radius: 20px !important;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 22px 80px rgba(0,0,0,.60), 0 0 0 1px rgba(255,255,255,.05) inset;
+}
+.fcCompTopProV2 #splide01 img.rounded-xl{
+  border-radius: 20px !important;
+  filter: saturate(1.02) contrast(1.02);
+}
+
+/* Thumbs: slim, restrained (no pill rail) */
+.fcCompTopProV2 #splide02{
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.fcCompTopProV2 #splide02 .splide__track{
+  padding-top: 8px;
+}
+.fcCompTopProV2 #splide02 .splide__slide{
+  border-radius: 14px !important;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+  box-shadow: 0 12px 36px rgba(0,0,0,.25);
+}
+.fcCompTopProV2 #splide02 .splide__slide.is-active{
+  border-color: rgba(45,124,255,.35) !important;
+  box-shadow: 0 14px 45px rgba(0,0,0,.38), 0 0 0 2px rgba(45,124,255,.12);
+}
+
+/* ===== Time remaining: minimal tiles, no badge ===== */
+.fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5{
+  position: relative;
+  margin-top: 12px !important;
+
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.16);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+  padding: 14px 10px;
+  gap: 8px;
+}
+
+/* Remove the previously-added labels/badges (hard off) */
+.fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5::before,
+.fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5::after{
+  content: none !important;
+  display:none !important;
+}
+
+/* Each countdown unit: simple tile, no bubble look */
+.fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5 > div{
+  padding: 10px 8px !important;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,.20);
+  min-width: 76px;
+}
+.fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5 span.font-stripe{
+  font-size: 22px !important;
+  letter-spacing: .02em;
+}
+.fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5 span.text-sm{
+  font-size: 11px !important;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.58) !important;
+}
+
+/* Optional: soften ping */
+.fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5 .animate-ping{
+  opacity: .22 !important;
+}
+
+/* ===== % Sold block: clean progress (no stripe motion if present) ===== */
+.fcCompTopProV2 .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl{
+  margin-top: 12px !important;
+  background: rgba(0,0,0,.16) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 20px !important;
+  padding: 12px !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+}
+
+/* Left label */
+.fcCompTopProV2 .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .col-span-2 p{
+  font-weight: 900 !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+  font-size: 11px !important;
+  color: rgba(255,255,255,.68) !important;
+}
+
+/* Bar track */
+.fcCompTopProV2 .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .h-6.w-full.bg-gray-200.rounded-lg{
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.08) !important;
+  overflow:hidden;
+}
+
+/* Bar fill (static gradient; kills shimmer/stripes) */
+.fcCompTopProV2 .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .h-6.rounded-lg.bg-primary-500{
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, rgba(139,92,255,.95), rgba(45,124,255,.95)) !important;
+  background-image: linear-gradient(90deg, rgba(139,92,255,.95), rgba(45,124,255,.95)) !important;
+  animation: none !important;
+}
+.fcCompTopProV2 .barbershop-animation{
+  animation: none !important;
+  background-image: none !important;
+}
+
+/* Progress text */
+.fcCompTopProV2 #obsidian-progress{
+  top: -18px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,.58) !important;
+}
+
+/* ===== Online / Postal buttons: pro segmented, no pill spam ===== */
+.fcCompTopProV2 .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5{
+  margin-top: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  gap: 10px !important;
+  box-shadow: none !important;
+}
+
+/* Make each button a clean “segment” */
+.fcCompTopProV2 .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button{
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(255,255,255,.03) !important;
+  color: rgba(255,255,255,.80) !important;
+
+  font-weight: 950 !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+
+  padding: 12px 14px !important;
+  box-shadow: 0 14px 40px rgba(0,0,0,.25);
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+/* Active state: understated glow */
+.fcCompTopProV2 .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button.bg-gray-900,
+.fcCompTopProV2 .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button.text-gray-100.bg-gray-900{
+  background: linear-gradient(90deg, rgba(139,92,255,.18), rgba(45,124,255,.12)) !important;
+  border-color: rgba(45,124,255,.26) !important;
+  color: rgba(255,255,255,.92) !important;
+  box-shadow: 0 18px 60px rgba(0,0,0,.35), 0 0 0 2px rgba(45,124,255,.10);
+}
+
+@media (hover:hover){
+  .fcCompTopProV2 .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button:hover{
+    transform: translateY(-1px);
+    border-color: rgba(139,92,255,.20) !important;
+    box-shadow: 0 22px 70px rgba(0,0,0,.40);
+    filter: brightness(1.03);
+  }
+}
+
+/* ===== Mobile tidy ===== */
+@media (max-width: 560px){
+  .fcCompTopProV2 .lg\:grid.lg\:auto-rows-min.lg\:grid-cols-12.lg\:gap-x-8{ padding: 10px; border-radius: 18px; }
+  .fcCompTopProV2 .lg\:col-span-6.lg\:col-start-7{ padding: 12px; border-radius: 18px; }
+  .fcCompTopProV2 #splide01 .splide__track{ border-radius: 18px !important; }
+  .fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5{ border-radius: 18px; }
+  .fcCompTopProV2 .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl{ border-radius: 18px !important; }
+  .fcCompTopProV2 .flex.justify-around.items-center.lg\:col-span-6.mt-5 > div{ min-width: 68px; }
+  .fcCompTopProV2 .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button{ width: 100%; }
+  .fcCompTopProV2 .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5{ flex-direction: column; }
+}
+
+/* =========================================================
+   ⚡ Flash — Footer v6 (Minimal + Obvious + One-row mobile)
+   ✅ 2 sections stay SIDE-BY-SIDE on mobile (one row)
+   ✅ No backgrounds / no pills
+   ✅ Stronger divider + “footer header” label (injected)
+   ✅ Powered by Rafflex centered + one line (untouched)
+   ✅ Social row centered (injected)
+========================================================= */
+
+:root{
+  --fcF-text: rgba(255,255,255,.92);
+  --fcF-dim: rgba(255,255,255,.62);
+  --fcF-soft: rgba(255,255,255,.42);
+  --fcF-border: rgba(255,255,255,.10);
+  --fcF-border2: rgba(255,255,255,.16);
+  --fcF-ac1:#8B5CFF;
+  --fcF-ac2:#2D7CFF;
+}
+
+/* hide newsletter block */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .mt-10.xl\:mt-0.md\:ml-auto{
+  display:none !important;
+}
+
+/* footer wrapper (no bg) */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20{
+  position: relative;
+  margin-top: 64px;
+  padding-top: 48px !important;
+  padding-bottom: 40px !important;
+}
+
+/* make it OBVIOUS it's the footer: stronger top divider */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(980px,92%);
+  height:2px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.18),
+    rgba(255,255,255,.08),
+    rgba(255,255,255,0)
+  );
+}
+
+/* injected mini header */
+.fcFooterHdr{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap: 6px;
+  margin: 0 auto 18px;
+}
+.fcFooterHdr .fcFooterBrand{
+  font-weight: 950;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--fcF-text);
+}
+.fcFooterHdr .fcFooterKicker{
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--fcF-dim);
+}
+
+/* flatten grid container */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .md\:grid{
+  display:block !important;
+}
+
+/* the two section columns (always 2-up, even on mobile) */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .grid.grid-cols-2.gap-8{
+  display:grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-content:center;
+  gap: 34px !important;
+  width: min(680px, 100%);
+  margin: 0 auto !important;
+}
+
+/* center each column */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .grid.grid-cols-2.gap-8 > div{
+  text-align:center;
+}
+
+/* headings smaller + tighter */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 h3{
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--fcF-text) !important;
+  margin: 0 0 14px !important;
+}
+
+/* lists */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"]{
+  margin-top: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"] li{
+  margin: 8px 0 !important;
+}
+
+/* links: minimal, premium */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"] a{
+  display:inline-block;
+  font-size: 13px !important;
+  font-weight: 650;
+  color: var(--fcF-dim) !important;
+  text-decoration: none !important;
+  line-height: 1.35;
+  transition: color .15s ease, transform .15s ease;
+}
+@media (hover:hover){
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"] a:hover{
+    color: var(--fcF-text) !important;
+    transform: translateY(-1px);
+  }
+}
+
+/* subtle underline accent only on hover */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"] a::after{
+  content:"";
+  display:block;
+  height:1px;
+  width:0%;
+  margin: 6px auto 0;
+  background: linear-gradient(90deg, var(--fcF-ac1), var(--fcF-ac2));
+  opacity:.7;
+  transition: width .18s ease;
+}
+@media (hover:hover){
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"] a:hover::after{
+    width: 64%;
+  }
+}
+
+/* =========================================================
+   Social row (injected) — no pills, just outline buttons
+========================================================= */
+.fcFooterSocial{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap: 12px;
+  margin: 26px auto 0;
+  width: 100%;
+}
+.fcFooterSocial a{
+  width: 40px;
+  height: 40px;
+  display:grid;
+  place-items:center;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 12px;
+  color: rgba(255,255,255,.86);
+  text-decoration:none;
+  box-shadow: 0 16px 46px rgba(0,0,0,.26);
+  transition: transform .15s ease, border-color .15s ease, color .15s ease;
+}
+.fcFooterSocial a svg{
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  opacity: .95;
+}
+@media (hover:hover){
+  .fcFooterSocial a:hover{
+    transform: translateY(-2px);
+    border-color: rgba(139,92,255,.45);
+    color: rgba(255,255,255,.95);
+  }
+}
+
+/* =========================================================
+   Powered by Rafflex — center + single line (do not style inner shimmer)
+========================================================= */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .mt-8.-ml-\[100px\]{
+  margin-left: 0 !important;
+  display:flex !important;
+  justify-content:center !important;
+  margin-top: 24px !important;
+}
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .mt-8.-ml-\[100px\] a{
+  white-space: nowrap !important;
+  text-align:center !important;
+}
+
+/* =========================================================
+   Bottom row (copyright)
+========================================================= */
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .mt-4.border-t{
+  border-color: var(--fcF-border) !important;
+  margin-top: 22px !important;
+  padding-top: 18px !important;
+  display:flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align:center;
+}
+div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 p.text-xs{
+  color: var(--fcF-soft) !important;
+  font-weight: 550;
+  letter-spacing: .02em;
+  margin: 0 !important;
+}
+
+/* =========================================================
+   Mobile: keep 2 columns (one row), just tighten spacing
+========================================================= */
+@media (max-width: 760px){
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20{
+    padding-top: 42px !important;
+  }
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .grid.grid-cols-2.gap-8{
+    width: min(560px, 100%);
+    gap: 18px !important;
+  }
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 h3{
+    font-size: 10.5px !important;
+    margin-bottom: 12px !important;
+  }
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"] a{
+    font-size: 12.5px !important;
+  }
+}
+@media (max-width: 360px){
+  /* still 2 columns, but smallest spacing */
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 .grid.grid-cols-2.gap-8{
+    gap: 14px !important;
+  }
+  div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 ul[role="list"] a{
+    font-size: 12px !important;
+  }
+}
+
+/* =========================================================
+   ⚡ FLASH — /lists HEADER + CARDS (AMAZING v4)
+   ✅ Header now DEFINITELY shows (inserts before the grid)
+   ✅ Hides the default Rafflex header block (only on /lists scope)
+   ✅ Cards redesigned HARD (premium, clean, energetic)
+   ✅ NO pill/bullet vibe: meta becomes a clean spec row
+   ✅ Removes any leftover “weird” injected widgets from older versions
+   ✅ Livewire-safe + idempotent • No font changes • Reduced-motion safe
+========================================================= */
+
+:root{
+  --fcL0:#070815;
+  --fcL1:#0B0F22;
+
+  --fcT:  rgba(255,255,255,.92);
+  --fcD:  rgba(255,255,255,.70);
+  --fcDD: rgba(255,255,255,.52);
+
+  --fcB1: rgba(255,255,255,.10);
+  --fcB2: rgba(255,255,255,.18);
+
+  --fcA1:#8B5CFF;
+  --fcA2:#2D7CFF;
+  --fcG:#F6C24A;
+  --fcOK:#34D399;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .fcListsV4 *, .fcListsV4 *::before, .fcListsV4 *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
+/* =========================
+   SCOPE
+========================= */
+.fcListsV4{ position:relative; }
+
+/* =========================
+   REMOVE ANY OLD “WEIRD THING”
+   (from previous inject versions)
+========================= */
+.fcListsV4 .fcCardCorner,
+.fcListsV4 .fcListSignal,
+.fcListsV4 .fcTLSectionHdr,
+.fcListsV4 .fcListsHeaderWrap,
+.fcListsV4 .fcFooterHdr,
+.fcListsV4 .fcListsHero,
+.fcListsV4 .fcListsHeroFrame,
+.fcListsV4 .fcListsDivider{
+  /* if any survived as classes, we’ll remove them in JS;
+     this just ensures nothing visual remains */
+}
+
+/* =========================
+   DEFAULT HEADER OFF (only within scope)
+========================= */
+.fcListsV4 .mx-auto.max-w-2xl.text-center{
+  display:none !important;
+}
+
+/* =========================
+   INJECTED HEADER (our vibe)
+========================= */
+.fcListsV4 .fcListsHero{
+  width: min(980px, 100%);
+  margin: 10px auto 0;
+  padding: 0 8px;
+  text-align:center;
+}
+
+.fcListsV4 .fcListsHeroFrame{
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid var(--fcB1);
+  padding: 22px 16px 18px;
+
+  background:
+    radial-gradient(1000px 520px at 10% 0%, rgba(139,92,255,.14), transparent 60%),
+    radial-gradient(900px 600px at 92% 110%, rgba(45,124,255,.11), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
+    linear-gradient(180deg, var(--fcL1), var(--fcL0));
+
+  box-shadow:
+    0 28px 90px rgba(0,0,0,.62),
+    0 0 0 1px rgba(255,255,255,.05) inset;
+}
+
+/* premium top “signal line” */
+.fcListsV4 .fcListsHeroFrame::before{
+  content:"";
+  position:absolute;
+  left: 18px; right: 18px; top: 14px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0),
+    rgba(139,92,255,.70),
+    rgba(45,124,255,.62),
+    rgba(255,255,255,0)
+  );
+  opacity: .8;
+}
+
+.fcListsV4 .fcListsKicker{
+  display:inline-flex;
+  align-items:center;
+  gap: 10px;
+  font-weight: 950;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: rgba(255,255,255,.72);
+  margin: 0 0 10px;
+}
+.fcListsV4 .fcListsKicker::before{
+  content:"";
+  width: 9px; height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(139,92,255,.95), rgba(45,124,255,.95));
+  box-shadow: 0 0 0 3px rgba(45,124,255,.10);
+  opacity: .92;
+}
+
+.fcListsV4 .fcListsTitle{
+  margin: 0;
+  font-weight: 950;
+  letter-spacing: .01em;
+  line-height: 1.05;
+  font-size: clamp(22px, 2.8vw, 38px);
+
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.98),
+    rgba(139,92,255,.86),
+    rgba(45,124,255,.86)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  text-shadow: 0 22px 70px rgba(0,0,0,.65);
+}
+
+.fcListsV4 .fcListsSub{
+  margin: 10px auto 0;
+  max-width: 740px;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.6;
+  color: rgba(255,255,255,.70);
+}
+
+/* clean divider under hero */
+.fcListsV4 .fcListsDivider{
+  width: min(920px, 92%);
+  height: 2px;
+  margin: 18px auto 0;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.16),
+    rgba(255,255,255,.08),
+    rgba(255,255,255,0)
+  );
+}
+
+/* =========================
+   GRID RHYTHM
+========================= */
+.fcListsV4 .grid.grid-cols-2.my-10{
+  margin-top: 22px !important;
+  gap: 12px !important;
+  row-gap: 22px !important;
+}
+@media (min-width: 640px){
+  .fcListsV4 .grid.grid-cols-2.my-10{ gap: 16px !important; row-gap: 26px !important; }
+}
+@media (min-width: 1024px){
+  .fcListsV4 .grid.grid-cols-2.my-10{ gap: 18px !important; row-gap: 30px !important; }
+}
+
+/* =========================
+   CARD — AMAZING (clean, premium, “want to click”)
+========================= */
+.fcListsV4 [data-fc-card-meta]{
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px !important;
+  border: 1px solid var(--fcB1) !important;
+
+  /* Remove the boxy utility background feel */
+  background:
+    radial-gradient(1100px 520px at 12% 0%, rgba(139,92,255,.12), transparent 58%),
+    radial-gradient(1000px 620px at 100% 110%, rgba(45,124,255,.10), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+    linear-gradient(180deg, var(--fcL1), var(--fcL0)) !important;
+
+  box-shadow:
+    0 30px 95px rgba(0,0,0,.66),
+    0 0 0 1px rgba(255,255,255,.05) inset;
+
+  transform: translateZ(0);
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, filter .22s ease;
+}
+
+/* ultra subtle perimeter glow (not tacky) */
+.fcListsV4 [data-fc-card-meta]::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: 24px;
+  pointer-events:none;
+  background: linear-gradient(135deg,
+    rgba(139,92,255,.38),
+    rgba(45,124,255,.28),
+    rgba(246,194,74,.12)
+  );
+  opacity: .14;
+  filter: blur(14px);
+}
+
+/* Full-card link focus */
+.fcListsV4 [data-fc-card-meta] > a.absolute.inset-0{
+  border-radius: 22px;
+}
+.fcListsV4 [data-fc-card-meta] > a.absolute.inset-0:focus-visible{
+  outline: 2px solid rgba(246,194,74,.92);
+  outline-offset: 3px;
+}
+
+/* Padding */
+.fcListsV4 [data-fc-card-meta]{
+  padding: 10px !important;
+}
+@media (min-width: 768px){
+  .fcListsV4 [data-fc-card-meta]{ padding: 14px !important; }
+}
+
+/* Image: poster-grade */
+.fcListsV4 [data-fc-card-meta] img{
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.65),
+    0 0 0 1px rgba(255,255,255,.05) inset;
+  margin-bottom: 12px !important;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+
+  filter: saturate(1.06) contrast(1.04);
+  transform: translateZ(0);
+  transition: transform .45s ease, filter .22s ease;
+
+  -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 78%, transparent 100%);
+}
+@media (prefers-reduced-motion: no-preference){
+  .fcListsV4 [data-fc-card-meta]:hover img{
+    transform: scale(1.02);
+    filter: saturate(1.10) contrast(1.06);
+  }
+}
+
+/* Title: “expensive ink” */
+.fcListsV4 [data-fc-card-meta] [data-flux-heading]{
+  margin: 2px 0 10px !important;
+  font-weight: 950 !important;
+  letter-spacing: .01em;
+  line-height: 1.12;
+  font-size: 15px !important;
+  text-wrap: balance;
+
+  background: linear-gradient(90deg, rgba(255,255,255,.96), rgba(139,92,255,.82), rgba(45,124,255,.82));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+
+  text-shadow: 0 14px 50px rgba(0,0,0,.55);
+}
+@media (min-width: 768px){
+  .fcListsV4 [data-fc-card-meta] [data-flux-heading]{ font-size: 16px !important; }
+}
+
+/* =========================
+   META: clean spec row (NO pills)
+========================= */
+.fcListsV4 .fcLists-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap: 0;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+/* Hide original pill spans once rebuilt */
+.fcListsV4 .fcLists-meta[data-fc-spec="1"] .fcLists-pill{
+  display:none !important;
+}
+
+/* Spec item */
+.fcListsV4 .fcSpec{
+  display:inline-flex;
+  align-items:baseline;
+  gap: 10px;
+  color: var(--fcD);
+  font-size: 12.5px;
+}
+.fcListsV4 .fcSpec + .fcSpec{
+  margin-left: 14px;
+  padding-left: 14px;
+  border-left: 1px solid rgba(255,255,255,.10);
+}
+
+.fcListsV4 .fcSpecKey{
+  font-weight: 950;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-size: 10px;
+  color: var(--fcDD);
+}
+
+.fcListsV4 .fcSpecVal{
+  font-weight: 800;
+  color: rgba(255,255,255,.84);
+}
+
+/* Price emphasis (no chip) */
+.fcListsV4 .fcSpec--price .fcSpecVal{
+  background: linear-gradient(90deg, rgba(139,92,255,.92), rgba(45,124,255,.92));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+}
+.fcListsV4 .fcSpec--free .fcSpecVal{
+  background:none;
+  color: rgba(52,211,153,.92);
+}
+
+/* Mobile tiny tweaks */
+@media (max-width: 380px){
+  .fcListsV4 .fcSpec{ font-size: 12px; }
+  .fcListsV4 .fcSpec + .fcSpec{ margin-left: 12px; padding-left: 12px; }
+}
+
+/* =========================================================
+   ⚡ FLASH — Entry List Renovation v10 (FULL)
+   ✅ Full layout renovation + wide fit
+   ✅ Mobile-first, less clutter
+   ✅ Table shows ONLY: Ticket # + Customer + Admin
+   ✅ Removes “ticket grid outline” (no outer framed wrapper)
+   ✅ Livewire-safe, idempotent, no font changes
+========================================================= */
+
+:root{
+  --fc0:#070815;
+  --fc1:#0B0F22;
+
+  --t:  rgba(255,255,255,.92);
+  --d:  rgba(255,255,255,.66);
+  --dd: rgba(255,255,255,.48);
+
+  --b1: rgba(255,255,255,.10);
+  --b2: rgba(255,255,255,.16);
+
+  --ac1:#8B5CFF;
+  --ac2:#2D7CFF;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .fcELv10 *, .fcELv10 *::before, .fcELv10 *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
+/* ===== Wider fit + safe gutters ===== */
+.fcELv10{
+  width:100%;
+  padding-left: max(12px, env(safe-area-inset-left)) !important;
+  padding-right: max(12px, env(safe-area-inset-right)) !important;
+}
+@media (min-width: 1024px){
+  .fcELv10{
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+.fcELv10 .fcEL10-wide{
+  width: min(1400px, 100%);
+  margin: 0 auto;
+}
+
+/* Hide original centered header (we inject our own) */
+.fcELv10 .mx-auto.max-w-2xl.text-center{ display:none !important; }
+
+/* ===== Shell ===== */
+.fcELv10 .fcEL10-shell{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 6px;
+}
+@media (min-width: 1024px){
+  .fcELv10 .fcEL10-shell{
+    grid-template-columns: 340px 1fr; /* slimmer left, more room for table */
+    gap: 16px;
+    align-items:start;
+  }
+}
+
+/* ===== Hero ===== */
+.fcELv10 .fcEL10-hero{
+  grid-column: 1 / -1;
+  border-radius: 18px;
+  border: 1px solid var(--b1);
+  background:
+    radial-gradient(900px 440px at 12% 0%, rgba(139,92,255,.12), transparent 60%),
+    radial-gradient(900px 540px at 92% 105%, rgba(45,124,255,.10), transparent 64%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012)),
+    linear-gradient(180deg, var(--fc1), var(--fc0));
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.55),
+    0 0 0 1px rgba(255,255,255,.04) inset;
+  overflow:hidden;
+  padding: 12px 12px 10px;
+}
+@media (min-width:640px){
+  .fcELv10 .fcEL10-hero{ padding: 14px 14px 12px; }
+}
+
+.fcELv10 .fcEL10-kicker{
+  display:inline-flex; align-items:center; gap:8px;
+  font-weight: 950;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  font-size: 10px;
+  color: rgba(255,255,255,.62);
+}
+.fcELv10 .fcEL10-kicker .dot{
+  width: 8px; height: 8px; border-radius:999px;
+  background: linear-gradient(90deg, rgba(52,211,153,.95), rgba(45,124,255,.85));
+  box-shadow: 0 0 0 3px rgba(52,211,153,.08);
+}
+@media (prefers-reduced-motion: no-preference){
+  .fcELv10 .fcEL10-kicker .dot{ animation: fcEL10Pulse 1.6s ease-in-out infinite; }
+  @keyframes fcEL10Pulse{
+    0%,100%{ transform: scale(1); opacity:.85; }
+    50%{ transform: scale(1.18); opacity:1; }
+  }
+}
+.fcELv10 .fcEL10-title{
+  margin-top: 8px;
+  font-weight: 950;
+  letter-spacing: .01em;
+  line-height: 1.10;
+  font-size: 16px;
+  background: linear-gradient(90deg, rgba(255,255,255,.96), rgba(139,92,255,.82), rgba(45,124,255,.82));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+  text-shadow: 0 14px 40px rgba(0,0,0,.55);
+}
+@media (min-width:640px){ .fcELv10 .fcEL10-title{ font-size: 18px; } }
+
+.fcELv10 .fcEL10-sub{
+  margin-top: 6px;
+  color: rgba(255,255,255,.62);
+  font-weight: 650;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+/* ===== Panels ===== */
+.fcELv10 .fcEL10-left,
+.fcELv10 .fcEL10-right{
+  border-radius: 18px;
+  border: 1px solid var(--b1);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012)),
+    linear-gradient(180deg, var(--fc1), var(--fc0));
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.55),
+    0 0 0 1px rgba(255,255,255,.04) inset;
+  overflow:hidden;
+}
+@media (min-width:1024px){
+  .fcELv10 .fcEL10-left{ position: sticky; top: 18px; }
+}
+
+.fcELv10 .fcEL10-leftTop,
+.fcELv10 .fcEL10-rightTop{
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.12);
+}
+@media (min-width:640px){
+  .fcELv10 .fcEL10-leftTop,
+  .fcELv10 .fcEL10-rightTop{ padding: 14px 14px 12px; }
+}
+.fcELv10 .fcEL10-leftBody,
+.fcELv10 .fcEL10-rightBody{
+  padding: 10px 12px 12px;
+}
+@media (min-width:640px){
+  .fcELv10 .fcEL10-leftBody,
+  .fcELv10 .fcEL10-rightBody{ padding: 12px 14px 14px; }
+}
+
+/* Section headings */
+.fcELv10 .fcEL10-secK{
+  font-weight: 950;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  font-size: 10px;
+  color: rgba(255,255,255,.62);
+}
+.fcELv10 .fcEL10-secT{
+  margin-top: 8px;
+  font-weight: 950;
+  font-size: 14.5px;
+  line-height: 1.12;
+  color: rgba(255,255,255,.92);
+}
+.fcELv10 .fcEL10-secS{
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.62);
+  line-height: 1.55;
+}
+
+/* ===== Left card (less clutter) ===== */
+.fcELv10 .fcEL10-leftBody [data-flux-card]{
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.fcELv10 .fcEL10-leftBody [data-flux-card] .flex.flex-col.lg\:flex-row.gap-6{
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+/* Hide badge pills */
+.fcELv10 .fcEL10-leftBody .flex.flex-wrap.gap-2.mb-4{ display:none !important; }
+
+/* Poster */
+.fcELv10 .fcEL10-leftBody img{
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: 0 16px 50px rgba(0,0,0,.55) !important;
+  margin-bottom: 8px !important;
+  filter: saturate(1.04) contrast(1.03) !important;
+}
+
+/* Hide the top “View” button (desktop one) to reduce clutter */
+.fcELv10 .fcEL10-leftBody a[href*="/competition/"].hidden.sm\:inline-flex{
+  display:none !important;
+}
+
+/* Title */
+.fcELv10 .fcEL10-leftBody [data-flux-heading]{
+  font-weight: 950 !important;
+  font-size: 15.5px !important;
+  line-height: 1.12;
+  background: linear-gradient(90deg, rgba(255,255,255,.96), rgba(139,92,255,.82), rgba(45,124,255,.82));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent !important;
+  text-shadow: 0 14px 40px rgba(0,0,0,.55);
+}
+
+/* Specs -> only keep 3 rows (Price, Max Tickets, Ends) if others exist */
+.fcELv10 .fcEL10-leftBody .grid.grid-cols-2.md\:grid-cols-4.gap-4{
+  display:flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin-top: 10px !important;
+}
+.fcELv10 .fcEL10-leftBody .grid.grid-cols-2.md\:grid-cols-4.gap-4 > div{
+  display:flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 10px 12px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(0,0,0,.12) !important;
+}
+.fcELv10 .fcEL10-leftBody [data-flux-subheading]{
+  font-weight: 950 !important;
+  letter-spacing: .22em !important;
+  text-transform: uppercase !important;
+  font-size: 10px !important;
+  color: rgba(255,255,255,.50) !important;
+  margin: 0 !important;
+}
+.fcELv10 .fcEL10-leftBody p.text-gray-50.font-semibold{
+  margin: 0 !important;
+  font-weight: 950 !important;
+  font-size: 13px !important;
+  color: rgba(255,255,255,.90) !important;
+}
+
+/* Progress: keep but minimal */
+.fcELv10 .fcEL10-leftBody .mt-4{
+  margin-top: 12px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.fcELv10 .fcEL10-leftBody .w-full.bg-zinc-400{
+  height: 8px !important;
+  background: rgba(255,255,255,.08) !important;
+  border-radius: 999px !important;
+}
+.fcELv10 .fcEL10-leftBody .bg-primary-500{
+  height: 8px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, rgba(139,92,255,.92), rgba(45,124,255,.92)) !important;
+  animation:none !important;
+}
+
+/* CTA (keep mobile full button, make it clean) */
+.fcELv10 .fcEL10-leftBody a[data-flux-button]{
+  margin-top: 12px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: rgba(255,255,255,.03) !important;
+  box-shadow: none !important;
+  padding: 12px 14px !important;
+  font-weight: 950 !important;
+  letter-spacing: .20em !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,.90) !important;
+}
+@media (hover:hover){
+  .fcELv10 .fcEL10-leftBody a[data-flux-button]:hover{
+    background: rgba(255,255,255,.05) !important;
+    border-color: rgba(45,124,255,.22) !important;
+    transform: translateY(-1px);
+  }
+}
+
+/* ===== Right controls (less clutter on mobile) ===== */
+.fcELv10 .fcEL10-rightBody .flex.flex-col.sm\:flex-row.gap-3.mb-4{
+  padding: 10px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(0,0,0,.10) !important;
+  box-shadow: none !important;
+  gap: 10px !important;
+  margin-bottom: 12px !important;
+}
+.fcELv10 .fcEL10-rightBody input[type="text"][wire\\:model]{
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: rgba(255,255,255,.03) !important;
+  color: rgba(255,255,255,.88) !important;
+  box-shadow: none !important;
+}
+.fcELv10 .fcEL10-rightBody input[type="text"][wire\\:model]::placeholder{
+  color: rgba(255,255,255,.42) !important;
+}
+.fcELv10 .fcEL10-rightBody select[wire\\:model]{
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: rgba(255,255,255,.03) !important;
+  color: rgba(255,255,255,.88) !important;
+  box-shadow: none !important;
+}
+/* Hide “Show My Tickets” on very small screens to reduce clutter (still accessible on >= 520px) */
+@media (max-width: 520px){
+  .fcELv10 .fcEL10-rightBody button[wire\\:click="toggleMyTickets"]{ display:none !important; }
+}
+.fcELv10 .fcEL10-rightBody button[wire\\:click="toggleMyTickets"]{
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: rgba(255,255,255,.02) !important;
+  box-shadow: none !important;
+  font-weight: 950 !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+  font-size: 10.5px !important;
+  padding: 12px 12px !important;
+}
+@media (hover:hover){
+  .fcELv10 .fcEL10-rightBody button[wire\\:click="toggleMyTickets"]:hover{
+    background: rgba(255,255,255,.05) !important;
+    border-color: rgba(45,124,255,.22) !important;
+    transform: translateY(-1px);
+  }
+}
+
+/* ===== Table: remove outer outline / wrapper ===== */
+.fcELv10 .fcEL10-rightBody .relative.overflow-x-auto.rounded-lg.border.border-gray-700.bg-gray-950{
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+/* Style the TABLE itself as the clean ledger */
+.fcELv10 .fcEL10-rightBody table{
+  width: 100%;
+  border-radius: 16px !important;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.012), rgba(255,255,255,.006)),
+    rgba(0,0,0,.16) !important;
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.55),
+    0 0 0 1px rgba(255,255,255,.04) inset !important;
+}
+
+/* Header row */
+.fcELv10 .fcEL10-rightBody table thead.bg-gray-900{
+  background: rgba(255,255,255,.02) !important;
+}
+.fcELv10 .fcEL10-rightBody table th{
+  font-size: 10px !important;
+  letter-spacing: .22em !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,.74) !important;
+}
+
+/* Zebra subtle + hover */
+.fcELv10 .fcEL10-rightBody table tbody tr:nth-child(even){
+  background: rgba(255,255,255,.012);
+}
+@media (hover:hover){
+  .fcELv10 .fcEL10-rightBody table tbody tr:hover{
+    background: rgba(139,92,255,.06);
+  }
+}
+
+/* Ticket ID feel */
+.fcELv10 .fcEL10-rightBody table tbody td:first-child{
+  font-weight: 950;
+  letter-spacing: .10em;
+}
+
+/* Empty state text */
+.fcELv10 .fcEL10-rightBody td.text-center.text-gray-400{
+  color: rgba(255,255,255,.55) !important;
+  font-weight: 700;
+}
+
+/* ===== Show ONLY: Ticket # + Customer + Admin ===== */
+/* columns: 1 Ticket #, 2 Status, 3 Customer, 4 Date, 5 Admin (sometimes) */
+.fcELv10 .fcEL10-rightBody table th:nth-child(2),
+.fcELv10 .fcEL10-rightBody table td:nth-child(2),
+.fcELv10 .fcEL10-rightBody table th:nth-child(4),
+.fcELv10 .fcEL10-rightBody table td:nth-child(4){
+  display:none !important;
+}
+
+/* Ensure Admin stays visible if present */
+.fcELv10 .fcEL10-rightBody table th:nth-child(5),
+.fcELv10 .fcEL10-rightBody table td:nth-child(5){
+  display: table-cell !important;
+  text-align: right !important;
+}
+
+/* Width balance for 3 cols */
+.fcELv10 .fcEL10-rightBody table{
+  table-layout: fixed !important;
+}
+.fcELv10 .fcEL10-rightBody table th:nth-child(1),
+.fcELv10 .fcEL10-rightBody table td:nth-child(1){ width: 32% !important; }
+.fcELv10 .fcEL10-rightBody table th:nth-child(3),
+.fcELv10 .fcEL10-rightBody table td:nth-child(3){ width: 48% !important; }
+.fcELv10 .fcEL10-rightBody table th:nth-child(5),
+.fcELv10 .fcEL10-rightBody table td:nth-child(5){ width: 20% !important; }
+
+/* ===== Pagination: minimal ===== */
+.fcELv10 .fcEL10-rightBody .pt-4.flex.flex-col.sm\:flex-row.justify-between.items-start{
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+/* De-emphasize “Total tickets” pill */
+.fcELv10 .fcEL10-rightBody .pt-4 > div.text-gray-50.text-sm{
+  color: rgba(255,255,255,.62) !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+}
+.fcELv10 .fcEL10-rightBody .pt-4 .text-primary-theme.bg-primary-500{
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 10px !important;
+  padding: 3px 8px !important;
+  margin-left: 8px !important;
+  color: rgba(255,255,255,.86) !important;
+  font-weight: 950 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  font-size: 11px !important;
+}
+
+.fcELv10 .fcEL10-rightBody nav[aria-label="Ticket list pagination"]{
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  gap: 8px !important;
+}
+.fcELv10 .fcEL10-rightBody nav[aria-label="Ticket list pagination"] button[data-flux-button]{
+  height: 36px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(255,255,255,.02) !important;
+  box-shadow: none !important;
+  color: rgba(255,255,255,.82) !important;
+  font-weight: 950 !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+  font-size: 10px !important;
+  padding: 0 12px !important;
+}
+.fcELv10 .fcEL10-rightBody nav[aria-label="Ticket list pagination"] button.w-10{
+  width: 36px !important;
+  padding: 0 !important;
+}
+.fcELv10 .fcEL10-rightBody nav[aria-label="Ticket list pagination"] button:disabled{
+  opacity: .45 !important;
+}
+@media (hover:hover){
+  .fcELv10 .fcEL10-rightBody nav[aria-label="Ticket list pagination"] button[data-flux-button]:hover{
+    transform: translateY(-1px);
+    border-color: rgba(45,124,255,.22) !important;
+    background: rgba(255,255,255,.04) !important;
+  }
+}
+
+/* Mobile: pagination fills width nicely */
+@media (max-width: 520px){
+  .fcELv10 .fcEL10-rightBody nav[aria-label="Ticket list pagination"]{
+    width: 100%;
+    justify-content: space-between;
+  }
+  .fcELv10 .fcEL10-rightBody nav[aria-label="Ticket list pagination"] button:not(.w-10){
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+  }
+}
+
+/* =========================================================
+   ⚡ FLASH — “Alive Background” v2 (NO color change)
+   UNIQUE: moving energy ribbons + parallax shimmer + micro-specs
+   ✅ Keeps bg-gray-950 intact (no background override)
+   ✅ Premium, subtle gaming energy (not casino)
+   ✅ Also adds life behind sticky header without recoloring it
+   ✅ Respects prefers-reduced-motion
+========================================================= */
+
+:root{
+  --fc-ac1:#8B5CFF;
+  --fc-ac2:#2D7CFF;
+}
+
+/* Wrapper: do NOT change background-color */
+.min-h-screen.bg-gray-950.flex.flex-col{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Layer 1: “Energy ribbons” (soft, blurred, slow-moving) */
+.min-h-screen.bg-gray-950.flex.flex-col::before{
+  content:"";
+  position:absolute;
+  inset:-35%;
+  pointer-events:none;
+  z-index:0;
+
+  /* ribbons are ultra-soft bands, not a gradient wash */
+  background:
+    /* ribbon A */
+    linear-gradient(120deg,
+      transparent 38%,
+      rgba(139,92,255,.10) 46%,
+      transparent 54%
+    ),
+    /* ribbon B */
+    linear-gradient(120deg,
+      transparent 22%,
+      rgba(45,124,255,.08) 33%,
+      transparent 44%
+    ),
+    /* ribbon C (white sheen) */
+    linear-gradient(120deg,
+      transparent 58%,
+      rgba(255,255,255,.06) 63%,
+      transparent 68%
+    );
+
+  filter: blur(18px);
+  opacity: .55;
+  transform: translate3d(-10%, -6%, 0) rotate(-10deg);
+  animation: fcRibbonDrift 24s ease-in-out infinite;
+  mix-blend-mode: screen; /* makes it feel like light, not paint */
+}
+
+/* Layer 2: “Micro specs” + subtle parallax wobble */
+.min-h-screen.bg-gray-950.flex.flex-col::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+
+  /* micro specs: irregular placement, very faint */
+  background:
+    radial-gradient(1px 1px at 8%  18%, rgba(255,255,255,.14) 45%, transparent 46%),
+    radial-gradient(1px 1px at 16% 72%, rgba(255,255,255,.10) 45%, transparent 46%),
+    radial-gradient(1px 1px at 22% 34%, rgba(139,92,255,.10) 45%, transparent 46%),
+    radial-gradient(1px 1px at 31% 88%, rgba(255,255,255,.10) 45%, transparent 46%),
+    radial-gradient(1px 1px at 39% 26%, rgba(45,124,255,.10) 45%, transparent 46%),
+    radial-gradient(1px 1px at 47% 61%, rgba(255,255,255,.10) 45%, transparent 46%),
+    radial-gradient(1px 1px at 56% 12%, rgba(255,255,255,.09) 45%, transparent 46%),
+    radial-gradient(1px 1px at 63% 44%, rgba(139,92,255,.09) 45%, transparent 46%),
+    radial-gradient(1px 1px at 72% 78%, rgba(255,255,255,.10) 45%, transparent 46%),
+    radial-gradient(1px 1px at 81% 36%, rgba(45,124,255,.09) 45%, transparent 46%),
+    radial-gradient(1px 1px at 89% 58%, rgba(255,255,255,.10) 45%, transparent 46%),
+    radial-gradient(1px 1px at 94% 84%, rgba(255,255,255,.08) 45%, transparent 46%);
+
+  opacity:.28;
+  filter: blur(.15px);
+  animation: fcSpecsFloat 38s linear infinite;
+}
+
+/* Content above */
+.min-h-screen.bg-gray-950.flex.flex-col > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Sticky header: life WITHOUT recolor ===== */
+.sticky.top-0.z-50.bg-gray-950{
+  position: sticky;
+  overflow: hidden; /* clip the sheen */
+}
+
+/* A subtle moving “glass sheen” over header */
+.sticky.top-0.z-50.bg-gray-950::before{
+  content:"";
+  position:absolute;
+  inset:-80% -40%;
+  pointer-events:none;
+  z-index:0;
+
+  background:
+    linear-gradient(120deg,
+      transparent 44%,
+      rgba(255,255,255,.07) 52%,
+      transparent 60%
+    ),
+    linear-gradient(120deg,
+      transparent 18%,
+      rgba(139,92,255,.05) 30%,
+      transparent 42%
+    );
+
+  filter: blur(10px);
+  opacity:.35;
+  transform: translate3d(-22%, 0, 0) rotate(-8deg);
+  animation: fcHeaderSweep 16s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* crisp but faint divider under header */
+.sticky.top-0.z-50.bg-gray-950::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255,255,255,.14),
+    rgba(255,255,255,.06),
+    transparent
+  );
+  opacity:.6;
+}
+
+.sticky.top-0.z-50.bg-gray-950 > *{
+  position:relative;
+  z-index:1;
+}
+
+/* ===== Animations ===== */
+@keyframes fcRibbonDrift{
+  0%   { transform: translate3d(-12%, -8%, 0) rotate(-10deg); opacity:.44; }
+  50%  { transform: translate3d( 10%,  6%, 0) rotate(-10deg); opacity:.62; }
+  100% { transform: translate3d(-12%, -8%, 0) rotate(-10deg); opacity:.48; }
+}
+
+@keyframes fcSpecsFloat{
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(-1.8%, -1.2%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes fcHeaderSweep{
+  0%   { transform: translate3d(-24%, -2%, 0) rotate(-8deg); opacity:.22; }
+  50%  { transform: translate3d( 18%,  2%, 0) rotate(-8deg); opacity:.42; }
+  100% { transform: translate3d(-24%, -2%, 0) rotate(-8deg); opacity:.24; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .min-h-screen.bg-gray-950.flex.flex-col::before,
+  .min-h-screen.bg-gray-950.flex.flex-col::after,
+  .sticky.top-0.z-50.bg-gray-950::before{
+    animation:none !important;
+  }
+}
