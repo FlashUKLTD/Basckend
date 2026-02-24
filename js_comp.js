@@ -528,4 +528,459 @@
   mo.observe(document.documentElement, { childList:true, subtree:true });
 
   window.addEventListener("popstate", () => setTimeout(init, 80));
+
+})();
+
+(function(){
+  function enhance(){
+    // Find any grid wrapper that contains your list cards (data-fc-card-meta)
+    var grids = document.querySelectorAll('div.grid.grid-cols-2');
+    grids.forEach(function(g){
+      if (g.classList.contains('fcListsGrid')) return;
+      if (g.querySelector('[data-fc-card-meta]')) g.classList.add('fcListsGrid');
+    });
+  }
+
+  enhance();
+
+  // Lightweight re-run for dynamic loads (Rafflex/Livewire)
+  var t;
+  var mo = new MutationObserver(function(){
+    clearTimeout(t);
+    t = setTimeout(enhance, 60);
+  });
+  mo.observe(document.documentElement, {subtree:true, childList:true});
+})();
+
+/* Scope class only. No DOM edits. */
+(function(){
+  function apply(){
+    if(location.pathname.indexOf('/competition/') === -1) return;
+    var root = document.querySelector('.pb-16.pt-3.sm\\:pt-6.sm\\:pb-20');
+    if(!root) return;
+    root.classList.add('fcCompTopProV2');
+  }
+  apply();
+  var mo = new MutationObserver(apply);
+  mo.observe(document.documentElement, {subtree:true, childList:true});
+  setTimeout(function(){ mo.disconnect(); }, 6000);
+})();
+
+(function(){
+  // Prevent double init across live navigation
+  if (window.__fcFooterV6) return;
+  window.__fcFooterV6 = true;
+
+  /* =========================================================
+     ✅ EASY CUSTOMIZATION (edit only this block)
+  ========================================================= */
+  var CFG = {
+    header: {
+      brand: "FLASH COMPETITIONS",
+      kicker: "Quick links & support"
+    },
+    sections: [
+      {
+        title: "Page Links",
+        links: [
+          { label: "Acceptable Use Policy", url: "https://flashcompetitions.com/i/acceptable-use-policy" },
+          { label: "Flash Affiliates",       url: "https://flashcompetitions.com/i/affiliate" },
+          { label: "How it Works",           url: "https://flashcompetitions.com/i/how-it-works" },
+          { label: "Responsible Play",       url: "https://flashcompetitions.com/i/responsible-play" }
+        ]
+      },
+      {
+        title: "Support",
+        links: [
+          { label: "About",                 url: "https://flashcompetitions.com/about" },
+          { label: "Contact",               url: "https://flashcompetitions.com/contact" },
+          { label: "Privacy Policy",         url: "https://flashcompetitions.com/privacy" },
+          { label: "Terms & Conditions",     url: "https://flashcompetitions.com/terms" }
+        ]
+      }
+    ],
+    socials: [
+      { label:"Instagram", url:"https://www.instagram.com/flashcompetitions" },
+      { label:"Facebook",  url:"https://www.facebook.com/flashcompetitions" },
+      { label:"TikTok",    url:"https://www.tiktok.com/@flashcompetitions" },
+      // { label:"X",       url:"https://x.com/yourhandle" },
+    ]
+  };
+
+  function qs(sel, root){ return (root||document).querySelector(sel); }
+  function el(tag, cls){ var n=document.createElement(tag); if(cls) n.className=cls; return n; }
+
+  // Simple inline SVGs
+  var ICONS = {
+    Instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm9 2h-9A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9A3.5 3.5 0 0 0 20 16.5v-9A3.5 3.5 0 0 0 16.5 4ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.8-2.2a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>',
+    Facebook:  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3H13.5V9.1c0-.9.3-1.6 1.7-1.6h1.5V4.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.5v3H10v8h3.5Z"/></svg>',
+    TikTok:    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3c.6 2.8 2.7 4.8 5 5v3c-1.8 0-3.4-.6-5-1.7v6.7c0 3.9-3.2 7-7 7s-7-3.1-7-7 3.2-7 7-7c.4 0 .8 0 1.2.1v3.3c-.4-.2-.8-.3-1.2-.3-2.1 0-3.8 1.7-3.8 3.8S7.9 19.7 10 19.7s3.8-1.6 3.8-3.9V3h2.2Z"/></svg>',
+    X:        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.7 2H22l-7.2 8.2L23 22h-6.5l-5.1-6.7L5.6 22H2.3l7.8-8.9L1 2h6.7l4.6 6.1L18.7 2Zm-1.1 18h1.8L6.7 3.9H4.8L17.6 20Z"/></svg>'
+  };
+
+  function build(){
+    var wrap = qs('div.mx-auto.max-w-7xl.px-6.pb-8.pt-20');
+    if(!wrap) return false;
+
+    // find links grid
+    var linksGrid = qs('.grid.grid-cols-2.gap-8', wrap);
+    if(!linksGrid) return false;
+
+    // Build header (once)
+    if(!qs('.fcFooterHdr', wrap)){
+      var hdr = el('div','fcFooterHdr');
+      hdr.innerHTML =
+        '<div class="fcFooterBrand"></div>' +
+        '<div class="fcFooterKicker"></div>';
+      hdr.querySelector('.fcFooterBrand').textContent  = (CFG.header && CFG.header.brand)  ? CFG.header.brand  : '';
+      hdr.querySelector('.fcFooterKicker').textContent = (CFG.header && CFG.header.kicker) ? CFG.header.kicker : '';
+      wrap.insertBefore(hdr, linksGrid);
+    }
+
+    // Rebuild the two sections from CFG (easy editing)
+    if(CFG.sections && CFG.sections.length){
+      var cols = linksGrid.children;
+      // ensure exactly 2 columns exist
+      while(linksGrid.children.length < 2) linksGrid.appendChild(el('div'));
+      while(linksGrid.children.length > 2) linksGrid.removeChild(linksGrid.lastElementChild);
+
+      for(var i=0;i<2;i++){
+        var col = linksGrid.children[i];
+        col.innerHTML = '';
+
+        var sec = CFG.sections[i] || { title:'', links:[] };
+        var h = el('h3');
+        h.textContent = sec.title || '';
+        col.appendChild(h);
+
+        var ul = el('ul');
+        ul.setAttribute('role','list');
+
+        (sec.links || []).forEach(function(l){
+          if(!l || !l.url) return;
+          var li = el('li');
+          var a  = el('a');
+          a.href = l.url;
+          a.textContent = l.label || l.url;
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+
+        col.appendChild(ul);
+      }
+    }
+
+    // Social row (once)
+    if(!qs('.fcFooterSocial', wrap)){
+      var row = el('div','fcFooterSocial');
+      row.setAttribute('aria-label','Social links');
+
+      (CFG.socials || []).forEach(function(s){
+        if(!s || !s.url) return;
+        var a = el('a');
+        a.href = s.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.setAttribute('aria-label', s.label || 'Social');
+
+        var key = (s.label || '').trim();
+        a.innerHTML = ICONS[key] || ICONS.Instagram;
+
+        row.appendChild(a);
+      });
+
+      linksGrid.insertAdjacentElement('afterend', row);
+    }
+
+    // Keep Powered by Rafflex untouched — we only center it via CSS (already done)
+    return true;
+  }
+
+  // Try now + retries for dynamic loads
+  var tries = 0;
+  var iv = setInterval(function(){
+    tries++;
+    if(build() || tries > 25) clearInterval(iv);
+  }, 300);
+
+  // Livewire-ish navigation safety
+  var mo = new MutationObserver(function(){ build(); });
+  mo.observe(document.documentElement, { childList:true, subtree:true });
+})();
+
+(function(){
+  // one global guard (still safe with Livewire rerenders)
+  if(window.__fcListsV4) return;
+  window.__fcListsV4 = true;
+
+  /* =========================================================
+     EASY CUSTOMIZATION (edit text only)
+  ========================================================= */
+  var CFG = {
+    kicker: "TRANSPARENCY",
+    title:  "Live Ticket Lists",
+    sub:    "Realtime entry lists so everyone can verify their tickets and stay in the loop."
+  };
+
+  function normPath(p){ return (p || '').replace(/\/+$/,''); }
+  function $(sel, root){ return (root||document).querySelector(sel); }
+  function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+
+  function isListsPage(){
+    return normPath(location.pathname) === '/lists';
+  }
+
+  function removeOldInjected(root){
+    // hard remove any older injected nodes that might look “weird”
+    $all('.fcCardCorner,.fcListSignal,.fcTLSectionHdr,.fcListsHeaderWrap', root).forEach(function(n){ n.remove(); });
+  }
+
+  function buildHero(root){
+    var grid = $('.grid.grid-cols-2.my-10', root);
+    if(!grid) return;
+
+    // If hero already exists (ours), keep
+    if($('.fcListsHero', root)) return;
+
+    var hero = document.createElement('div');
+    hero.className = 'fcListsHero';
+    hero.innerHTML =
+      '<div class="fcListsHeroFrame">' +
+        '<div class="fcListsKicker"></div>' +
+        '<h2 class="fcListsTitle"></h2>' +
+        '<div class="fcListsSub"></div>' +
+        '<div class="fcListsDivider" aria-hidden="true"></div>' +
+      '</div>';
+
+    hero.querySelector('.fcListsKicker').textContent = CFG.kicker || '';
+    hero.querySelector('.fcListsTitle').textContent  = CFG.title  || '';
+    hero.querySelector('.fcListsSub').textContent    = CFG.sub    || '';
+
+    // Insert hero DIRECTLY above the grid so it always shows
+    grid.parentNode.insertBefore(hero, grid);
+  }
+
+  function rebuildMeta(card){
+    var meta = $('.fcLists-meta', card);
+    if(!meta) return;
+    if(meta.getAttribute('data-fc-spec') === '1') return;
+
+    var spans = $all('.fcLists-pill', meta);
+    if(!spans.length) return;
+
+    var items = [];
+    spans.forEach(function(s){
+      var txt = (s.textContent || '').replace(/\s+/g,' ').trim();
+      var m = txt.match(/^(Price|Ends)\s+(.+)$/i);
+      if(m) items.push({ key: m[1], val: m[2] });
+    });
+
+    // Build spec row
+    var specWrap = document.createElement('div');
+    specWrap.className = 'fcSpecs';
+
+    items.forEach(function(it){
+      var key = (it.key || '').toLowerCase();
+      var isPrice = key === 'price';
+      var isFree  = isPrice && String(it.val||'').toLowerCase().indexOf('free') !== -1;
+
+      var el = document.createElement('span');
+      el.className = 'fcSpec' + (isPrice ? ' fcSpec--price' : '') + (isFree ? ' fcSpec--free' : '');
+      el.innerHTML =
+        '<span class="fcSpecKey"></span>' +
+        '<span class="fcSpecVal"></span>';
+
+      el.querySelector('.fcSpecKey').textContent = (it.key || '').toUpperCase();
+      el.querySelector('.fcSpecVal').textContent = it.val || '';
+
+      specWrap.appendChild(el);
+    });
+
+    meta.appendChild(specWrap);
+    meta.setAttribute('data-fc-spec','1');
+  }
+
+  function apply(){
+    if(!isListsPage()) return;
+
+    var root = document.querySelector('[wire\\:id][wire\\:snapshot][data-fc-lists-init]');
+    if(!root) return;
+
+    if(!root.classList.contains('fcListsV4')) root.classList.add('fcListsV4');
+
+    removeOldInjected(root);
+    buildHero(root);
+
+    var grid = $('.grid.grid-cols-2.my-10', root);
+    if(!grid) return;
+
+    $all('[data-fc-card-meta]', grid).forEach(function(card){
+      // ensure old weird elements are removed if nested
+      $all('.fcCardCorner,.fcListSignal', card).forEach(function(n){ n.remove(); });
+      rebuildMeta(card);
+    });
+  }
+
+  apply();
+
+  // Livewire-safe reruns
+  var t;
+  var mo = new MutationObserver(function(){
+    clearTimeout(t);
+    t = setTimeout(apply, 60);
+  });
+  mo.observe(document.documentElement, {subtree:true, childList:true});
+})();
+
+(function(){
+  function norm(p){ return (p||'').replace(/\/+$/,''); }
+  function isEntryList(){
+    var p = norm(location.pathname);
+    return (p.indexOf('/lists/') === 0 && p !== '/lists');
+  }
+  function qs(sel, root){ return (root||document).querySelector(sel); }
+  function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+  function txt(n){ return n ? (n.textContent||'').replace(/\s+/g,' ').trim() : ''; }
+
+  function enforceCols(table){
+    // Hide by header label (robust) but keep Ticket #, Customer, Admin
+    var ths = qsa('thead th', table);
+    if(!ths.length) return;
+
+    var keep = { 'ticket #': true, 'customer': true, 'admin': true };
+
+    ths.forEach(function(th, idx){
+      var label = txt(th).toLowerCase();
+      var col = idx + 1;
+      var shouldKeep = !!keep[label];
+
+      qsa('thead th:nth-child('+col+')', table).forEach(function(x){
+        x.style.display = shouldKeep ? '' : 'none';
+      });
+      qsa('tbody td:nth-child('+col+')', table).forEach(function(x){
+        x.style.display = shouldKeep ? '' : 'none';
+      });
+    });
+
+    // Fix empty state colspan
+    var emptyTd = qs('tbody td[colspan]', table);
+    if(emptyTd) emptyTd.setAttribute('colspan','3');
+  }
+
+  function apply(){
+    if(!isEntryList()) return;
+
+    var search = document.querySelector('input[placeholder="Search ticket number"]');
+    if(!search) return;
+
+    // Base host container from your markup
+    var host = search.closest('.px-3.mx-auto.py-5.lg\\:py-10.max-w-7xl.sm\\:px-6.lg\\:px-8');
+    if(!host) return;
+
+    // Mark host + wrap into width controller once (non-destructive)
+    host.classList.add('fcELv10');
+
+    if(!host.querySelector(':scope > .fcEL10-wide')){
+      var wide = document.createElement('div');
+      wide.className = 'fcEL10-wide';
+      while(host.firstChild) wide.appendChild(host.firstChild);
+      host.appendChild(wide);
+    }
+    var wideHost = host.querySelector(':scope > .fcEL10-wide');
+    if(!wideHost) return;
+
+    // Find live nodes
+    var header = wideHost.querySelector('.mx-auto.max-w-2xl.text-center');
+    var productCard = wideHost.querySelector('[data-flux-card].mb-6');
+    var controls = search.closest('.flex.flex-col.sm\\:flex-row.gap-3.mb-4');
+    var tableWrap = wideHost.querySelector('.relative.overflow-x-auto.rounded-lg.border.border-gray-700.bg-gray-950');
+    var pager = wideHost.querySelector('.pt-4.flex.flex-col.sm\\:flex-row.justify-between.items-start');
+
+    if(!productCard || !controls || !tableWrap) return;
+
+    // If shell exists but nodes got swapped by Livewire, rebuild
+    var existing = wideHost.querySelector(':scope > .fcEL10-shell');
+    if(existing){
+      if(!existing.contains(productCard) || !existing.contains(controls) || !existing.contains(tableWrap)){
+        existing.remove();
+      }else{
+        var tbl1 = tableWrap.querySelector('table');
+        if(tbl1) enforceCols(tbl1);
+        return;
+      }
+    }
+
+    // Build shell
+    var shell = document.createElement('div');
+    shell.className = 'fcEL10-shell';
+
+    var h1 = header ? header.querySelector('h1') : null;
+    var p  = header ? header.querySelector('p.mt-2') : null;
+
+    var hero = document.createElement('section');
+    hero.className = 'fcEL10-hero';
+    hero.innerHTML =
+      '<div class="fcEL10-kicker"><span class="dot" aria-hidden="true"></span>LIVE TICKET LEDGER</div>' +
+      '<div class="fcEL10-title"></div>' +
+      '<div class="fcEL10-sub"></div>';
+    hero.querySelector('.fcEL10-title').textContent = txt(h1) || 'Ticket List';
+    hero.querySelector('.fcEL10-sub').textContent   = txt(p)  || 'Minimal view — Ticket #, Customer, and Admin tools only.';
+
+    var left = document.createElement('section');
+    left.className = 'fcEL10-left';
+    left.innerHTML =
+      '<div class="fcEL10-leftTop">' +
+        '<div class="fcEL10-secK">COMPETITION</div>' +
+        '<div class="fcEL10-secT">Overview</div>' +
+        '<div class="fcEL10-secS">Key details and quick access.</div>' +
+      '</div>' +
+      '<div class="fcEL10-leftBody"></div>';
+
+    var right = document.createElement('section');
+    right.className = 'fcEL10-right';
+    right.innerHTML =
+      '<div class="fcEL10-rightTop">' +
+        '<div class="fcEL10-secK">TICKETS</div>' +
+        '<div class="fcEL10-secT">Search & verify</div>' +
+        '<div class="fcEL10-secS">Clutter removed. Keep it transparent.</div>' +
+      '</div>' +
+      '<div class="fcEL10-rightBody"></div>';
+
+    shell.appendChild(hero);
+    shell.appendChild(left);
+    shell.appendChild(right);
+
+    wideHost.insertBefore(shell, wideHost.firstChild);
+
+    // Re-parent nodes (same nodes, no logic changes)
+    qs('.fcEL10-leftBody', left).appendChild(productCard);
+
+    var rb = qs('.fcEL10-rightBody', right);
+    rb.appendChild(controls);
+    rb.appendChild(tableWrap);
+    if(pager) rb.appendChild(pager);
+
+    // Force only Ticket # / Customer / Admin visible
+    var tbl = tableWrap.querySelector('table');
+    if(tbl) enforceCols(tbl);
+
+    // Make empty message nicer once
+    var empty = wideHost.querySelector('tbody td.text-center.text-gray-400');
+    if(empty && !empty.getAttribute('data-fc-el10-empty')){
+      var current = txt(empty);
+      if(/no tickets yet/i.test(current)){
+        empty.textContent = 'No tickets yet — this ledger updates live.';
+      }
+      empty.setAttribute('data-fc-el10-empty','1');
+    }
+  }
+
+  apply();
+
+  var t;
+  var mo = new MutationObserver(function(){
+    clearTimeout(t);
+    t = setTimeout(apply, 120);
+  });
+  mo.observe(document.documentElement, {subtree:true, childList:true});
 })();
