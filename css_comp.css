@@ -3108,7 +3108,6 @@ div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 p.text-xs{
 /* ===== Sticky header: life WITHOUT recolor ===== */
 .sticky.top-0.z-50.bg-gray-950{
   position: sticky;
-  overflow: hidden; /* clip the sheen */
 }
 
 /* A subtle moving “glass sheen” over header */
@@ -3185,3 +3184,4 @@ div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 p.text-xs{
     animation:none !important;
   }
 }
+
