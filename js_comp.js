@@ -1,11 +1,3 @@
-/* =========================================================
-   ⚡ FlashCompetitions — FAST Checkout + Slider v13 (JS)
-   - Livewire-safe, idempotent
-   - Adds .fc-comp-page on /competition/
-   - Sticky bar v13 id
-   - Default tickets ~£1 (one-time) on paid comps
-   ========================================================= */
-
 (() => {
   const CFG = {
     pageMatch: /\/competition\//i,
@@ -982,4 +974,5 @@
   });
   mo.observe(document.documentElement, {subtree:true, childList:true});
 })();
+
 
