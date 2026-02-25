@@ -920,11 +920,11 @@
     var hero = document.createElement('section');
     hero.className = 'fcEL10-hero';
     hero.innerHTML =
-      '<div class="fcEL10-kicker"><span class="dot" aria-hidden="true"></span>LIVE TICKET LEDGER</div>' +
+      '<div class="fcEL10-kicker"><span class="dot" aria-hidden="true"></span>LIVE TICKET LIST</div>' +
       '<div class="fcEL10-title"></div>' +
       '<div class="fcEL10-sub"></div>';
     hero.querySelector('.fcEL10-title').textContent = txt(h1) || 'Ticket List';
-    hero.querySelector('.fcEL10-sub').textContent   = txt(p)  || 'Minimal view — Ticket #, Customer, and Admin tools only.';
+    hero.querySelector('.fcEL10-sub').textContent   = txt(p)  || 'Ticket #, Customer';
 
     var left = document.createElement('section');
     left.className = 'fcEL10-left';
@@ -932,7 +932,6 @@
       '<div class="fcEL10-leftTop">' +
         '<div class="fcEL10-secK">COMPETITION</div>' +
         '<div class="fcEL10-secT">Overview</div>' +
-        '<div class="fcEL10-secS">Key details and quick access.</div>' +
       '</div>' +
       '<div class="fcEL10-leftBody"></div>';
 
@@ -942,7 +941,6 @@
       '<div class="fcEL10-rightTop">' +
         '<div class="fcEL10-secK">TICKETS</div>' +
         '<div class="fcEL10-secT">Search & verify</div>' +
-        '<div class="fcEL10-secS">Clutter removed. Keep it transparent.</div>' +
       '</div>' +
       '<div class="fcEL10-rightBody"></div>';
 
@@ -969,7 +967,7 @@
     if(empty && !empty.getAttribute('data-fc-el10-empty')){
       var current = txt(empty);
       if(/no tickets yet/i.test(current)){
-        empty.textContent = 'No tickets yet — this ledger updates live.';
+        empty.textContent = 'No tickets yet';
       }
       empty.setAttribute('data-fc-el10-empty','1');
     }
@@ -984,3 +982,4 @@
   });
   mo.observe(document.documentElement, {subtree:true, childList:true});
 })();
+
