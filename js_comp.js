@@ -15,6 +15,16 @@
   const clean = (s) => (s || "").replace(/\s+/g, " ").trim();
   const txt = (el) => clean(el?.textContent || "");
 
+  // ✅ FIX: never throw NotFoundError if beforeNode is stale (Livewire swaps)
+  function safeInsertBefore(parent, node, before){
+    if (!parent || !node) return;
+    if (!before || before.parentNode !== parent){
+      parent.appendChild(node);
+      return;
+    }
+    parent.insertBefore(node, before);
+  }
+
   function ensurePageClass(){
     if (CFG.pageMatch.test(location.pathname)) document.documentElement.classList.add(CFG.pageClass);
     else document.documentElement.classList.remove(CFG.pageClass);
@@ -176,7 +186,7 @@
     `;
 
     const sliderWrap = wrap.querySelector(".fcSliderWrap");
-    if (sliderWrap) wrap.insertBefore(host, sliderWrap);
+    if (sliderWrap) safeInsertBefore(wrap, host, sliderWrap);
     else wrap.appendChild(host);
 
     return host;
@@ -241,8 +251,8 @@
         </div>
       `;
 
-      if (span) label.insertBefore(ui, span);
-      else label.insertBefore(ui, label.firstChild);
+      if (span) safeInsertBefore(label, ui, span);
+      else safeInsertBefore(label, ui, label.firstChild);
     });
   }
 
@@ -368,7 +378,7 @@
       `;
 
       if (toggleRow) toggleRow.insertAdjacentElement("afterend", wrap);
-      else panel.insertBefore(wrap, panel.firstChild);
+      else safeInsertBefore(panel, wrap, panel.firstChild);
     }
 
     const grid = moveBundlesIntoHost(panel, wrap);
@@ -525,7 +535,6 @@
 
 (function(){
   function enhance(){
-    // Find any grid wrapper that contains your list cards (data-fc-card-meta)
     var grids = document.querySelectorAll('div.grid.grid-cols-2');
     grids.forEach(function(g){
       if (g.classList.contains('fcListsGrid')) return;
@@ -535,7 +544,6 @@
 
   enhance();
 
-  // Lightweight re-run for dynamic loads (Rafflex/Livewire)
   var t;
   var mo = new MutationObserver(function(){
     clearTimeout(t);
@@ -559,13 +567,9 @@
 })();
 
 (function(){
-  // Prevent double init across live navigation
   if (window.__fcFooterV6) return;
   window.__fcFooterV6 = true;
 
-  /* =========================================================
-     ✅ EASY CUSTOMIZATION (edit only this block)
-  ========================================================= */
   var CFG = {
     header: {
       brand: "FLASH COMPETITIONS",
@@ -595,14 +599,19 @@
       { label:"Instagram", url:"https://www.instagram.com/flashcompetitions" },
       { label:"Facebook",  url:"https://www.facebook.com/flashcompetitions" },
       { label:"TikTok",    url:"https://www.tiktok.com/@flashcompetitions" },
-      // { label:"X",       url:"https://x.com/yourhandle" },
     ]
   };
 
   function qs(sel, root){ return (root||document).querySelector(sel); }
   function el(tag, cls){ var n=document.createElement(tag); if(cls) n.className=cls; return n; }
 
-  // Simple inline SVGs
+  // ✅ FIX: safe insertBefore for Livewire DOM swaps
+  function safeInsertBefore(parent, node, before){
+    if (!parent || !node) return;
+    if (!before || before.parentNode !== parent) parent.appendChild(node);
+    else parent.insertBefore(node, before);
+  }
+
   var ICONS = {
     Instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm9 2h-9A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9A3.5 3.5 0 0 0 20 16.5v-9A3.5 3.5 0 0 0 16.5 4ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.8-2.2a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>',
     Facebook:  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3H13.5V9.1c0-.9.3-1.6 1.7-1.6h1.5V4.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.5v3H10v8h3.5Z"/></svg>',
@@ -614,11 +623,9 @@
     var wrap = qs('div.mx-auto.max-w-7xl.px-6.pb-8.pt-20');
     if(!wrap) return false;
 
-    // find links grid
     var linksGrid = qs('.grid.grid-cols-2.gap-8', wrap);
     if(!linksGrid) return false;
 
-    // Build header (once)
     if(!qs('.fcFooterHdr', wrap)){
       var hdr = el('div','fcFooterHdr');
       hdr.innerHTML =
@@ -626,13 +633,10 @@
         '<div class="fcFooterKicker"></div>';
       hdr.querySelector('.fcFooterBrand').textContent  = (CFG.header && CFG.header.brand)  ? CFG.header.brand  : '';
       hdr.querySelector('.fcFooterKicker').textContent = (CFG.header && CFG.header.kicker) ? CFG.header.kicker : '';
-      wrap.insertBefore(hdr, linksGrid);
+      safeInsertBefore(wrap, hdr, linksGrid);
     }
 
-    // Rebuild the two sections from CFG (easy editing)
     if(CFG.sections && CFG.sections.length){
-      var cols = linksGrid.children;
-      // ensure exactly 2 columns exist
       while(linksGrid.children.length < 2) linksGrid.appendChild(el('div'));
       while(linksGrid.children.length > 2) linksGrid.removeChild(linksGrid.lastElementChild);
 
@@ -662,7 +666,6 @@
       }
     }
 
-    // Social row (once)
     if(!qs('.fcFooterSocial', wrap)){
       var row = el('div','fcFooterSocial');
       row.setAttribute('aria-label','Social links');
@@ -684,30 +687,28 @@
       linksGrid.insertAdjacentElement('afterend', row);
     }
 
-    // Keep Powered by Rafflex untouched — we only center it via CSS (already done)
     return true;
   }
 
-  // Try now + retries for dynamic loads
   var tries = 0;
   var iv = setInterval(function(){
     tries++;
     if(build() || tries > 25) clearInterval(iv);
   }, 300);
 
-  // Livewire-ish navigation safety
-  var mo = new MutationObserver(function(){ build(); });
+  // ✅ FIX: debounce observer so build isn't called mid-swap 500x
+  var t;
+  var mo = new MutationObserver(function(){
+    clearTimeout(t);
+    t = setTimeout(build, 80);
+  });
   mo.observe(document.documentElement, { childList:true, subtree:true });
 })();
 
 (function(){
-  // one global guard (still safe with Livewire rerenders)
   if(window.__fcListsV4) return;
   window.__fcListsV4 = true;
 
-  /* =========================================================
-     EASY CUSTOMIZATION (edit text only)
-  ========================================================= */
   var CFG = {
     kicker: "TRANSPARENCY",
     title:  "Live Ticket Lists",
@@ -718,12 +719,18 @@
   function $(sel, root){ return (root||document).querySelector(sel); }
   function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
 
+  // ✅ FIX: safe insertBefore for Livewire swaps
+  function safeInsertBefore(parent, node, before){
+    if (!parent || !node) return;
+    if (!before || before.parentNode !== parent) parent.appendChild(node);
+    else parent.insertBefore(node, before);
+  }
+
   function isListsPage(){
     return normPath(location.pathname) === '/lists';
   }
 
   function removeOldInjected(root){
-    // hard remove any older injected nodes that might look “weird”
     $all('.fcCardCorner,.fcListSignal,.fcTLSectionHdr,.fcListsHeaderWrap', root).forEach(function(n){ n.remove(); });
   }
 
@@ -731,7 +738,6 @@
     var grid = $('.grid.grid-cols-2.my-10', root);
     if(!grid) return;
 
-    // If hero already exists (ours), keep
     if($('.fcListsHero', root)) return;
 
     var hero = document.createElement('div');
@@ -748,8 +754,7 @@
     hero.querySelector('.fcListsTitle').textContent  = CFG.title  || '';
     hero.querySelector('.fcListsSub').textContent    = CFG.sub    || '';
 
-    // Insert hero DIRECTLY above the grid so it always shows
-    grid.parentNode.insertBefore(hero, grid);
+    if (grid.parentNode) safeInsertBefore(grid.parentNode, hero, grid);
   }
 
   function rebuildMeta(card){
@@ -767,7 +772,6 @@
       if(m) items.push({ key: m[1], val: m[2] });
     });
 
-    // Build spec row
     var specWrap = document.createElement('div');
     specWrap.className = 'fcSpecs';
 
@@ -776,16 +780,16 @@
       var isPrice = key === 'price';
       var isFree  = isPrice && String(it.val||'').toLowerCase().indexOf('free') !== -1;
 
-      var el = document.createElement('span');
-      el.className = 'fcSpec' + (isPrice ? ' fcSpec--price' : '') + (isFree ? ' fcSpec--free' : '');
-      el.innerHTML =
+      var elx = document.createElement('span');
+      elx.className = 'fcSpec' + (isPrice ? ' fcSpec--price' : '') + (isFree ? ' fcSpec--free' : '');
+      elx.innerHTML =
         '<span class="fcSpecKey"></span>' +
         '<span class="fcSpecVal"></span>';
 
-      el.querySelector('.fcSpecKey').textContent = (it.key || '').toUpperCase();
-      el.querySelector('.fcSpecVal').textContent = it.val || '';
+      elx.querySelector('.fcSpecKey').textContent = (it.key || '').toUpperCase();
+      elx.querySelector('.fcSpecVal').textContent = it.val || '';
 
-      specWrap.appendChild(el);
+      specWrap.appendChild(elx);
     });
 
     meta.appendChild(specWrap);
@@ -807,7 +811,6 @@
     if(!grid) return;
 
     $all('[data-fc-card-meta]', grid).forEach(function(card){
-      // ensure old weird elements are removed if nested
       $all('.fcCardCorner,.fcListSignal', card).forEach(function(n){ n.remove(); });
       rebuildMeta(card);
     });
@@ -815,7 +818,6 @@
 
   apply();
 
-  // Livewire-safe reruns
   var t;
   var mo = new MutationObserver(function(){
     clearTimeout(t);
@@ -834,8 +836,14 @@
   function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
   function txt(n){ return n ? (n.textContent||'').replace(/\s+/g,' ').trim() : ''; }
 
+  // ✅ FIX: safe insertBefore for Livewire swaps
+  function safeInsertBefore(parent, node, before){
+    if (!parent || !node) return;
+    if (!before || before.parentNode !== parent) parent.appendChild(node);
+    else parent.insertBefore(node, before);
+  }
+
   function enforceCols(table){
-    // Hide by header label (robust) but keep Ticket #, Customer, Admin
     var ths = qsa('thead th', table);
     if(!ths.length) return;
 
@@ -854,7 +862,6 @@
       });
     });
 
-    // Fix empty state colspan
     var emptyTd = qs('tbody td[colspan]', table);
     if(emptyTd) emptyTd.setAttribute('colspan','3');
   }
@@ -865,11 +872,9 @@
     var search = document.querySelector('input[placeholder="Search ticket number"]');
     if(!search) return;
 
-    // Base host container from your markup
     var host = search.closest('.px-3.mx-auto.py-5.lg\\:py-10.max-w-7xl.sm\\:px-6.lg\\:px-8');
     if(!host) return;
 
-    // Mark host + wrap into width controller once (non-destructive)
     host.classList.add('fcELv10');
 
     if(!host.querySelector(':scope > .fcEL10-wide')){
@@ -881,7 +886,6 @@
     var wideHost = host.querySelector(':scope > .fcEL10-wide');
     if(!wideHost) return;
 
-    // Find live nodes
     var header = wideHost.querySelector('.mx-auto.max-w-2xl.text-center');
     var productCard = wideHost.querySelector('[data-flux-card].mb-6');
     var controls = search.closest('.flex.flex-col.sm\\:flex-row.gap-3.mb-4');
@@ -890,7 +894,6 @@
 
     if(!productCard || !controls || !tableWrap) return;
 
-    // If shell exists but nodes got swapped by Livewire, rebuild
     var existing = wideHost.querySelector(':scope > .fcEL10-shell');
     if(existing){
       if(!existing.contains(productCard) || !existing.contains(controls) || !existing.contains(tableWrap)){
@@ -902,7 +905,6 @@
       }
     }
 
-    // Build shell
     var shell = document.createElement('div');
     shell.className = 'fcEL10-shell';
 
@@ -940,9 +942,8 @@
     shell.appendChild(left);
     shell.appendChild(right);
 
-    wideHost.insertBefore(shell, wideHost.firstChild);
+    safeInsertBefore(wideHost, shell, wideHost.firstChild);
 
-    // Re-parent nodes (same nodes, no logic changes)
     qs('.fcEL10-leftBody', left).appendChild(productCard);
 
     var rb = qs('.fcEL10-rightBody', right);
@@ -950,11 +951,9 @@
     rb.appendChild(tableWrap);
     if(pager) rb.appendChild(pager);
 
-    // Force only Ticket # / Customer / Admin visible
     var tbl = tableWrap.querySelector('table');
     if(tbl) enforceCols(tbl);
 
-    // Make empty message nicer once
     var empty = wideHost.querySelector('tbody td.text-center.text-gray-400');
     if(empty && !empty.getAttribute('data-fc-el10-empty')){
       var current = txt(empty);
@@ -974,5 +973,3 @@
   });
   mo.observe(document.documentElement, {subtree:true, childList:true});
 })();
-
-
