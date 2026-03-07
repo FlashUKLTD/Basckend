@@ -1,21 +1,22 @@
 (() => {
   // =========================================================
   // FLASH — COMPETITION PAGE ONLY
-  // Full design restored + mobile-safe + Livewire-safe
+  // Runs ONLY on /competition/ pages
+  // Mobile-safe / observer-light / Livewire-safe
   // =========================================================
   if (!/^\/competition\//i.test(location.pathname)) return;
-  if (window.__fcCompFastV15) return;
-  window.__fcCompFastV15 = true;
+  if (window.__fcCompFastV14) return;
+  window.__fcCompFastV14 = true;
 
   const CFG = {
     pageMatch: /^\/competition\//i,
     pageClass: "fc-comp-page",
-    panelFlag: "data-fc-fast-v15",
-    bundleFlag: "data-fc-bundle-ui-v15",
-    stickyId: "fcStickyBuyFastV15",
+    panelFlag: "data-fc-fast-v14",
+    bundleFlag: "data-fc-bundle-ui-v14",
+    stickyId: "fcStickyBuyFastV14",
     defaultCheckoutGBP: 1.00,
-    defaultFlag: "data-fc-default-applied-v15",
-    bindFlag: "data-fc-bound-v15",
+    defaultFlag: "data-fc-default-applied-v14",
+    bindFlag: "data-fc-bound-v14",
     updateTickMs: 80,
   };
 
@@ -187,7 +188,7 @@
 
   function parseBundle(text){
     const t = clean(text);
-    const m = t.match(/buy\\s+(\\d+)\\s+get\\s+(\\d+)\\s+free/i);
+    const m = t.match(/buy\s+(\d+)\s+get\s+(\d+)\s+free/i);
     if (!m) return null;
     const buy = Number(m[1]);
     const free = Number(m[2]);
@@ -327,12 +328,6 @@
     const kicker = wrap.querySelector(".fcFastKicker");
     if (kicker) kicker.textContent = "Free entry. Good luck.";
 
-    const heroKicker = wrap.querySelector(".fcFastHeroKicker");
-    if (heroKicker) heroKicker.textContent = "⚡ Free Entry";
-
-    const heroTitle = wrap.querySelector(".fcFastHeroTitle");
-    if (heroTitle) heroTitle.textContent = "Enter free. Good luck.";
-
     const subEl = wrap.querySelector("[data-fc-sub]");
     if (subEl) subEl.innerHTML = `1 ticket × <span class="amt">Free</span>`;
 
@@ -371,12 +366,6 @@
 
     const kicker = wrap.querySelector(".fcFastKicker");
     if (kicker) kicker.textContent = "Enter now. Win in a flash";
-
-    const heroKicker = wrap.querySelector(".fcFastHeroKicker");
-    if (heroKicker) heroKicker.textContent = "⚡ FAST ENTRY";
-
-    const heroTitle = wrap.querySelector(".fcFastHeroTitle");
-    if (heroTitle) heroTitle.textContent = "Enter now. Win in a flash";
 
     const sticky = document.getElementById(CFG.stickyId);
     if (sticky) sticky.style.display = "";
@@ -548,19 +537,9 @@
       wrap.className = "fcFastWrap";
       wrap.innerHTML = `
         <div class="fcFastTop">
-          <div class="fcFastHero">
-            <div class="fcFastHeroInner">
-              <div class="fcFastHeroKicker">⚡ FAST ENTRY</div>
-              <div class="fcFastHeroTitle">Enter now. Win in a flash</div>
-              <div class="fcFastHeroSub">
-                <div class="fcFastKicker">Enter now. Win in a flash</div>
-                <div class="fcFastSub"><span data-fc-sub></span></div>
-              </div>
-            </div>
-          </div>
+          <div class="fcFastKicker">Enter now. Win in a flash</div>
+          <div class="fcFastSub"><span data-fc-sub></span></div>
         </div>
-
-        <div class="fcBundleHostShell"></div>
 
         <div class="fcSliderWrap">
           <div class="fcSliderTop">
@@ -569,7 +548,7 @@
           </div>
           <input class="fcTicketSlider" type="range" min="1" max="${maxUser}" step="1" value="1" />
           <div class="fcTotalCenter">
-            <div class="fcTotalRow">Total <span class="amt" data-fc-total>£0.00</span></div>
+            <div>Total <span class="amt" data-fc-total>£0.00</span></div>
           </div>
         </div>
 
