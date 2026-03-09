@@ -4074,182 +4074,80 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
   margin-left:auto !important;
   margin-right:auto !important;
 }
-/* =========================================================
-   FLASH COMPETITIONS — HEADING FONT + SECTION HEADER FIX
-   Scope: /competition/ only
-   ========================================================= */
 
-body.fc-comp-page{
-  --fc-purple:#8B5CFF;
-  --fc-blue:#35B8FF;
-  --fc-white:#F4F7FF;
+
+/* v12 — force single underline + Orbitron for Instant Wins / Information */
+.fc-comp-page .fcMajorSectionTitle{
+  text-transform:none !important;
+}
+.fc-comp-page .fcMajorSectionTitle::after{
+  content:none !important;
+}
+.fc-comp-page .fcMajorSectionTitle::before{
+  content:none !important;
 }
 
-/* =========================================================
-   Competition hero title font upgrade
-   ========================================================= */
-
-body.fc-comp-page .fc-hero-title,
-body.fc-comp-page h1.fc-hero-title{
-  font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  font-weight: 800 !important;
-  letter-spacing: -.035em !important;
-  line-height: .98 !important;
-  color: var(--fc-white) !important;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.03),
-    0 0 18px rgba(53,184,255,.06);
+.fc-comp-page .fcV12MajorTitle{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:fit-content !important;
+  max-width:100% !important;
+  margin:0 auto 34px !important;
+  padding:0 20px 18px !important;
+  position:relative !important;
+  text-align:center !important;
+  font-family:"Orbitron",system-ui,sans-serif !important;
+  font-size:clamp(30px,3vw,52px) !important;
+  font-weight:600 !important;
+  line-height:1.02 !important;
+  letter-spacing:.08em !important;
+  color:transparent !important;
+  background:linear-gradient(90deg,#d6c8ff 0%, #9d89ff 34%, #69a8ff 68%, #8de6ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:0 0 18px rgba(139,92,255,.10), 0 0 30px rgba(53,184,255,.08) !important;
 }
 
-/* keep title one line and scale nicely */
-body.fc-comp-page .fc-hero-title{
-  font-size: clamp(2rem, 3.3vw, 3.9rem) !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+.fc-comp-page .fcV12MajorTitle > *,
+.fc-comp-page .fcV12MajorTitle > *::before,
+.fc-comp-page .fcV12MajorTitle > *::after{
+  font-family:"Orbitron",system-ui,sans-serif !important;
+  background:none !important;
+  -webkit-text-fill-color:inherit !important;
+  text-shadow:none !important;
+  box-shadow:none !important;
+  border:0 !important;
 }
 
-/* =========================================================
-   Price font upgrade
-   ========================================================= */
-
-body.fc-comp-page .fcHeroMeta-price,
-body.fc-comp-page .fc-hero-price,
-body.fc-comp-page .lg\:col-span-6.lg\:col-start-7 p.text-3xl,
-body.fc-comp-page .fcHeroMeta .text-3xl{
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif !important;
-  font-weight: 700 !important;
-  letter-spacing: -.02em !important;
-  background: linear-gradient(90deg, var(--fc-purple) 0%, var(--fc-blue) 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-  display: inline-block !important;
-}
-
-/* mobile safety for gradient text */
-@supports not (-webkit-background-clip: text) {
-  body.fc-comp-page .fcHeroMeta-price,
-  body.fc-comp-page .fc-hero-price,
-  body.fc-comp-page .lg\:col-span-6.lg\:col-start-7 p.text-3xl,
-  body.fc-comp-page .fcHeroMeta .text-3xl{
-    color: #7fc9ff !important;
-  }
-}
-
-/* =========================================================
-   Instant Wins + More Details
-   Same upgraded font as hero title
-   ========================================================= */
-
-body.fc-comp-page .fc-match-hero-heading{
-  position: relative !important;
-  display: block !important;
-  width: fit-content !important;
-  max-width: 100% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  margin-top: 8px !important;
-  margin-bottom: 28px !important;
-  padding-bottom: 18px !important;
-
-  font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  font-size: clamp(2rem, 3vw, 3.4rem) !important;
-  font-weight: 500 !important;
-  line-height: 1.02 !important;
-  letter-spacing: .04em !important;
-  text-transform: none !important;
-  text-align: center !important;
-
-  color: transparent !important;
-  background: linear-gradient(90deg,#d8cbff 0%, #a992ff 34%, #79baff 70%, #d6f3ff 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  text-shadow:
-    0 0 12px rgba(139,92,255,.08),
-    0 0 18px rgba(53,184,255,.06) !important;
-}
-
-/* remove any old weird heading decoration */
-body.fc-comp-page .fc-match-hero-heading::before{
-  content: none !important;
-}
-
-/* exact same divider under both section headers */
-body.fc-comp-page .fc-match-hero-heading::after{
-  content: "" !important;
-  position: absolute !important;
-  left: 50% !important;
-  bottom: 0 !important;
-  transform: translateX(-50%) !important;
-  width: min(74%, 300px) !important;
-  height: 2px !important;
-  border-radius: 999px !important;
-  background: linear-gradient(
+.fc-comp-page .fcV12MajorTitle::after{
+  content:"" !important;
+  display:block !important;
+  width:min(84%, 300px) !important;
+  min-width:180px !important;
+  height:2px !important;
+  margin:16px auto 0 !important;
+  border-radius:999px !important;
+  background:linear-gradient(
     90deg,
     rgba(139,92,255,0) 0%,
-    rgba(139,92,255,.95) 25%,
-    rgba(53,184,255,.95) 75%,
+    rgba(139,92,255,.95) 24%,
+    rgba(53,184,255,.95) 76%,
     rgba(53,184,255,0) 100%
   ) !important;
-  box-shadow:
-    0 0 10px rgba(139,92,255,.16),
-    0 0 16px rgba(53,184,255,.12) !important;
+  box-shadow:0 0 12px rgba(53,184,255,.22) !important;
 }
-
-/* =========================================================
-   More Details content centered
-   ========================================================= */
-
-body.fc-comp-page .fc-section-heading-details + *,
-body.fc-comp-page .fc-section-heading-details + * .wysiwyg,
-body.fc-comp-page .fc-section-heading-details + * .prose,
-body.fc-comp-page .fc-section-heading-details + * .content{
-  text-align: center !important;
-}
-
-body.fc-comp-page .fc-section-heading-details + * ul,
-body.fc-comp-page .fc-section-heading-details + * ol{
-  display: inline-block !important;
-  text-align: left !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* =========================================================
-   Keep smaller utility headings untouched
-   ========================================================= */
-
-body.fc-comp-page .fcBundleTitle,
-body.fc-comp-page .fcTicketSelectorTitle,
-body.fc-comp-page .fc-bundle-title,
-body.fc-comp-page .fc-ticket-selector-title{
-  font-family: inherit !important;
-  font-size: inherit !important;
-  text-transform: inherit !important;
-  letter-spacing: inherit !important;
-  background: none !important;
-  -webkit-text-fill-color: initial !important;
-}
-
-/* =========================================================
-   Mobile tuning
-   ========================================================= */
 
 @media (max-width: 767px){
-  body.fc-comp-page .fc-hero-title{
-    font-size: clamp(1.7rem, 8vw, 2.7rem) !important;
+  .fc-comp-page .fcV12MajorTitle{
+    font-size:clamp(24px,7vw,34px) !important;
+    margin-bottom:28px !important;
+    padding-bottom:16px !important;
+    letter-spacing:.07em !important;
   }
-
-  body.fc-comp-page .fc-match-hero-heading{
-    font-size: clamp(1.7rem, 8vw, 2.5rem) !important;
-    padding-bottom: 16px !important;
-    margin-bottom: 24px !important;
-  }
-
-  body.fc-comp-page .fc-match-hero-heading::after{
-    width: min(82%, 240px) !important;
+  .fc-comp-page .fcV12MajorTitle::after{
+    width:min(82%, 240px) !important;
   }
 }
