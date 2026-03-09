@@ -391,7 +391,6 @@
       if (sticky) sticky.style.display = '';
     }
 
-
     function formatDisplayPrice(raw){
       const n = parseTicketPrice(raw);
       if (n === 0) return 'Free Entry';
@@ -647,8 +646,7 @@
         if (!document.documentElement.classList.contains(CFG.pageClass)) return;
         enhanceMeta();
         enhanceHeroInfo();
-      enhancePanel();
-      enhanceSectionHeadings();
+        enhancePanel();
       });
     }
 
@@ -708,7 +706,6 @@
   }
 })();
 
-
 /* v12 heading cleanup + Orbitron */
 (() => {
   if (!/\/competition\//i.test(location.pathname)) return;
@@ -748,7 +745,6 @@
         el.classList.add('fcMajorSectionTitle','fcV12MajorTitle');
         el.setAttribute(FLAG, 'true');
 
-        // strip previously injected wrappers that can inherit old underline styles
         [...el.querySelectorAll('*')].forEach((child) => {
           child.classList.remove('fc-match-hero-heading','fcSectionTitleMore','fcMoreDetailsTitle');
         });
