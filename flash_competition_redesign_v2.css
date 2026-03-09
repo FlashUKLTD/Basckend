@@ -3362,3 +3362,169 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.bg-z
     font-size:13px !important;
   }
 }
+
+/* =========================================================
+   V6 PATCH — duplicate hero fix, cleaner countdown, upgraded fonts
+   ========================================================= */
+
+:root{
+  --fc-heading-font:"Jura","Rajdhani","Orbitron","Segoe UI",system-ui,sans-serif;
+}
+
+/* Better premium heading font */
+.fc-comp-page h1.text-3xl.font-display.text-gray-50,
+.fc-comp-page .fcHeroName,
+.fc-comp-page .fcHeroPrice,
+.fc-comp-page .fcPricePrefix,
+.fc-comp-page .fcPriceValue,
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50{
+  font-family:var(--fc-heading-font) !important;
+}
+
+.fc-comp-page h1.text-3xl.font-display.text-gray-50,
+.fc-comp-page .fcHeroName,
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50{
+  font-weight:500 !important;
+  letter-spacing:.055em !important;
+}
+
+.fc-comp-page .fcHeroName{
+  display:block;
+  text-align:left;
+  font-size:clamp(2rem, 3.2vw, 3.15rem) !important;
+  line-height:1.02 !important;
+  color:transparent !important;
+  background:linear-gradient(90deg,#eee4ff 0%, #b49cff 34%, #77c8ff 68%, #e8f9ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  text-shadow:0 0 18px rgba(139,92,255,.14), 0 0 28px rgba(53,184,255,.10);
+}
+
+.fc-comp-page .fcHeroPrice{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:10px;
+}
+
+.fc-comp-page .fcPricePrefix{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:30px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid rgba(112,128,255,.20);
+  color:rgba(247,251,255,.72) !important;
+  background:rgba(255,255,255,.02);
+  font-size:11px !important;
+  font-weight:700 !important;
+  letter-spacing:.18em !important;
+  text-transform:uppercase;
+}
+
+.fc-comp-page .fcPriceValue{
+  font-size:clamp(1rem, 1.45vw, 1.28rem) !important;
+  font-weight:700 !important;
+  letter-spacing:.03em !important;
+  color:#89e3ff !important;
+  text-shadow:0 0 16px rgba(53,184,255,.12);
+}
+
+/* Remove duplicate right-side hero info on desktop because custom hero meta is above image */
+@media (min-width:1024px){
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .flex.justify-between.gap-x-5.flex-wrap.items-center,
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .mt-2,
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .fcHeroLine{
+    display:none !important;
+  }
+
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7{
+    padding-top:36px !important;
+  }
+
+  .fc-comp-page .fcHeroMeta{
+    padding:8px 0 18px !important;
+  }
+}
+
+@media (max-width:1023px){
+  .fc-comp-page .fcHeroMeta{
+    display:none !important;
+  }
+}
+
+/* Cleaner time remaining — no outer lines */
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]{
+  border-top:0 !important;
+  border-bottom:0 !important;
+  background:transparent !important;
+  padding:18px 0 8px !important;
+  gap:12px !important;
+  justify-content:flex-end !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]::before,
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]::after,
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div::before,
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div::after{
+  display:none !important;
+  content:none !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div{
+  flex:0 0 auto;
+  min-width:84px;
+  padding:16px 10px !important;
+  border-radius:16px;
+  border:1px solid rgba(86,168,255,.34);
+  background:linear-gradient(180deg,rgba(255,255,255,.038),rgba(255,255,255,.015));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.015), 0 0 22px rgba(53,184,255,.05);
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .font-stripe{
+  font-family:var(--fc-heading-font) !important;
+  font-size:clamp(1.65rem, 2.4vw, 2.15rem) !important;
+  font-weight:700 !important;
+  letter-spacing:.03em !important;
+  color:#41d5ff !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .text-sm{
+  font-size:11px !important;
+  letter-spacing:.14em !important;
+}
+
+/* Upgraded instant wins / more information headings */
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50{
+  font-size:clamp(2rem, 3vw, 3.1rem) !important;
+  font-weight:500 !important;
+  letter-spacing:.06em !important;
+  color:transparent !important;
+  background:linear-gradient(90deg,#efe3ff 0%, #af97ff 34%, #6fc8ff 70%, #e5f8ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  text-shadow:0 0 18px rgba(139,92,255,.14), 0 0 28px rgba(53,184,255,.10);
+}
+
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50::after,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50::after{
+  height:1px !important;
+  background:linear-gradient(90deg, transparent 0%, rgba(139,92,255,0) 8%, rgba(139,92,255,.95) 28%, rgba(53,184,255,.96) 72%, rgba(53,184,255,0) 92%, transparent 100%) !important;
+  box-shadow:0 0 16px rgba(53,184,255,.16) !important;
+}
+
+@media (max-width:1023px){
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]{
+    justify-content:center !important;
+    padding-top:8px !important;
+  }
+
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div{
+    min-width:76px;
+    padding:14px 8px !important;
+  }
+}
