@@ -3868,8 +3868,7 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
     margin: 2px 0 10px !important;
     justify-content: center !important;
   }
-}
-/* ===============================
+  /* ===============================
    SECTION HEADERS (Instant Wins / More Details)
    =============================== */
 
@@ -3960,4 +3959,5 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
 .fc-comp-page .wysiwyg ul{
   display:inline-block;
   text-align:left;
+}
 }
