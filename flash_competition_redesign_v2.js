@@ -665,3 +665,45 @@
     window.addEventListener('pageshow', queueEnhance);
   })();
 })();
+
+/* v11 safe heading patch */
+(() => {
+  const FLAG = 'data-fc-v11-headings';
+  const isCompetitionPage = () => /\/competition\//i.test(location.pathname);
+
+  function textOf(el){ return (el?.textContent || '').replace(/\s+/g,' ').trim(); }
+
+  function markMajorHeadings(root=document){
+    if (!isCompetitionPage()) return;
+    const nodes = root.querySelectorAll('h1,h2,h3,h4,p,div');
+    nodes.forEach((el) => {
+      const txt = textOf(el);
+      if (!txt) return;
+      if (/^instant wins$/i.test(txt)) {
+        el.classList.add('fcMajorSectionTitle');
+      }
+      if (/^more information$/i.test(txt) || /^more details$/i.test(txt)) {
+        el.classList.add('fcMajorSectionTitle','fcMoreDetailsTitle');
+        if (txt !== 'MORE DETAILS') el.textContent = 'MORE DETAILS';
+      }
+    });
+
+    const moreBox = [...root.querySelectorAll('.wysiwyg, .competition-content, [class*="more"], [class*="information"]')]
+      .find(el => /what'?s up for grabs|we'?re going live|site credit/i.test(textOf(el)));
+    if (moreBox) moreBox.classList.add('fcMoreDetailsBody');
+  }
+
+  function init(){
+    if (document.documentElement.hasAttribute(FLAG)) return;
+    document.documentElement.setAttribute(FLAG,'true');
+    markMajorHeadings(document);
+    const mo = new MutationObserver(() => markMajorHeadings(document));
+    mo.observe(document.body, {subtree:true, childList:true, characterData:true});
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, {once:true});
+  } else {
+    init();
+  }
+})();
