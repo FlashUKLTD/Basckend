@@ -665,6 +665,169 @@
     window.addEventListener('pageshow', queueEnhance);
   })();
 })();
+(() => {
+  const FONT_ID = "fc-heading-font-v2";
+  const FLAG = "data-fc-heading-upgrade-v2";
+
+  function isCompetitionPage() {
+    return /\/competition\//i.test(window.location.pathname);
+  }
+
+  function loadFont() {
+    if (document.getElementById(FONT_ID)) return;
+    const link = document.createElement("link");
+    link.id = FONT_ID;
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap";
+    document.head.appendChild(link);
+  }
+
+  function cleanText(el) {
+    return (el?.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+  }
+
+  function markHeroTitle() {
+    const title =
+      document.querySelector(".fcHeroMeta-title") ||
+      document.querySelector(".fc-hero-title") ||
+      document.querySelector(".lg\\:col-span-6.lg\\:col-start-7 h1") ||
+      document.querySelector("h1.text-3xl.font-display.text-gray-50") ||
+      document.querySelector("h1");
+
+    if (title) {
+      title.classList.add("fc-hero-title");
+    }
+  }
+
+  function markSectionHeadings(root = document) {
+    const nodes = root.querySelectorAll("h1, h2, h3, .font-display, .text-3xl, .text-4xl, .text-5xl, p, div");
+
+    nodes.forEach((el) => {
+      if (el.hasAttribute(FLAG)) return;
+
+      const txt = cleanText(el);
+      if (!txt) return;
+
+      if (txt === "instant wins") {
+        el.classList.add("fc-match-hero-heading", "fc-section-heading-instant");
+        el.setAttribute(FLAG, "instant");
+      }
+
+      if (txt === "more information" || txt === "more details") {
+        el.textContent = "MORE DETAILS";
+        el.classList.add("fc-match-hero-heading", "fc-section-heading-details");
+        el.setAttribute(FLAG, "details");
+      }
+    });
+  }
+
+  function init() {
+    if (!isCompetitionPage()) return;
+    loadFont();
+    markHeroTitle();
+    markSectionHeadings(document);
+
+    const mo = new MutationObserver(() => {
+      if (!isCompetitionPage()) return;
+      markHeroTitle();
+      markSectionHeadings(document);
+    });
+
+    mo.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+})();
+
+
+(() => {
+  const FONT_ID = "fc-heading-font-v2";
+  const FLAG = "data-fc-heading-upgrade-v2";
+
+  function isCompetitionPage() {
+    return /\/competition\//i.test(window.location.pathname);
+  }
+
+  function loadFont() {
+    if (document.getElementById(FONT_ID)) return;
+    const link = document.createElement("link");
+    link.id = FONT_ID;
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap";
+    document.head.appendChild(link);
+  }
+
+  function cleanText(el) {
+    return (el?.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+  }
+
+  function markHeroTitle() {
+    const title =
+      document.querySelector(".fcHeroMeta-title") ||
+      document.querySelector(".fc-hero-title") ||
+      document.querySelector(".lg\\:col-span-6.lg\\:col-start-7 h1") ||
+      document.querySelector("h1.text-3xl.font-display.text-gray-50") ||
+      document.querySelector("h1");
+
+    if (title) {
+      title.classList.add("fc-hero-title");
+    }
+  }
+
+  function markSectionHeadings(root = document) {
+    const nodes = root.querySelectorAll("h1, h2, h3, .font-display, .text-3xl, .text-4xl, .text-5xl, p, div");
+
+    nodes.forEach((el) => {
+      if (el.hasAttribute(FLAG)) return;
+
+      const txt = cleanText(el);
+      if (!txt) return;
+
+      if (txt === "instant wins") {
+        el.classList.add("fc-match-hero-heading", "fc-section-heading-instant");
+        el.setAttribute(FLAG, "instant");
+      }
+
+      if (txt === "more information" || txt === "more details") {
+        el.textContent = "MORE DETAILS";
+        el.classList.add("fc-match-hero-heading", "fc-section-heading-details");
+        el.setAttribute(FLAG, "details");
+      }
+    });
+  }
+
+  function init() {
+    if (!isCompetitionPage()) return;
+    loadFont();
+    markHeroTitle();
+    markSectionHeadings(document);
+
+    const mo = new MutationObserver(() => {
+      if (!isCompetitionPage()) return;
+      markHeroTitle();
+      markSectionHeadings(document);
+    });
+
+    mo.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+})();
+
 
 /* v11 safe heading patch */
 (() => {
