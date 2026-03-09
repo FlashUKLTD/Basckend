@@ -682,9 +682,9 @@
       if (/^instant wins$/i.test(txt)) {
         el.classList.add('fcMajorSectionTitle');
       }
-      if (/^more information$/i.test(txt) || /^more details$/i.test(txt)) {
+      if (/^more information$/i.test(txt) || /^details$/i.test(txt)) {
         el.classList.add('fcMajorSectionTitle','fcMoreDetailsTitle');
-        if (txt !== 'MORE DETAILS') el.textContent = 'MORE DETAILS';
+        if (txt !== 'Details') el.textContent = 'Details';
       }
     });
 
