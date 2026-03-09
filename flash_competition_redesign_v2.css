@@ -3956,3 +3956,121 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
   margin-left:auto !important;
   margin-right:auto !important;
 }
+
+/* =========================================================
+   v11 — rollback bad heading override + safe major section styling
+   ========================================================= */
+
+/* Revert bundles + ticket selector headers to small layout */
+.fc-comp-page .fcBundleHost .fcSectionTitle,
+.fc-comp-page .fcSliderWrap .fcSectionTitle,
+.fc-comp-page .fcBundleHost .fcSectionTitleSmall,
+.fc-comp-page .fcSliderWrap .fcSectionTitleSmall{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  margin:0 0 12px !important;
+  padding:0 !important;
+  text-align:center !important;
+  position:relative !important;
+  background:none !important;
+  color:inherit !important;
+  text-shadow:none !important;
+}
+
+.fc-comp-page .fcBundleHost .fcSectionTitle::before,
+.fc-comp-page .fcSliderWrap .fcSectionTitle::before{
+  content:"" !important;
+  display:block !important;
+  flex:0 1 120px !important;
+  height:1px !important;
+  margin-right:8px !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg, transparent, rgba(139,92,255,.86), rgba(53,184,255,.86)) !important;
+  box-shadow:0 0 14px rgba(53,184,255,.12) !important;
+}
+
+.fc-comp-page .fcBundleHost .fcSectionTitle::after,
+.fc-comp-page .fcSliderWrap .fcSectionTitle::after{
+  content:"" !important;
+  display:block !important;
+  flex:0 1 120px !important;
+  width:auto !important;
+  min-width:0 !important;
+  height:1px !important;
+  margin:0 0 0 8px !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg, rgba(139,92,255,.86), rgba(53,184,255,.86), transparent) !important;
+  box-shadow:0 0 14px rgba(53,184,255,.12) !important;
+}
+
+.fc-comp-page .fcBundleHost .fcSectionText,
+.fc-comp-page .fcSliderWrap .fcSectionText{
+  background:linear-gradient(90deg, #c7b2ff 0%, #7ec7ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  color:transparent !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  letter-spacing:.22em !important;
+  text-transform:uppercase !important;
+  line-height:1 !important;
+}
+
+/* Big headings only for Instant Wins + More Details */
+.fc-comp-page .fcMajorSectionTitle{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:fit-content !important;
+  max-width:100% !important;
+  margin:0 auto 28px !important;
+  padding:0 18px 16px !important;
+  position:relative !important;
+  text-align:center !important;
+  text-transform:uppercase !important;
+  letter-spacing:.08em !important;
+  line-height:1.02 !important;
+  font-size:clamp(28px,3vw,54px) !important;
+  font-weight:500 !important;
+  color:transparent !important;
+  background:linear-gradient(90deg,#d6c8ff 0%, #9d89ff 34%, #69a8ff 68%, #8de6ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:0 0 18px rgba(139,92,255,.10), 0 0 30px rgba(53,184,255,.08) !important;
+}
+
+.fc-comp-page .fcMajorSectionTitle::before{ content:none !important; }
+
+.fc-comp-page .fcMajorSectionTitle::after{
+  content:"" !important;
+  display:block !important;
+  width:100% !important;
+  min-width:180px !important;
+  height:2px !important;
+  margin:16px auto 0 !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg, rgba(139,92,255,0) 0%, rgba(139,92,255,.95) 26%, rgba(53,184,255,.95) 74%, rgba(53,184,255,0) 100%) !important;
+  box-shadow:0 0 12px rgba(53,184,255,.22) !important;
+}
+
+/* More details body centered */
+.fc-comp-page .fcMoreDetailsBody,
+.fc-comp-page .fcMoreDetailsBody p,
+.fc-comp-page .fcMoreDetailsBody .wysiwyg,
+.fc-comp-page .fcMoreDetailsBody .wysiwyg p{
+  text-align:center !important;
+}
+
+.fc-comp-page .fcMoreDetailsBody ul,
+.fc-comp-page .fcMoreDetailsBody ol{
+  display:inline-block !important;
+  text-align:left !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
