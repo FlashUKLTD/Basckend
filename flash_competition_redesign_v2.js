@@ -18,6 +18,7 @@
 
     const clean = (s) => (s || '').replace(/\s+/g, ' ').trim();
     const txt = (el) => clean(el?.textContent || '');
+    const sanitizeTitle = (s) => clean(String(s || '').replace(/[\u2600-\u27BF\u{1F300}-\u{1FAFF}]+/gu, '').replace(/[◆◇🔸🔹🔶🔷💎⭐✨⚡]+/gu, ''));
 
     function safeInsertBefore(parent, node, before){
       if (!parent || !node) return;
@@ -426,7 +427,7 @@
       }
 
       hero.innerHTML = `
-        <div class="fcHeroName">${titleEl.textContent || ''}</div>
+        <div class="fcHeroName">${sanitizeTitle(titleEl.textContent || '')}</div>
         <div class="fcHeroPrice"><span class="fcPricePrefix">Price</span><span class="fcPriceValue">${formattedPrice}</span></div>
         <div class="fcHeroDate">${dateEl.textContent || ''}</div>
       `;
