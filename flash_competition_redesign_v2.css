@@ -2955,3 +2955,183 @@ div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 p.text-xs{
 
 
 
+
+/* =========================================================
+   v4 refinements
+   ========================================================= */
+
+/* add breathing room below navbar */
+.fc-comp-page .pb-16.pt-3.sm\:pt-6.sm\:pb-20{
+  padding-top: 1.4rem !important;
+}
+@media (min-width:640px){
+  .fc-comp-page .pb-16.pt-3.sm\:pt-6.sm\:pb-20{
+    padding-top: 2rem !important;
+  }
+}
+
+/* title + price polish */
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .flex.justify-between.gap-x-5.flex-wrap.items-center{
+  padding-top: 10px !important;
+}
+
+.fc-comp-page h1.text-3xl.font-display.text-gray-50{
+  font-size: clamp(1.3rem, 2.35vw, 2.15rem) !important;
+  letter-spacing: .065em !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  text-shadow:
+    0 0 14px rgba(139,92,255,.14),
+    0 0 28px rgba(53,184,255,.10),
+    0 10px 24px rgba(0,0,0,.28) !important;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .flex.justify-between.gap-x-5.flex-wrap.items-center > p.text-3xl{
+  font-size: clamp(1.05rem, 1.45vw, 1.3rem) !important;
+  letter-spacing: .03em !important;
+  font-weight: 900 !important;
+  color: #9fe8ff !important;
+  text-shadow: 0 0 16px rgba(53,184,255,.18), 0 0 28px rgba(53,184,255,.08) !important;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .mt-2 > p{
+  padding: 10px 18px !important;
+  border-color: rgba(120,130,255,.34) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.02) inset,
+    0 0 18px rgba(139,92,255,.08),
+    0 0 18px rgba(53,184,255,.08) !important;
+}
+
+/* remove now-useless top selector intro */
+.fc-comp-page .fcFastTop{
+  display: none !important;
+}
+
+.fc-comp-page .fcFastWrap{
+  padding-top: 6px !important;
+}
+
+/* make countdown more premium and eye-catching */
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]{
+  position: relative;
+  margin-top: 22px !important;
+  padding: 12px 0 !important;
+  border-top: 1px solid rgba(115,130,255,.22) !important;
+  border-bottom: 1px solid rgba(115,130,255,.22) !important;
+  background:
+    linear-gradient(90deg, rgba(139,92,255,.06), rgba(53,184,255,.045), rgba(139,92,255,.04)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.02),
+    inset 0 -1px 0 rgba(255,255,255,.02),
+    0 0 28px rgba(53,184,255,.05);
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]::before,
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(70%,420px);
+  height:1px;
+  pointer-events:none;
+  background:linear-gradient(90deg, transparent, rgba(139,92,255,.85), rgba(53,184,255,.85), transparent);
+  opacity:.85;
+}
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]::before{ top:-1px; }
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]::after{ bottom:-1px; }
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div{
+  padding: 8px 2px !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .font-stripe{
+  font-size: clamp(1.6rem, 2.6vw, 2.15rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em;
+  color: #ffffff !important;
+  text-shadow:
+    0 0 16px rgba(139,92,255,.10),
+    0 0 26px rgba(53,184,255,.18),
+    0 8px 22px rgba(0,0,0,.26) !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .text-sm{
+  margin-top: 5px;
+  font-size: 10px !important;
+  letter-spacing: .22em !important;
+  color: rgba(233,242,255,.72) !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div:last-child{
+  position: relative;
+}
+
+/* stretch lower-page header underlines only to text area and use flash gradient */
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50{
+  display: inline-flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  color: transparent !important;
+  background: linear-gradient(90deg, #caaeff 0%, #8b5cff 35%, #35b8ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 0 18px rgba(53,184,255,.10) !important;
+}
+
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50::after,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50::after{
+  width: 100% !important;
+  min-width: 120px;
+  max-width: 100%;
+  margin-top: 10px !important;
+  height: 1px !important;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(139,92,255,.96), rgba(53,184,255,.96)) !important;
+  box-shadow: 0 0 14px rgba(139,92,255,.14), 0 0 16px rgba(53,184,255,.16) !important;
+}
+
+/* more information neon gradient outline */
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.bg-zinc-950.border-2.border-primary-500.rounded-xl{
+  position: relative;
+  border: 1px solid transparent !important;
+  background:
+    linear-gradient(#071022,#071022) padding-box,
+    linear-gradient(90deg, rgba(139,92,255,.9), rgba(53,184,255,.95)) border-box !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.02) inset,
+    0 0 24px rgba(139,92,255,.08),
+    0 0 28px rgba(53,184,255,.08),
+    0 24px 70px rgba(0,0,0,.42) !important;
+}
+
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.bg-zinc-950.border-2.border-primary-500.rounded-xl::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background: linear-gradient(135deg, rgba(139,92,255,.08), rgba(53,184,255,.05) 55%, transparent 80%);
+}
+
+/* mobile title balance */
+@media (max-width: 1023px){
+  .fc-comp-page h1.text-3xl.font-display.text-gray-50{
+    font-size: clamp(1.2rem, 6.3vw, 1.7rem) !important;
+    letter-spacing: .055em !important;
+  }
+
+  .fc-comp-page .pb-16.pt-3.sm\:pt-6.sm\:pb-20{
+    padding-top: 1.15rem !important;
+  }
+
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .font-stripe{
+    font-size: clamp(1.2rem, 5.5vw, 1.55rem) !important;
+  }
+}
