@@ -3220,75 +3220,6 @@ a[href="/results"] {
 
 
 
-/* Inactive breadcrumb items */
-nav[aria-label="Breadcrumb"] ol li p {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #ffffff; /* base white */
-    position: relative;
-    background: linear-gradient(90deg, #ffffff, #f0f0f0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: all 0.3s ease;
-    background-size: 200% 100%;
-    animation: shimmerWhite 4s linear infinite;
-}
-
-/* Hover effect for inactive items */
-nav[aria-label="Breadcrumb"] ol li p:hover {
-    text-shadow: 0 0 8px rgba(255,255,255,0.6);
-    transform: translateY(-1px);
-}
-
-/* Current page item */
-nav[aria-label="Breadcrumb"] ol li p[aria-current="page"] {
-    font-weight: 700;
-    background: linear-gradient(90deg, #b497ff, #7c3aed); /* lavender → purple */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 12px rgba(180,151,255,0.9), 0 0 18px rgba(124,58,237,0.7);
-    animation: shimmerActive 3s linear infinite;
-}
-
-/* Divider arrows */
-nav[aria-label="Breadcrumb"] ol li svg {
-    height: 1.25rem;
-    width: auto;
-    color: #ffffff; /* white arrows */
-    transition: all 0.3s ease;
-    filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
-}
-
-/* Arrow hover effect */
-nav[aria-label="Breadcrumb"] ol li:hover svg {
-    transform: translateX(2px);
-}
-
-/* Shimmer for inactive items (white) */
-@keyframes shimmerWhite {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-}
-
-/* Shimmer for active item (lavender → purple) */
-@keyframes shimmerActive {
-    0% { background-position: -200% 0; }
-    50% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-    nav[aria-label="Breadcrumb"] ol li p {
-        font-size: 0.75rem;
-    }
-    nav[aria-label="Breadcrumb"] ol li svg {
-        height: 1rem;
-    }
-}
-
-
-
 /* Optional: shimmer animation for a subtle glow */
 svg.size-6.md\:size-7.flex-shrink-0 {
     background-size: 200% 200%;
@@ -5294,5 +5225,6 @@ html body
     transform: none !important;
   }
 }
+
 
 
