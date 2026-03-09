@@ -2867,5 +2867,762 @@ div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 p.text-xs{
     justify-content: center;
   }
 }
+/* =========================================================
+   ⚡ FLASH — COMPETITION PAGE REFERENCE REWORK
+   Paste at the VERY BOTTOM of your CSS file
+   ========================================================= */
+
+:root{
+  --fc-ref-bg:#050816;
+  --fc-ref-bg2:#0a1022;
+  --fc-ref-panel:rgba(7,12,28,.78);
+  --fc-ref-panel2:rgba(255,255,255,.04);
+  --fc-ref-brd:rgba(83,122,255,.20);
+  --fc-ref-brd2:rgba(255,255,255,.10);
+  --fc-ref-text:rgba(255,255,255,.96);
+  --fc-ref-dim:rgba(255,255,255,.66);
+  --fc-ref-dim2:rgba(255,255,255,.48);
+  --fc-ref-a1:#8B5CFF;
+  --fc-ref-a2:#35B8FF;
+  --fc-ref-a3:#B690FF;
+  --fc-ref-good:#34D399;
+  --fc-ref-shadow:0 24px 90px rgba(0,0,0,.60);
+  --fc-ref-inset:0 0 0 1px rgba(255,255,255,.05) inset;
+  --fc-ref-r1:16px;
+  --fc-ref-r2:20px;
+  --fc-ref-r3:24px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .fc-comp-page *,
+  .fc-comp-page *::before,
+  .fc-comp-page *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
+/* =========================================================
+   PAGE WRAP
+   ========================================================= */
+
+.fc-comp-page,
+.fc-comp-page #competition-page,
+.fc-comp-page .pb-16.pt-3.sm\:pt-6.sm\:pb-20{
+  background:
+    radial-gradient(1200px 700px at 12% -10%, rgba(139,92,255,.12), transparent 58%),
+    radial-gradient(1200px 700px at 88% 0%, rgba(53,184,255,.10), transparent 62%),
+    linear-gradient(180deg, #040714 0%, #070b18 55%, #050816 100%) !important;
+}
+
+/* =========================================================
+   TOP SECTION LAYOUT
+   ========================================================= */
+
+.fc-comp-page .mx-auto.mt-0.sm\:mt-8.max-w-2xl.px-4.sm\:px-6.lg\:max-w-7xl.lg\:px-8{
+  max-width: 1380px !important;
+}
+
+.fc-comp-page .lg\:grid.lg\:auto-rows-min.lg\:grid-cols-12.lg\:gap-x-8{
+  position:relative;
+  gap:24px !important;
+  align-items:start;
+}
+
+.fc-comp-page .lg\:grid.lg\:auto-rows-min.lg\:grid-cols-12.lg\:gap-x-8::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:-10px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(
+    90deg,
+    rgba(139,92,255,0),
+    rgba(139,92,255,.95),
+    rgba(53,184,255,.95),
+    rgba(53,184,255,0)
+  );
+  box-shadow:
+    0 0 14px rgba(139,92,255,.20),
+    0 0 22px rgba(53,184,255,.18);
+  opacity:.9;
+}
+
+/* =========================================================
+   TITLE / PRICE PANEL
+   ========================================================= */
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7{
+  position:relative;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .flex.justify-between.gap-x-5.flex-wrap.items-center,
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .mt-2{
+  position:relative;
+  z-index:2;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:var(--fc-ref-r3);
+  border:1px solid var(--fc-ref-brd2);
+  background:
+    radial-gradient(700px 220px at 10% 0%, rgba(139,92,255,.15), transparent 60%),
+    radial-gradient(720px 240px at 100% 100%, rgba(53,184,255,.12), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
+    linear-gradient(180deg, rgba(8,12,28,.90), rgba(6,10,22,.84));
+  box-shadow:var(--fc-ref-shadow),var(--fc-ref-inset);
+  pointer-events:none;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7{
+  padding:18px 18px 16px !important;
+  border-radius:var(--fc-ref-r3);
+  background:transparent !important;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 h1{
+  margin:0 !important;
+  font-size:clamp(28px,4vw,56px) !important;
+  line-height:1.02 !important;
+  font-weight:1000 !important;
+  letter-spacing:.02em !important;
+  background:linear-gradient(90deg,var(--fc-ref-a3),var(--fc-ref-a2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent !important;
+  text-shadow:0 18px 55px rgba(0,0,0,.55);
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 .flex.justify-between.gap-x-5.flex-wrap.items-center > p{
+  margin:0 !important;
+  padding:0 !important;
+  font-size:24px !important;
+  font-weight:950 !important;
+  color:var(--fc-ref-text) !important;
+  display:flex !important;
+  align-items:center;
+  gap:10px;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 .flex.justify-between.gap-x-5.flex-wrap.items-center > p::before{
+  content:"";
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--fc-ref-a1),var(--fc-ref-a2));
+  box-shadow:0 0 0 4px rgba(139,92,255,.12);
+  flex:0 0 auto;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 .mt-2{
+  margin-top:14px !important;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 .mt-2 p{
+  margin:0 !important;
+  color:var(--fc-ref-dim) !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+
+/* =========================================================
+   MAIN IMAGE / GALLERY
+   ========================================================= */
+
+.fc-comp-page #splide01 .splide__track{
+  border-radius:var(--fc-ref-r3) !important;
+  overflow:hidden !important;
+  border:1px solid rgba(83,122,255,.26) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.04) inset,
+    0 0 30px rgba(53,184,255,.12),
+    0 28px 90px rgba(0,0,0,.62) !important;
+}
+
+.fc-comp-page #splide01 img.rounded-xl{
+  border-radius:var(--fc-ref-r3) !important;
+  width:100%;
+  display:block;
+  filter:saturate(1.04) contrast(1.02);
+}
+
+.fc-comp-page #splide02{
+  margin-top:12px !important;
+}
+
+.fc-comp-page #splide02 .splide__slide{
+  border-radius:16px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:rgba(255,255,255,.03) !important;
+  box-shadow:0 14px 36px rgba(0,0,0,.28);
+}
+
+.fc-comp-page #splide02 .splide__slide.is-active{
+  border-color:rgba(53,184,255,.34) !important;
+  box-shadow:
+    0 18px 48px rgba(0,0,0,.38),
+    0 0 0 2px rgba(53,184,255,.10);
+}
+
+/* =========================================================
+   COUNTDOWN
+   ========================================================= */
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5{
+  margin-top:14px !important;
+  padding:12px !important;
+  border-radius:var(--fc-ref-r2) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+    rgba(6,10,22,.78) !important;
+  box-shadow:var(--fc-ref-shadow),var(--fc-ref-inset);
+  gap:10px;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5 > div{
+  flex:1 1 0;
+  min-width:0;
+  padding:10px 6px !important;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.02);
+  box-shadow:0 10px 30px rgba(0,0,0,.24);
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5 span.font-stripe{
+  font-size:clamp(22px,3vw,34px) !important;
+  line-height:1 !important;
+  background:linear-gradient(180deg,#ffffff,var(--fc-ref-a2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5 span.text-sm{
+  font-size:10px !important;
+  letter-spacing:.18em !important;
+  text-transform:uppercase !important;
+  color:var(--fc-ref-dim2) !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5 .animate-ping{
+  opacity:.22 !important;
+}
+
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
+
+.fc-comp-page .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl{
+  margin-top:14px !important;
+  padding:12px !important;
+  border-radius:var(--fc-ref-r2) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+    rgba(7,12,28,.80) !important;
+  box-shadow:var(--fc-ref-shadow),var(--fc-ref-inset);
+}
+
+.fc-comp-page .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .col-span-2 p{
+  font-size:10px !important;
+  letter-spacing:.18em !important;
+  text-transform:uppercase !important;
+  color:var(--fc-ref-dim) !important;
+  font-weight:950 !important;
+}
+
+.fc-comp-page .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .h-6.w-full.bg-gray-200.rounded-lg{
+  height:10px !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.08) !important;
+  overflow:hidden;
+}
+
+.fc-comp-page .bg-primary-500.barbershop-animation,
+.fc-comp-page .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .h-6.rounded-lg.bg-primary-500{
+  height:10px !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg,var(--fc-ref-a1),var(--fc-ref-a2)) !important;
+  box-shadow:
+    0 0 12px rgba(139,92,255,.18),
+    0 0 18px rgba(53,184,255,.14);
+}
+
+.fc-comp-page #obsidian-progress{
+  top:-19px !important;
+  font-size:10px !important;
+  letter-spacing:.16em !important;
+  text-transform:uppercase !important;
+  color:var(--fc-ref-dim2) !important;
+  font-weight:900 !important;
+}
+
+/* =========================================================
+   ONLINE / POSTAL TOGGLE
+   ========================================================= */
+
+.fc-comp-page .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5{
+  margin-top:14px !important;
+  padding:8px !important;
+  gap:8px !important;
+  border-radius:18px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)),
+    rgba(7,12,28,.70) !important;
+  box-shadow:var(--fc-ref-inset);
+}
+
+.fc-comp-page .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button{
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:transparent !important;
+  color:rgba(255,255,255,.78) !important;
+  font-weight:950 !important;
+  letter-spacing:.16em !important;
+  text-transform:uppercase !important;
+  font-size:11px !important;
+  padding:12px 14px !important;
+  box-shadow:none !important;
+}
+
+.fc-comp-page .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button.bg-gray-900,
+.fc-comp-page .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button.text-gray-100.bg-gray-900{
+  background:linear-gradient(90deg, rgba(139,92,255,.18), rgba(53,184,255,.14)) !important;
+  border-color:rgba(83,122,255,.28) !important;
+  color:#fff !important;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.24),
+    0 0 0 1px rgba(255,255,255,.04) inset;
+}
+
+/* =========================================================
+   TICKET PANEL
+   ========================================================= */
+
+.fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5.rounded-lg.border-2.border-gray-700{
+  border-radius:var(--fc-ref-r3) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:
+    radial-gradient(900px 300px at 12% 0%, rgba(139,92,255,.12), transparent 58%),
+    radial-gradient(900px 340px at 100% 100%, rgba(53,184,255,.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012)),
+    linear-gradient(180deg, rgba(7,12,28,.88), rgba(5,8,20,.86)) !important;
+  box-shadow:var(--fc-ref-shadow),var(--fc-ref-inset);
+  padding:18px !important;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+/* =========================================================
+   FAST BLOCK
+   ========================================================= */
+
+.fc-comp-page .fcFastWrap{
+  margin:12px 0 16px !important;
+  padding:16px !important;
+  border-radius:20px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.01)),
+    rgba(0,0,0,.16) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;
+}
+
+.fc-comp-page .fcFastKicker{
+  font-size:15px !important;
+  font-weight:1000 !important;
+  color:#fff !important;
+  letter-spacing:.02em !important;
+}
+
+.fc-comp-page .fcFastSub{
+  color:var(--fc-ref-dim) !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+}
+
+.fc-comp-page .fcFastSub .amt,
+.fc-comp-page .fcTotalCenter .amt,
+.fc-comp-page .fcBundleFree strong,
+.fc-comp-page .fcBundleGet .tickets b,
+.fc-comp-page .fcTotalCenter .fcOddsUnderTotal .odds{
+  background:linear-gradient(90deg,var(--fc-ref-a1),var(--fc-ref-a2)) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  color:transparent !important;
+}
+
+.fc-comp-page .fcSliderLabel,
+.fc-comp-page .fcBundleHostTitle .t{
+  color:rgba(255,255,255,.58) !important;
+  letter-spacing:.18em !important;
+  font-size:10px !important;
+}
+
+.fc-comp-page .fcSliderValue{
+  color:#fff !important;
+  font-size:11px !important;
+  letter-spacing:.14em !important;
+}
+
+.fc-comp-page input[type="range"].fcTicketSlider::-webkit-slider-runnable-track{
+  height:10px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(139,92,255,.34), rgba(53,184,255,.30)) !important;
+  border:1px solid rgba(255,255,255,.10);
+}
+.fc-comp-page input[type="range"].fcTicketSlider::-moz-range-track{
+  height:10px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(139,92,255,.34), rgba(53,184,255,.30)) !important;
+  border:1px solid rgba(255,255,255,.10);
+}
+.fc-comp-page input[type="range"].fcTicketSlider::-webkit-slider-thumb{
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.98), rgba(255,255,255,.34)) !important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.46),
+    0 0 0 5px rgba(139,92,255,.10),
+    0 0 0 1px rgba(255,255,255,.06) inset !important;
+}
+.fc-comp-page input[type="range"].fcTicketSlider::-moz-range-thumb{
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.98), rgba(255,255,255,.34)) !important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.46),
+    0 0 0 5px rgba(139,92,255,.10) !important;
+}
+
+.fc-comp-page .fcTotalCenter{
+  gap:8px !important;
+  margin-top:10px !important;
+}
+
+.fc-comp-page .fcTotalCenter .amt{
+  font-size:20px !important;
+}
+
+.fc-comp-page .fcTotalCenter .fcOddsUnderTotal{
+  padding:8px 12px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:rgba(255,255,255,.04) !important;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.26),
+    0 0 0 1px rgba(255,255,255,.04) inset !important;
+  color:rgba(255,255,255,.76) !important;
+}
+
+.fc-comp-page .fcFastChip{
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:rgba(255,255,255,.04) !important;
+  color:#fff !important;
+  font-weight:950 !important;
+  border-radius:999px !important;
+}
+@media (hover:hover){
+  .fc-comp-page .fcFastChip:hover{
+    background:linear-gradient(90deg, rgba(139,92,255,.12), rgba(53,184,255,.10)) !important;
+    border-color:rgba(83,122,255,.26) !important;
+    transform:translateY(-1px);
+  }
+}
+
+/* =========================================================
+   BUNDLES
+   ========================================================= */
+
+.fc-comp-page .fcBundleHost{
+  margin-top:8px !important;
+  padding:12px !important;
+  border-radius:20px !important;
+  background:rgba(255,255,255,.03) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.04) inset !important;
+}
+
+.fc-comp-page .fcBundleHost .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2 label{
+  border-radius:18px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:
+    radial-gradient(220px 120px at 12% 0%, rgba(139,92,255,.16), transparent 60%),
+    radial-gradient(240px 140px at 100% 100%, rgba(53,184,255,.12), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.018)) !important;
+  box-shadow:
+    0 16px 40px rgba(0,0,0,.32),
+    0 0 0 1px rgba(255,255,255,.04) inset !important;
+}
+
+.fc-comp-page .fcBundleHost .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2 label.fcBestValue{
+  background:
+    radial-gradient(220px 120px at 12% 0%, rgba(139,92,255,.24), transparent 60%),
+    radial-gradient(240px 140px at 100% 100%, rgba(53,184,255,.18), transparent 62%),
+    linear-gradient(90deg, rgba(139,92,255,.18), rgba(53,184,255,.12)) !important;
+  border-color:rgba(83,122,255,.30) !important;
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.42),
+    0 0 0 1px rgba(255,255,255,.05) inset,
+    0 0 0 5px rgba(139,92,255,.08) !important;
+}
+
+.fc-comp-page .fcBundleHost .grid.grid-cols-1.sm\:grid-cols-2.gap-3.pb-2 label.fcBestValue::after{
+  background:linear-gradient(90deg,var(--fc-ref-a1),var(--fc-ref-a2)) !important;
+  color:#08101f !important;
+}
+
+/* =========================================================
+   MAIN CTA BUTTON
+   ========================================================= */
+
+.fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5 button[type="submit"].mt-8{
+  margin-top:16px !important;
+  min-height:54px !important;
+  border-radius:16px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:linear-gradient(90deg,var(--fc-ref-a1),var(--fc-ref-a2)) !important;
+  color:#06101e !important;
+  font-weight:1000 !important;
+  letter-spacing:.04em !important;
+  box-shadow:
+    0 20px 55px rgba(0,0,0,.42),
+    0 0 26px rgba(53,184,255,.12) !important;
+}
+@media (hover:hover){
+  .fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5 button[type="submit"].mt-8:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.04);
+  }
+}
+
+/* =========================================================
+   INSTANT WINS
+   ========================================================= */
+
+.fc-comp-page section.pb-16.sm\:pb-20 .mb-4{
+  justify-content:center !important;
+  text-align:center !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50{
+  font-size:clamp(28px,3vw,44px) !important;
+  font-weight:1000 !important;
+  letter-spacing:.02em !important;
+  background:linear-gradient(90deg,#ffffff,var(--fc-ref-a2)) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  color:transparent !important;
+  text-shadow:0 18px 50px rgba(0,0,0,.55);
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50::after{
+  width:120px !important;
+  height:2px !important;
+  margin:12px auto 0 !important;
+  background:linear-gradient(90deg, rgba(139,92,255,0), rgba(139,92,255,.95), rgba(53,184,255,.95), rgba(53,184,255,0)) !important;
+  box-shadow:
+    0 0 12px rgba(139,92,255,.18),
+    0 0 18px rgba(53,184,255,.14);
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-1.lg\:grid-cols-2.gap-4 > div[x-data]{
+  border-radius:20px !important;
+  border:1px solid rgba(83,122,255,.18) !important;
+  background:
+    radial-gradient(260px 140px at 12% 0%, rgba(139,92,255,.14), transparent 60%),
+    radial-gradient(280px 160px at 100% 100%, rgba(53,184,255,.12), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012)),
+    linear-gradient(180deg, rgba(8,12,28,.86), rgba(5,8,20,.84)) !important;
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.46),
+    0 0 0 1px rgba(255,255,255,.04) inset !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-1.lg\:grid-cols-2.gap-4 > div[x-data] > div.pr-8.pl-4.py-4.flex.justify-between.items-center{
+  padding:12px !important;
+  gap:10px !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-1.lg\:grid-cols-2.gap-4 > div[x-data] p.font-display.text-base{
+  font-size:16px !important;
+  font-weight:950 !important;
+  color:#fff !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-1.lg\:grid-cols-2.gap-4 > div[x-data] p.cursor-pointer.text-sm.bg-primary-500{
+  background:rgba(255,255,255,.05) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:#fff !important;
+  font-size:11px !important;
+  font-weight:950 !important;
+  letter-spacing:.08em !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-1.lg\:grid-cols-2.gap-4 > div[x-data] p.cursor-pointer.text-sm.bg-primary-500::before{
+  background:linear-gradient(90deg,var(--fc-ref-a1),var(--fc-ref-a2)) !important;
+}
+
+/* Modal */
+.fc-comp-page section.pb-16.sm\:pb-20 div[x-show][role="dialog"] .relative.w-full.max-w-2xl{
+  border-radius:22px !important;
+  border:1px solid rgba(83,122,255,.24) !important;
+  background:
+    radial-gradient(700px 220px at 12% 0%, rgba(139,92,255,.14), transparent 60%),
+    radial-gradient(760px 240px at 100% 100%, rgba(53,184,255,.12), transparent 62%),
+    linear-gradient(180deg, rgba(12,16,34,.96), rgba(7,10,22,.96)) !important;
+  box-shadow:
+    0 28px 95px rgba(0,0,0,.72),
+    0 0 0 1px rgba(255,255,255,.05) inset !important;
+}
+
+/* =========================================================
+   MORE INFORMATION
+   ========================================================= */
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:14px !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4{
+  width:100% !important;
+  margin:0 !important;
+  display:flex;
+  justify-content:center;
+  text-align:center;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50{
+  font-size:clamp(28px,3vw,42px) !important;
+  font-weight:1000 !important;
+  letter-spacing:.02em !important;
+  background:linear-gradient(90deg,#ffffff,var(--fc-ref-a2)) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  color:transparent !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.bg-zinc-950.border-2.border-primary-500.rounded-xl{
+  border-radius:22px !important;
+  border:1px solid rgba(83,122,255,.18) !important;
+  background:
+    radial-gradient(800px 240px at 12% 0%, rgba(139,92,255,.14), transparent 60%),
+    radial-gradient(840px 260px at 100% 100%, rgba(53,184,255,.12), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012)),
+    linear-gradient(180deg, rgba(8,12,28,.88), rgba(5,8,20,.84)) !important;
+  box-shadow:
+    0 22px 70px rgba(0,0,0,.50),
+    0 0 0 1px rgba(255,255,255,.04) inset !important;
+  padding:20px 18px !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg *{
+  color:rgba(255,255,255,.84) !important;
+  line-height:1.72 !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg strong{
+  color:#fff !important;
+}
+
+/* =========================================================
+   RELATED PRODUCTS
+   ========================================================= */
+
+.fc-comp-page #splide03 .splide__slide__container > .relative.w-full.h-auto.overflow-hidden.aspect-\[3\/4\].rounded-lg.md\:rounded-xl{
+  border-radius:20px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  box-shadow:0 20px 55px rgba(0,0,0,.46);
+}
+
+.fc-comp-page #splide03 .mt-2 > div[wire\\:id] form{
+  margin-top:10px !important;
+}
+
+.fc-comp-page #splide03 .mt-2 button[type="submit"],
+.fc-comp-page #splide03 .mt-2 .quick-add-btn{
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:linear-gradient(90deg,var(--fc-ref-a1),var(--fc-ref-a2)) !important;
+  color:#06101e !important;
+  font-weight:950 !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.28);
+}
+
+/* =========================================================
+   MOBILE TUNING
+   ========================================================= */
+
+@media (max-width: 1023px){
+  .fc-comp-page .lg\:grid.lg\:auto-rows-min.lg\:grid-cols-12.lg\:gap-x-8{
+    gap:16px !important;
+  }
+
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7{
+    padding:14px !important;
+  }
+
+  .fc-comp-page .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5{
+    flex-direction:column;
+  }
+
+  .fc-comp-page .flex.justify-center.mb-4.rounded-md.shadow-sm.gap-5.p-2.bg-gray-800.mt-5 button{
+    width:100%;
+  }
+}
+
+@media (max-width: 640px){
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7 h1{
+    font-size:clamp(24px,9vw,36px) !important;
+  }
+
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7 .flex.justify-between.gap-x-5.flex-wrap.items-center > p{
+    font-size:20px !important;
+  }
+
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5{
+    gap:8px;
+    padding:10px !important;
+  }
+
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5 > div{
+    padding:9px 4px !important;
+  }
+
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5 span.font-stripe{
+    font-size:20px !important;
+  }
+
+  .fc-comp-page .lg\:col-span-6 .bg-gray-800.p-5.mt-5.rounded-lg.border-2.border-gray-700{
+    padding:14px !important;
+    border-radius:20px !important;
+  }
+
+  .fc-comp-page .fcFastWrap{
+    padding:14px !important;
+    border-radius:18px !important;
+  }
+
+  .fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-1.lg\:grid-cols-2.gap-4 > div[x-data] p.font-display.text-base{
+    font-size:14px !important;
+  }
+
+  .fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.bg-zinc-950.border-2.border-primary-500.rounded-xl{
+    padding:16px 14px !important;
+  }
+}
 
 
