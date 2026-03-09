@@ -3135,3 +3135,230 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.bg-z
     font-size: clamp(1.2rem, 5.5vw, 1.55rem) !important;
   }
 }
+
+
+/* =========================================================
+   V5 — hero typography + section header refinements
+   ========================================================= */
+
+.fc-comp-page .fcSectionBolt{ display:none !important; }
+
+.fc-comp-page .fcFastTop{ display:none !important; }
+
+.fc-comp-page .fcSliderWrap{
+  padding-top:18px;
+  border-top:1px solid var(--fc-line);
+}
+
+.fc-comp-page .fcSectionTitle{
+  gap:0 !important;
+}
+
+.fc-comp-page .fcSectionTitle::before,
+.fc-comp-page .fcSectionTitle::after{
+  flex:0 1 84px;
+}
+
+.fc-comp-page .fcSectionText,
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50{
+  font-family: var(--font-display, inherit) !important;
+  font-weight: 500 !important;
+  letter-spacing: .05em !important;
+  text-transform: none !important;
+  color: transparent !important;
+  background: linear-gradient(90deg,#cdb6ff 0%, #8e82ff 35%, #57b5ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  text-shadow: 0 0 18px rgba(139,92,255,.14), 0 0 24px rgba(53,184,255,.10) !important;
+}
+
+.fc-comp-page .fcSectionText{
+  font-size: 14px !important;
+  letter-spacing: .16em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+}
+
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7{
+  padding-top: 26px !important;
+}
+
+.fc-comp-page h1.text-3xl.font-display.text-gray-50,
+.fc-comp-page .fcHeroName{
+  font-family: var(--font-display, inherit) !important;
+  font-weight: 500 !important;
+  letter-spacing: .035em !important;
+  line-height: 1.04 !important;
+  color: transparent !important;
+  background: linear-gradient(90deg,#e9e4ff 0%, #c9b3ff 24%, #8a84ff 56%, #67c2ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  text-shadow: 0 0 20px rgba(139,92,255,.15), 0 0 24px rgba(53,184,255,.10) !important;
+}
+
+.fc-comp-page h1.text-3xl.font-display.text-gray-50{
+  font-size: clamp(1.8rem, 3vw, 2.7rem) !important;
+}
+
+.fc-comp-page .fcHeroMeta{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  margin: 0 0 18px;
+}
+
+.fc-comp-page .fcHeroName{
+  font-size: clamp(1.8rem, 3vw, 2.8rem) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.fc-comp-page .fcHeroPrice,
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .flex.justify-between.gap-x-5.flex-wrap.items-center > p.text-3xl{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+
+.fc-comp-page .fcPricePrefix{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(111,128,255,.22);
+  background: linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+  color: var(--fc-white-dim) !important;
+  font-size:11px !important;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:700;
+}
+
+.fc-comp-page .fcPriceValue{
+  font-family: var(--font-display, inherit) !important;
+  font-size: clamp(1rem, 1.4vw, 1.18rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: .04em !important;
+  color: #7de0ff !important;
+  text-shadow: 0 0 12px rgba(53,184,255,.18);
+}
+
+.fc-comp-page .fcHeroDate,
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .mt-2 > p{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:9px 16px;
+  border-radius:999px;
+  border:1px solid rgba(111,128,255,.24);
+  background: linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  color: #f4fbff !important;
+  font-size: 11px !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px rgba(53,184,255,.08);
+}
+
+@media (min-width:1024px){
+  .fc-comp-page .fc-info-col > .fc-hero-original,
+  .fc-comp-page .fc-info-col > .fc-hero-original-date{
+    display:none !important;
+  }
+}
+
+@media (max-width:1023px){
+  .fc-comp-page .fcHeroMeta{
+    display:none !important;
+  }
+}
+
+/* Countdown refinement */
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]{
+  border-top:0 !important;
+  border-bottom:0 !important;
+  background:transparent !important;
+  justify-content:flex-end !important;
+  gap:10px !important;
+  padding:10px 0 6px !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div{
+  flex:0 0 auto;
+  min-width:74px;
+  padding:14px 10px !important;
+  border-radius:14px;
+  border:1px solid rgba(85,170,255,.34);
+  background: linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.015), 0 0 20px rgba(53,184,255,.06);
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div:not(:last-child)::after{ display:none !important; }
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .font-stripe{
+  font-size: clamp(1.55rem, 2.3vw, 2rem) !important;
+  color:#41d5ff !important;
+}
+
+/* Instant wins / more information upgraded headings and fade underline */
+section.pb-16.sm\:pb-20 .mb-4,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4{
+  text-align:center !important;
+}
+
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  font-size: clamp(2rem, 2.9vw, 3rem) !important;
+  line-height:1.06 !important;
+  margin:0 auto !important;
+  position:relative;
+}
+
+section.pb-16.sm\:pb-20 .mb-4 p.text-2xl.font-display.text-gray-50::after,
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 p.text-2xl.font-display.text-gray-50::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-16px;
+  height:1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(139,92,255,0) 6%, rgba(139,92,255,.95) 28%, rgba(53,184,255,.95) 72%, rgba(53,184,255,0) 94%, transparent 100%) !important;
+  box-shadow: 0 0 14px rgba(53,184,255,.16);
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+}
+
+section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.bg-zinc-950.border-2.border-primary-500.rounded-xl{
+  border:1px solid transparent !important;
+  background:
+    linear-gradient(#071022,#071022) padding-box,
+    linear-gradient(90deg, rgba(139,92,255,.92), rgba(53,184,255,.92)) border-box !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.015), 0 0 22px rgba(139,92,255,.08), 0 0 30px rgba(53,184,255,.08) !important;
+}
+
+@media (max-width:1023px){
+  .fc-comp-page .lg\:col-span-6.lg\:col-start-7{
+    padding-top: 18px !important;
+  }
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]{
+    justify-content:center !important;
+    flex-wrap:wrap;
+  }
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div{
+    min-width:72px;
+  }
+  .fc-comp-page .fcSectionText{
+    font-size:13px !important;
+  }
+}
