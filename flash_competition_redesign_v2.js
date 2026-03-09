@@ -170,10 +170,17 @@
 
     function parseBundle(text){
       const t = clean(text);
-      const m = t.match(/buy\s+(\d+)\s+get\s+(\d+)\s+free/i);
+      if (!t) return null;
+
+      let m = t.match(/buy\s*(\d+)\s*get\s*(\d+)\s*free/i);
+      if (!m) m = t.match(/(\d+)\s*\+\s*(\d+)\s*free/i);
+      if (!m) m = t.match(/(\d+)\s*tickets?\s*\+\s*(\d+)\s*free/i);
+      if (!m) m = t.match(/bundle\s*(\d+)\s*\+\s*(\d+)/i);
       if (!m) return null;
+
       const buy = Number(m[1]);
       const free = Number(m[2]);
+      if (!Number.isFinite(buy) || !Number.isFinite(free) || buy <= 0) return null;
       return { buy, free, total: buy + free, ratio: buy ? (free / buy) : 0 };
     }
 
@@ -184,8 +191,13 @@
     function getBundleLabels(grid){
       if (!grid) return [];
       return [...grid.querySelectorAll('label')].filter((label) => {
-        const span = [...label.querySelectorAll('span')].find((s) => !s.classList.contains('sr-only'));
-        return !!parseBundle(span?.textContent || '');
+        const visibleBits = [...label.querySelectorAll('span, div, p')]
+          .filter((el) => !el.classList.contains('sr-only'))
+          .map((el) => txt(el))
+          .filter(Boolean)
+          .join(' ');
+        const source = visibleBits || txt(label);
+        return !!parseBundle(source);
       });
     }
 
@@ -243,6 +255,8 @@
       if (!slot) return null;
 
       if (!slot.contains(grid)) slot.appendChild(grid);
+      grid.style.display = '';
+      host.style.display = '';
       syncBundleVisibility(panel, wrap);
       return grid;
     }
