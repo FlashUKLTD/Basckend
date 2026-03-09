@@ -3378,6 +3378,58 @@ div.mx-auto.max-w-7xl.px-6.pb-8.pt-20 p.text-xs{
     grid-column:auto / auto !important;
   }
 }
+/* =========================================================
+   ⚡ FLASH COMP TITLE — BEHIND FLASH STYLE
+   ========================================================= */
+
+/* load premium sci-fi font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&display=swap');
+
+/* competition title */
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 h1{
+
+  font-family: 'Orbitron', sans-serif !important;
+
+  font-size: clamp(22px, 2.2vw, 32px) !important;
+  letter-spacing: .08em !important;
+  font-weight: 500 !important;
+
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  text-align: center !important;
+  margin: 0 auto 6px auto !important;
+
+  background: linear-gradient(
+    90deg,
+    #e3e6ff 0%,
+    #a777ff 35%,
+    #6c7dff 60%,
+    #41b9ff 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+
+  text-shadow:
+    0 0 12px rgba(167,119,255,.15),
+    0 0 22px rgba(65,185,255,.12);
+}
+
+/* tighten spacing with price */
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 .flex.justify-between.gap-x-5.flex-wrap.items-center{
+  gap:4px 12px !important;
+}
+
+/* make price line align nicely under title */
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 .flex.justify-between.gap-x-5.flex-wrap.items-center > p.text-3xl{
+  font-size:14px !important;
+  letter-spacing:.16em !important;
+  font-weight:800 !important;
+  text-transform:uppercase !important;
+}
 
 
 
