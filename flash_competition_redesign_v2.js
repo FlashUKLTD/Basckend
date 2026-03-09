@@ -227,7 +227,6 @@
       host.className = 'fcBundleHost';
       host.innerHTML = `
         <div class="fcSectionTitle">
-          <span class="fcSectionBolt">⚡</span>
           <span class="fcSectionText">Bundles</span>
         </div>
         <div class="fcBundleSlot"></div>
@@ -391,6 +390,48 @@
       if (sticky) sticky.style.display = '';
     }
 
+
+    function formatDisplayPrice(raw){
+      const n = parseTicketPrice(raw);
+      if (n === 0) return 'Free Entry';
+      if (!Number.isFinite(n)) return clean(raw);
+      if (n < 1) return `${Math.round(n * 100)}p per ticket`;
+      return `£${n.toFixed(2)} per ticket`;
+    }
+
+    function enhanceHeroInfo(){
+      const infoCol = document.querySelector('.lg\\:col-span-6.lg\\:col-start-7');
+      const imageCol = document.querySelector('.lg\\:col-span-6.lg\\:col-start-1.lg\\:row-span-3.lg\\:row-start-1');
+      if (!infoCol || !imageCol) return;
+
+      const titleRow = infoCol.querySelector('.flex.justify-between.gap-x-5.flex-wrap.items-center');
+      const dateRow = infoCol.querySelector(':scope > .mt-2');
+      const titleEl = titleRow?.querySelector('h1');
+      const priceEl = titleRow?.querySelector('p.text-3xl');
+      const dateEl = dateRow?.querySelector('p');
+      if (!titleEl || !priceEl || !dateEl) return;
+
+      infoCol.classList.add('fc-info-col');
+      titleRow.classList.add('fc-hero-original');
+      if (dateRow) dateRow.classList.add('fc-hero-original-date');
+
+      const formattedPrice = formatDisplayPrice(priceEl.textContent || '');
+      priceEl.innerHTML = `<span class="fcPricePrefix">Price</span><span class="fcPriceValue">${formattedPrice}</span>`;
+
+      let hero = imageCol.querySelector('.fcHeroMeta');
+      if (!hero){
+        hero = document.createElement('div');
+        hero.className = 'fcHeroMeta';
+        imageCol.insertBefore(hero, imageCol.firstChild);
+      }
+
+      hero.innerHTML = `
+        <div class="fcHeroName">${titleEl.textContent || ''}</div>
+        <div class="fcHeroPrice"><span class="fcPricePrefix">Price</span><span class="fcPriceValue">${formattedPrice}</span></div>
+        <div class="fcHeroDate">${dateEl.textContent || ''}</div>
+      `;
+    }
+
     function enhancePanel(){
       const panel = findTicketPanel();
       if (!panel) return;
@@ -407,18 +448,8 @@
         wrap = document.createElement('div');
         wrap.className = 'fcFastWrap';
         wrap.innerHTML = `
-          <div class="fcFastTop">
-            <div class="fcSectionTitle">
-              <span class="fcSectionBolt">⚡</span>
-              <span class="fcSectionText">Select Tickets</span>
-            </div>
-            <div class="fcFastKicker">Enter now. Win in a flash</div>
-            <div class="fcFastSub"><span data-fc-sub></span></div>
-          </div>
-
           <div class="fcSliderWrap">
             <div class="fcSectionTitle fcSectionTitleSmall">
-              <span class="fcSectionBolt">⚡</span>
               <span class="fcSectionText">Ticket Selector</span>
             </div>
             <div class="fcSliderTop">
@@ -614,7 +645,8 @@
         ensurePageClass();
         if (!document.documentElement.classList.contains(CFG.pageClass)) return;
         enhanceMeta();
-        enhancePanel();
+        enhanceHeroInfo();
+      enhancePanel();
       });
     }
 
