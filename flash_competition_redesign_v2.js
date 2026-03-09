@@ -648,6 +648,7 @@
         enhanceMeta();
         enhanceHeroInfo();
       enhancePanel();
+      enhanceSectionHeadings();
       });
     }
 
