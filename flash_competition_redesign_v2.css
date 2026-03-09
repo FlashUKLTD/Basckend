@@ -3869,3 +3869,90 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
     justify-content: center !important;
   }
 }
+
+
+/* =========================================================
+   v10 — Section heading fixes
+   ========================================================= */
+
+.fc-comp-page .fcSectionTitle,
+.fc-comp-page .fcSectionTitleMore{
+  display:inline-flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:auto !important;
+  max-width:100% !important;
+  margin:0 auto 22px !important;
+  padding:0 20px 12px !important;
+  position:relative !important;
+  text-align:center !important;
+  text-transform:uppercase !important;
+  letter-spacing:.10em !important;
+  line-height:1.02 !important;
+  font-size:clamp(28px,3vw,56px) !important;
+  font-weight:500 !important;
+  color:transparent !important;
+  background:linear-gradient(90deg,#d6c8ff 0%, #9d89ff 34%, #69a8ff 68%, #8de6ff 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  text-shadow:0 0 20px rgba(139,92,255,.10), 0 0 34px rgba(53,184,255,.08) !important;
+}
+
+.fc-comp-page .fcSectionTitle::after,
+.fc-comp-page .fcSectionTitleMore::after{
+  content:"";
+  display:block;
+  width:100%;
+  min-width:180px;
+  height:2px;
+  margin:16px auto 0 !important;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(139,92,255,0) 0%, rgba(139,92,255,.95) 26%, rgba(53,184,255,.95) 74%, rgba(53,184,255,0) 100%) !important;
+  box-shadow:0 0 12px rgba(53,184,255,.22);
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .mb-4,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  text-align:center !important;
+  margin-bottom:10px !important;
+}
+
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg{
+  width:100% !important;
+  max-width:100% !important;
+}
+
+.fc-comp-page .fc-more-details-box,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg{
+  text-align:center !important;
+}
+
+.fc-comp-page .fc-more-details-box p,
+.fc-comp-page .fc-more-details-box h1,
+.fc-comp-page .fc-more-details-box h2,
+.fc-comp-page .fc-more-details-box h3,
+.fc-comp-page .fc-more-details-box h4,
+.fc-comp-page .fc-more-details-box strong,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg p,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg h1,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg h2,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg h3,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg h4{
+  text-align:center !important;
+}
+
+.fc-comp-page .fc-more-details-box ul,
+.fc-comp-page .fc-more-details-box ol,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg ul,
+.fc-comp-page section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysiwyg ol{
+  display:inline-block !important;
+  text-align:left !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
