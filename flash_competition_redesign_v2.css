@@ -3664,3 +3664,125 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
     font-size:clamp(1rem, 5vw, 1.2rem) !important;
   }
 }
+
+
+/* =========================================================
+   v8 fixes — hero cleanup + countdown alignment
+   ========================================================= */
+
+.fc-comp-page .fcHeroMeta{
+  padding-top: 10px;
+}
+
+.fc-comp-page .fcHeroName,
+.fc-comp-page .fc-info-col h1.text-3xl.font-display.text-gray-50{
+  font-size: clamp(2.1rem, 4.2vw, 3.1rem) !important;
+  line-height: .96 !important;
+  letter-spacing: -.03em !important;
+  font-weight: 900 !important;
+  color: #f4f8ff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  text-shadow: 0 0 26px rgba(53,184,255,.08), 0 0 42px rgba(53,184,255,.04) !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: initial !important;
+}
+
+.fc-comp-page .fcHeroName::after,
+.fc-comp-page .fc-info-col h1.text-3xl.font-display.text-gray-50::after{
+  content: none !important;
+}
+
+.fc-comp-page .fcHeroPrice,
+.fc-comp-page .fcHeroPrice .fcPriceValue,
+.fc-comp-page .lg\:col-span-6.lg\:col-start-7 > .flex.justify-between.gap-x-5.flex-wrap.items-center > p.text-3xl{
+  color: transparent !important;
+  background: linear-gradient(90deg, #8B5CFF 0%, #35B8FF 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  text-shadow: 0 0 18px rgba(139,92,255,.12), 0 0 20px rgba(53,184,255,.12) !important;
+  font-size: clamp(1.05rem, 1.55vw, 1.35rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: .01em !important;
+}
+
+.fc-comp-page .fcHeroPrice .fcPricePrefix,
+.fc-comp-page .fcPricePrefix{
+  display: none !important;
+}
+
+.fc-comp-page .fcHeroDate{
+  margin-top: 10px !important;
+}
+
+/* remove stray title symbols / small decorative fragments */
+.fc-comp-page .fcHeroMeta > :not(.fcHeroName):not(.fcHeroPrice):not(.fcHeroDate):not(.fcHeroGlow){
+  display: none !important;
+}
+
+/* make right side countdown compact and centered */
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 8px 0 14px !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div{
+  flex: 0 0 auto !important;
+  min-width: 88px;
+  padding: 12px 10px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(75,164,255,.34) !important;
+  background: linear-gradient(180deg, rgba(10,16,34,.72), rgba(8,14,28,.42)) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02), 0 0 18px rgba(53,184,255,.06);
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div::after{
+  display: none !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .font-stripe{
+  font-size: clamp(1.8rem, 2.3vw, 2.3rem) !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  color: #35B8FF !important;
+  text-shadow: 0 0 16px rgba(53,184,255,.14) !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .text-sm{
+  margin-top: 7px !important;
+  color: rgba(247,251,255,.72) !important;
+  font-size: 10px !important;
+  letter-spacing: .16em !important;
+}
+
+.fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] .absolute.-top-2.-right-2.flex.h-5.w-5{
+  top: -6px !important;
+  right: -6px !important;
+}
+
+@media (max-width: 1023px){
+  .fc-comp-page .fcHeroName,
+  .fc-comp-page .fc-info-col h1.text-3xl.font-display.text-gray-50{
+    font-size: clamp(1.7rem, 8vw, 2.3rem) !important;
+  }
+
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"]{
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    padding-bottom: 10px !important;
+  }
+
+  .fc-comp-page .flex.justify-around.items-center.lg\:col-span-6.mt-5[x-data*="remaining"] > div{
+    min-width: 74px;
+    padding: 10px 8px !important;
+  }
+}
