@@ -97,7 +97,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
 
     /* Order you want on desktop */
     items: [
-      { id:"competitions", type:"dropdown", match:{ idEquals:"categories-header" }, label:"Competitions", enabled:true },
+      { id:"competitions", type:"link", match:{ idEquals:"categories-header" }, label:"Competitions", enabled:true },
        { id:"entry", type:"link", match:{ idEquals:"header-entry-list" }, label:"Ticket Lists", enabled:true },
       { id:"instant", type:"link", match:{ idEquals:"header-instant-list" }, label:"Winners", enabled:true },
       { id:"results", type:"link", match:{ idEquals:"header-results" }, label:"Results", enabled:false },
@@ -146,9 +146,9 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         /* Dropdown trigger (existing ui-dropdown) */
       {
         id: "competitions_dropdown",
-        type: "dropdown",
+        type: "link",
         match: { idEquals: "categories-header" },
-        label: "Enter Now",
+        label: "Competitions",
         enabled: true,
         icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9a2 2 0 0 0 0 6v4h16v-4a2 2 0 0 0 0-6V5H4z"/><path d="M9 8v8"/><path d="M12 8v8"/></svg>'
       },
@@ -973,6 +973,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }catch(_){}
 })();
+
 
 
 
