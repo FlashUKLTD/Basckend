@@ -633,6 +633,7 @@ a#categories-header.fcCompDirectLink .fcNavX-ico{
 a#categories-header.fcCompDirectLink .fcNavX-txt{
   display:inline-flex !important;
   align-items:center !important;
+  font-weight:700 !important;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&display=swap');
@@ -1364,3 +1365,4 @@ body.fc-register-page [data-flux-error]{
 body.fc-auth-hide-heading .sm\:mx-auto.sm\:w-full.sm\:max-w-md{
   display:none !important;
 }
+
