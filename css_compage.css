@@ -1502,12 +1502,7 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-10.wysi
     gap: 10px !important;
   }
 }
-/* Hide #header-about on desktop only */
-@media (min-width: 1024px){
-  #header-about{
-    display: none !important;
-  }
-}
+
 
 
 /* =========================================================
