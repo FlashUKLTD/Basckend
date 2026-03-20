@@ -129,7 +129,7 @@ window.FC_MOBILE_NAV = {
       id: "about",
       type: "link",
       match: { idEquals: "header-about" },
-      label: "About",
+      label: "Mission",
       enabled: true,
       icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12s4.03-9 9-9 9 4.03 9 9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7h.01"/></svg>'
     },
