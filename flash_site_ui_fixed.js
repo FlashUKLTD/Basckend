@@ -63,7 +63,7 @@
     fadeMs: 200,
     messages: [
       "Secure checkout • Instant entry confirmation.",
-      "3% cashback automatically credited to your account.",
+      "2% cashback automatically credited to your account.",
       "Live draws streamed when a main prize is involved.",
       "Transparent process • Real winners."
     ]
@@ -78,7 +78,7 @@
   function styleMessage(text){
     text = esc(text);
     text = text.replace("3% cashback",
-      '<span class="fcMin-strong">3% cashback</span>'
+      '<span class="fcMin-strong">2% cashback</span>'
     );
     return text;
   }
