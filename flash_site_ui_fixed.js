@@ -77,7 +77,7 @@
 
   function styleMessage(text){
     text = esc(text);
-    text = text.replace("3% cashback",
+    text = text.replace("2% cashback",
       '<span class="fcMin-strong">2% cashback</span>'
     );
     return text;
