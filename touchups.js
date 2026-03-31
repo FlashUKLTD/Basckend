@@ -4,7 +4,7 @@
     underlineClass: 'fcNavSwiftUnderline',
     badgeClass: 'fcNavSwiftBadge',
     lineClass: 'fcNavSwiftLine',
-    logoUrl: 'https://res.cloudinary.com/dpf31pprv/image/upload/v1773944256/icon_kqb7nj.png'
+    logoUrl: 'https://static.rafflex.io/custom-twig-images/01KN2S86PQBX7SZ13EB330S7NJ.png'
   };
 
   function buildUnderline(root){
