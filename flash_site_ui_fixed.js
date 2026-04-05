@@ -61,14 +61,52 @@
   var CFG = {
     rotateEvery: 7000,
     fadeMs: 200,
-    messages: [
-  "Experience a smoother way to enter, with secure checkout, instant confirmation, and a premium competition journey throughout.",
-  "Every entry is backed by secure payment, clear updates, and a transparent process designed to keep things simple and trusted.",
-  "Qualifying orders earn automatic cashback, giving you even more value to use across future Flash Competitions entries.",
-  "Selected main prize competitions are streamed live, so you can watch the draw unfold with complete transparency.",
-  "Built around trust, clarity, and excitement, Flash Competitions brings you real winners and a premium entry experience.",
-  "From the moment you enter to the moment the draw takes place, everything is designed to feel secure, smooth, and transparent."
-]
+    var CFG = {
+  rotateEvery: 7000,
+  fadeMs: 200,
+  messages: [
+    "Secure checkout • Instant entry",
+    "2% cashback on every order",
+    "Live draws on main prizes",
+    "Real winners • Verified draws",
+    "Instant confirmation every time",
+    "Fast checkout • No delays",
+    "Play now • Results soon",
+    "Transparent from entry to draw",
+    "Premium competitions daily",
+    "Entries confirmed instantly",
+    "Cashback added automatically",
+    "Watch draws live",
+    "Limited tickets • High demand",
+    "New competitions now live",
+    "Enter in seconds",
+    "Fair and transparent draws",
+    "Secure payments always",
+    "Your entries • Instantly active",
+    "More chances • More winners",
+    "Win real prizes today",
+    "Built for speed and trust",
+    "Simple entry • Big prizes",
+    "Quick play • Real rewards",
+    "Daily chances to win",
+    "Instant wins available",
+    "Play smarter with cashback",
+    "New prizes added regularly",
+    "Secure • Fast • Transparent",
+    "Trusted competition platform",
+    "Enter now • Don’t miss out",
+    "Live updates • Real results",
+    "Winning made simple",
+    "More entries • More chances",
+    "Play today • Win today",
+    "Fair play guaranteed",
+    "Fast entry • Instant results",
+    "Your chance starts here",
+    "Big prizes • Small entry",
+    "Always fair • Always clear",
+    "Instant access to entries"
+  ]
+};
   };
 
   function esc(s){
