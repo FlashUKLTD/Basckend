@@ -62,11 +62,13 @@
     rotateEvery: 7000,
     fadeMs: 200,
     messages: [
-      "Secure checkout • Instant entry confirmation.",
-      "2% cashback automatically credited to your account.",
-      "Live draws streamed when a main prize is involved.",
-      "Transparent process • Real winners."
-    ]
+  "Experience a smoother way to enter, with secure checkout, instant confirmation, and a premium competition journey throughout.",
+  "Every entry is backed by secure payment, clear updates, and a transparent process designed to keep things simple and trusted.",
+  "Qualifying orders earn automatic cashback, giving you even more value to use across future Flash Competitions entries.",
+  "Selected main prize competitions are streamed live, so you can watch the draw unfold with complete transparency.",
+  "Built around trust, clarity, and excitement, Flash Competitions brings you real winners and a premium entry experience.",
+  "From the moment you enter to the moment the draw takes place, everything is designed to feel secure, smooth, and transparent."
+]
   };
 
   function esc(s){
