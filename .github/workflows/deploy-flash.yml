@@ -1,0 +1,51 @@
+name: Deploy Flash
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Generate version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(date +'%Y%m%d%H%M%S')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Update flash.version.json
+        shell: bash
+        run: |
+          cat > flash.version.json <<EOF
+          {
+            "version": "${VERSION}"
+          }
+          EOF
+
+      - name: Commit version bump
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add flash.version.json
+          git diff --cached --quiet || git commit -m "Deploy flash ${VERSION}"
+          git push
+
+      - name: Purge jsDelivr cache
+        shell: bash
+        run: |
+          curl -s "https://purge.jsdelivr.net/gh/FlashUKLTD/Basckend@main/flash.version.json"
+          curl -s "https://purge.jsdelivr.net/gh/FlashUKLTD/Basckend@main/flash-loader.js"
+          curl -s "https://purge.jsdelivr.net/gh/FlashUKLTD/Basckend@main/flash.css"
+          curl -s "https://purge.jsdelivr.net/gh/FlashUKLTD/Basckend@main/flash.js"
+
+      - name: Done
+        run: echo "Flash deploy complete - version ${VERSION}"
