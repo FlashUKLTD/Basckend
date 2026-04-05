@@ -106,7 +106,6 @@
     "Always fair • Always clear",
     "Instant access to entries"
   ]
-};
   };
 
   function esc(s){
