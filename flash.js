@@ -2312,47 +2312,15 @@ document.addEventListener("DOMContentLoaded", function() {
     speed: 40, // lower = faster (px per second feel)
     gap: "   •   ",
     messages: [
-      "Secure checkout • Instant entry",
-      "2% cashback on every order",
-      "Live draws on main prizes",
-      "Real winners • Verified draws",
-      "Instant confirmation every time",
-      "Fast checkout • No delays",
-      "Play now • Results soon",
-      "Transparent from entry to draw",
-      "Premium competitions daily",
-      "Entries confirmed instantly",
-      "Cashback added automatically",
-      "Watch draws live",
-      "Limited tickets • High demand",
-      "New competitions now live",
-      "Enter in seconds",
-      "Fair and transparent draws",
-      "Secure payments always",
-      "Your entries • Instantly active",
-      "More chances • More winners",
-      "Win real prizes today",
-      "Built for speed and trust",
-      "Simple entry • Big prizes",
-      "Quick play • Real rewards",
-      "Daily chances to win",
-      "Instant wins available",
-      "Play smarter with cashback",
-      "New prizes added regularly",
-      "Secure • Fast • Transparent",
-      "Trusted competition platform",
-      "Enter now • Don’t miss out",
-      "Live updates • Real results",
-      "Winning made simple",
-      "More entries • More chances",
-      "Play today • Win today",
-      "Fair play guaranteed",
-      "Fast entry • Instant results",
-      "Your chance starts here",
-      "Big prizes • Small entry",
-      "Always fair • Always clear",
-      "Instant access to entries"
-    ]
+  "<s>2% cashback</s> on every order",
+  "<g>Instant wins</g> available now",
+  "Win <y>real prizes</y> today",
+  "<o>Limited tickets</o> • High demand",
+  "<b>Fast checkout</b> • <g>Instant entry</g>",
+  "More entries • <p>More chances</p>",
+  "<d>Transparent</d> from entry to draw",
+  "Play <u>now</u> • Results soon"
+]
   };
 
   function esc(s){
@@ -2364,14 +2332,54 @@ document.addEventListener("DOMContentLoaded", function() {
   function styleMessage(text){
   text = String(text || "");
 
-  // temporarily protect <s> tags
-  var parts = text.split(/(<s>.*?<\/s>)/g);
+  var parts = text.split(/(<[sgrbyodip]>.*?<\/[sgrbyodip]>)/g);
 
   parts = parts.map(function(part){
-    if(part.startsWith("<s>") && part.endsWith("</s>")){
-      var inner = part.slice(3, -4); // remove <s> </s>
-      return '<span class="fcMin-strong">' + esc(inner) + '</span>';
+
+    function wrap(cls, inner){
+      return '<span class="' + cls + '">' + esc(inner) + '</span>';
     }
+
+    if(part.startsWith("<s>") && part.endsWith("</s>")){
+      return wrap("fcMin-strong", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<g>") && part.endsWith("</g>")){
+      return wrap("fcMin-green", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<r>") && part.endsWith("</r>")){
+      return wrap("fcMin-red", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<b>") && part.endsWith("</b>")){
+      return wrap("fcMin-bold", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<d>") && part.endsWith("</d>")){
+      return wrap("fcMin-dim", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<y>") && part.endsWith("</y>")){
+      return wrap("fcMin-gold", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<o>") && part.endsWith("</o>")){
+      return wrap("fcMin-orange", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<i>") && part.endsWith("</i>")){
+      return wrap("fcMin-italic", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<u>") && part.endsWith("</u>")){
+      return wrap("fcMin-underline", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<p>") && part.endsWith("</p>")){
+      return wrap("fcMin-pulse", part.slice(3, -4));
+    }
+
     return esc(part);
   });
 
