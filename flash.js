@@ -2314,7 +2314,7 @@ document.addEventListener("DOMContentLoaded", function() {
     messages: [
   "<g>Secure checkout</g> • <s>Instant entry</s> every time",
   "<b>Fast checkout</b> • Your entries are <g>active instantly</g>",
-  "<g>Instant wins</g> available • Play and see what happens",
+  "<g>Instant-win tickets</g> available • Play and see what happens",
   "<s>2% cashback</s> on every eligible order",
   "<b>Fair draws</b> • <d>Transparent from entry to result</d>",
   "<g>Instant confirmation</g> as soon as you enter",
