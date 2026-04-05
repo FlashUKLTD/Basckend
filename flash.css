@@ -10334,6 +10334,89 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
     animation: none !important;
   }
 }
+
+/* GREEN */
+.fcMin-green{
+  color: #2ad27f;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(42,210,127,.2);
+}
+
+/* RED */
+.fcMin-red{
+  color: #ff5a6b;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255,90,107,.2);
+}
+
+/* GOLD (🏆 vibe) */
+.fcMin-gold{
+  font-weight: 900;
+  background: linear-gradient(90deg, #facc15, #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 12px rgba(250,204,21,.25);
+}
+
+/* ORANGE (CTA energy) */
+.fcMin-orange{
+  color: #ff9a3c;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255,154,60,.2);
+}
+
+/* BOLD */
+.fcMin-bold{
+  color: #ffffff;
+  font-weight: 900;
+}
+
+/* DIM */
+.fcMin-dim{
+  color: rgba(255,255,255,.55);
+  font-weight: 600;
+}
+
+/* ITALIC */
+.fcMin-italic{
+  font-style: italic;
+  opacity: .85;
+}
+
+/* UNDERLINE (clean gradient line) */
+.fcMin-underline{
+  position: relative;
+}
+
+.fcMin-underline::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-2px;
+  width:100%;
+  height:1px;
+  background: linear-gradient(90deg, #8B5CFF, #35B8FF);
+  opacity:.7;
+}
+
+/* PULSE (very subtle glow animation) */
+.fcMin-pulse{
+  font-weight: 900;
+  color: #fff;
+  animation: fcMinPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes fcMinPulse{
+  0%,100%{
+    text-shadow: 0 0 0 rgba(53,184,255,0);
+  }
+  50%{
+    text-shadow: 0 0 12px rgba(53,184,255,.35);
+  }
+}
+
+
 :root{
   --fcVIP-purple:#8B5CFF;
   --fcVIP-blue:#2D7CFF;
