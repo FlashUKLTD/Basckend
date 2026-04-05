@@ -2312,14 +2312,21 @@ document.addEventListener("DOMContentLoaded", function() {
     speed: 40, // lower = faster (px per second feel)
     gap: "   •   ",
     messages: [
-  "<s>2% cashback</s> on every order",
-  "<g>Instant wins</g> available now",
-  "Win <y>real prizes</y> today",
-  "<o>Limited tickets</o> • High demand",
-  "<b>Fast checkout</b> • <g>Instant entry</g>",
-  "More entries • <p>More chances</p>",
-  "<d>Transparent</d> from entry to draw",
-  "Play <u>now</u> • Results soon"
+  "<g>Secure checkout</g> • <s>Instant entry</s> every time",
+  "<b>Fast checkout</b> • Your entries are <g>active instantly</g>",
+  "<g>Instant wins</g> available • Play and see what happens",
+  "<s>2% cashback</s> on every eligible order",
+  "<b>Fair draws</b> • <d>Transparent from entry to result</d>",
+  "<g>Instant confirmation</g> as soon as you enter",
+  "Play now • <p>Results coming up</p>",
+  "<b>Simple entry</b> • No complicated steps",
+  "<g>Secure payments</g> • Trusted platform",
+  "More entries • <b>More chances</b>",
+  "<s>Cashback added</s> automatically",
+  "<g>Fast entry</g> • No delays",
+  "<d>Transparent process</d> from start to finish",
+  "<b>Real winners</b> • Verified results",
+  "<p>Play anytime</p> • It’s always live"
 ]
   };
 
@@ -2332,7 +2339,7 @@ document.addEventListener("DOMContentLoaded", function() {
   function styleMessage(text){
   text = String(text || "");
 
-  var parts = text.split(/(<[sgrbyodip]>.*?<\/[sgrbyodip]>)/g);
+  var parts = text.split(/(<[sgrbyodipu]>.*?<\/[sgrbyodipu]>)/g);
 
   parts = parts.map(function(part){
 
