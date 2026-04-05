@@ -2309,50 +2309,50 @@ document.addEventListener("DOMContentLoaded", function() {
   window.__FC_MINIMAL_STRIP__ = true;
 
   var CFG = {
-    rotateEvery: 7000,
-    fadeMs: 200,
-  messages: [
-    "Secure checkout • Instant entry",
-    "2% cashback on every order",
-    "Live draws on main prizes",
-    "Real winners • Verified draws",
-    "Instant confirmation every time",
-    "Fast checkout • No delays",
-    "Play now • Results soon",
-    "Transparent from entry to draw",
-    "Premium competitions daily",
-    "Entries confirmed instantly",
-    "Cashback added automatically",
-    "Watch draws live",
-    "Limited tickets • High demand",
-    "New competitions now live",
-    "Enter in seconds",
-    "Fair and transparent draws",
-    "Secure payments always",
-    "Your entries • Instantly active",
-    "More chances • More winners",
-    "Win real prizes today",
-    "Built for speed and trust",
-    "Simple entry • Big prizes",
-    "Quick play • Real rewards",
-    "Daily chances to win",
-    "Instant wins available",
-    "Play smarter with cashback",
-    "New prizes added regularly",
-    "Secure • Fast • Transparent",
-    "Trusted competition platform",
-    "Enter now • Don’t miss out",
-    "Live updates • Real results",
-    "Winning made simple",
-    "More entries • More chances",
-    "Play today • Win today",
-    "Fair play guaranteed",
-    "Fast entry • Instant results",
-    "Your chance starts here",
-    "Big prizes • Small entry",
-    "Always fair • Always clear",
-    "Instant access to entries"
-  ]
+    speed: 40, // lower = faster (px per second feel)
+    gap: "   •   ",
+    messages: [
+      "Secure checkout • Instant entry",
+      "2% cashback on every order",
+      "Live draws on main prizes",
+      "Real winners • Verified draws",
+      "Instant confirmation every time",
+      "Fast checkout • No delays",
+      "Play now • Results soon",
+      "Transparent from entry to draw",
+      "Premium competitions daily",
+      "Entries confirmed instantly",
+      "Cashback added automatically",
+      "Watch draws live",
+      "Limited tickets • High demand",
+      "New competitions now live",
+      "Enter in seconds",
+      "Fair and transparent draws",
+      "Secure payments always",
+      "Your entries • Instantly active",
+      "More chances • More winners",
+      "Win real prizes today",
+      "Built for speed and trust",
+      "Simple entry • Big prizes",
+      "Quick play • Real rewards",
+      "Daily chances to win",
+      "Instant wins available",
+      "Play smarter with cashback",
+      "New prizes added regularly",
+      "Secure • Fast • Transparent",
+      "Trusted competition platform",
+      "Enter now • Don’t miss out",
+      "Live updates • Real results",
+      "Winning made simple",
+      "More entries • More chances",
+      "Play today • Win today",
+      "Fair play guaranteed",
+      "Fast entry • Instant results",
+      "Your chance starts here",
+      "Big prizes • Small entry",
+      "Always fair • Always clear",
+      "Instant access to entries"
+    ]
   };
 
   function esc(s){
@@ -2362,11 +2362,25 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function styleMessage(text){
-    text = esc(text);
-    text = text.replace("2% cashback",
-      '<span class="fcMin-strong">2% cashback</span>'
-    );
-    return text;
+  text = String(text || "");
+
+  // temporarily protect <s> tags
+  var parts = text.split(/(<s>.*?<\/s>)/g);
+
+  parts = parts.map(function(part){
+    if(part.startsWith("<s>") && part.endsWith("</s>")){
+      var inner = part.slice(3, -4); // remove <s> </s>
+      return '<span class="fcMin-strong">' + esc(inner) + '</span>';
+    }
+    return esc(part);
+  });
+
+  return parts.join("");
+}
+
+  function buildContent(){
+    var joined = CFG.messages.map(styleMessage).join(CFG.gap);
+    return joined;
   }
 
   function init(){
@@ -2376,29 +2390,34 @@ document.addEventListener("DOMContentLoaded", function() {
     el.id = "fcMinimalStrip";
     el.innerHTML =
       '<div class="fcMin-inner">' +
-        '<div class="fcMin-text" aria-live="polite"></div>' +
+        '<div class="fcMin-marquee">' +
+          '<div class="fcMin-track"></div>' +
+        '</div>' +
       '</div>';
 
     document.body.insertBefore(el, document.body.firstChild);
 
-    var textEl = el.querySelector(".fcMin-text");
-    var i = 0;
+    var track = el.querySelector(".fcMin-track");
 
-    function show(){
-      el.setAttribute("data-fade","1");
+    // duplicate content for seamless loop
+    var content = buildContent();
+    track.innerHTML = 
+      '<div class="fcMin-text">' + content + '</div>' +
+      '<div class="fcMin-text">' + content + '</div>';
 
-      setTimeout(function(){
-        textEl.innerHTML = styleMessage(CFG.messages[i]);
-        el.setAttribute("data-fade","0");
-      }, CFG.fadeMs);
-    }
+    applySpeed(el);
+  }
 
-    show();
+  function applySpeed(el){
+    var track = el.querySelector(".fcMin-track");
 
-    setInterval(function(){
-      i = (i + 1) % CFG.messages.length;
-      show();
-    }, CFG.rotateEvery);
+    // measure width for smooth timing
+    requestAnimationFrame(function(){
+      var width = track.scrollWidth / 2;
+      var duration = width / CFG.speed;
+
+      track.style.animationDuration = duration + "s";
+    });
   }
 
   if(document.readyState === "loading"){
