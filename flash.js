@@ -27,7 +27,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     wrapClass: "flash-live-wrap",
     dotClass: "flash-live-dot",
     textClass: "flash-live-text",
-    text: "TEST",
+    text: "LIVE",
     retries: { max: 20, everyMs: 250 }
   },
 
