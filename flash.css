@@ -888,8 +888,8 @@ a:focus-visible{
   border-radius: 999px;
   position: relative;
 
-  background: linear-gradient(135deg, #a855f7, #3b82f6);
-  box-shadow: 0 0 14px rgba(168, 85, 247, .55);
+  background: linear-gradient(135deg, #facc15, #f59e0b);
+  box-shadow: 0 0 14px rgba(250, 204, 21, .55);
 }
 
 #header-instant-list .flash-live-dot::after{
@@ -897,7 +897,7 @@ a:focus-visible{
   position: absolute;
   inset: -6px;
   border-radius: 999px;
-  border: 2px solid rgba(168, 85, 247, .35);
+  border: 2px solid rgba(250, 204, 21, .35);
 
   transform: scale(.6);
   opacity: 0;
@@ -917,15 +917,15 @@ a:focus-visible{
   letter-spacing: .9px;
   text-transform: uppercase;
 
-  background: linear-gradient(90deg, #a855f7, #3b82f6);
+  background: linear-gradient(90deg, #facc15, #f59e0b);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 
-  text-shadow: 0 0 16px rgba(59,130,246,.18);
+  text-shadow: 0 0 16px rgba(250,204,21,.18);
 }
 
-/* make sure dot aligns nicely inside your navbar */
+/* make sure badge aligns nicely inside your navbar */
 #header-instant-list > div{
   display: flex !important;
   align-items: center !important;
