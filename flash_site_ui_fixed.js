@@ -61,9 +61,6 @@
   var CFG = {
     rotateEvery: 7000,
     fadeMs: 200,
-    var CFG = {
-  rotateEvery: 7000,
-  fadeMs: 200,
   messages: [
     "Secure checkout • Instant entry",
     "2% cashback on every order",
