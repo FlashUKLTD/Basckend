@@ -10344,7 +10344,42 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
     transition: none !important;
   }
 }
+#fcMinimalStrip .fcMin-marquee{
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
 
+#fcMinimalStrip .fcMin-track{
+  display: flex;
+  width: max-content;
+  animation: fcMinScroll linear infinite;
+  will-change: transform;
+}
+
+#fcMinimalStrip .fcMin-text{
+  white-space: nowrap;
+  padding-right: 40px;
+}
+
+#fcMinimalStrip:hover .fcMin-track{
+  animation-play-state: paused;
+}
+
+@keyframes fcMinScroll{
+  from{
+    transform: translateX(0);
+  }
+  to{
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #fcMinimalStrip .fcMin-track{
+    animation: none !important;
+  }
+}
 :root{
   --fcVIP-purple:#8B5CFF;
   --fcVIP-blue:#2D7CFF;
