@@ -10233,38 +10233,24 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
   content:"";
   position:absolute;
   left:0;
-  right:0;
   top:0;
-  height:1px;
-  background:linear-gradient(
-    90deg,
-    rgba(139,92,255,0),
-    rgba(139,92,255,.65) 20%,
-    rgba(53,184,255,.72) 50%,
-    rgba(139,92,255,.65) 80%,
-    rgba(53,184,255,0)
-  );
-  opacity:.95;
+  bottom:0;
+  width:60px;
+  background:linear-gradient(90deg, rgba(4,7,15,1), transparent);
   pointer-events:none;
+  z-index:2;
 }
 
 #fcMinimalStrip::after{
   content:"";
   position:absolute;
+  right:0;
   top:0;
-  left:-18%;
-  width:18%;
-  height:100%;
+  bottom:0;
+  width:60px;
+  background:linear-gradient(270deg, rgba(4,7,15,1), transparent);
   pointer-events:none;
-  background:linear-gradient(
-    90deg,
-    rgba(255,255,255,0),
-    rgba(255,255,255,.07),
-    rgba(255,255,255,0)
-  );
-  transform: skewX(-18deg);
-  animation: fcMinStripSweep 7s linear infinite;
-  opacity:.55;
+  z-index:2;
 }
 
 #fcMinimalStrip .fcMin-inner{
