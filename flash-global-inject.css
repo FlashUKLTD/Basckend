@@ -1,14 +1,9 @@
 /* ======================================================================
-   FLASH — GLOBAL INJECT CSS
-   Purpose:
-   - Keep the Flash visual language
-   - Style shared Rafflex / Flux primitives site-wide
-   - Reduce brittle one-off page targeting
-   - Preserve your custom Flash systems
-   ====================================================================== */
-
-/* ======================================================================
-   0) ROOT TOKENS
+   FLASH — GLOBAL GLASS THEME V3
+   Premium glassy site-wide inject layer for Rafflex / Flux
+   - Targets shared primitives instead of one-off page selectors
+   - Preserves Flash purple → blue vibe
+   - Broader coverage for new / future elements
    ====================================================================== */
 
 :root{
@@ -16,75 +11,92 @@
   --fc-bg-1:#0B0F22;
   --fc-bg-2:#10182D;
 
-  --fc-surface-0:rgba(255,255,255,.03);
-  --fc-surface-1:rgba(255,255,255,.05);
-  --fc-surface-2:rgba(255,255,255,.075);
+  --fc-surface-0:rgba(255,255,255,.025);
+  --fc-surface-1:rgba(255,255,255,.045);
+  --fc-surface-2:rgba(255,255,255,.07);
+  --fc-surface-3:rgba(255,255,255,.10);
 
   --fc-line:rgba(255,255,255,.10);
   --fc-line-strong:rgba(255,255,255,.16);
 
-  --fc-text:rgba(255,255,255,.94);
-  --fc-text-soft:rgba(255,255,255,.76);
-  --fc-text-dim:rgba(255,255,255,.58);
+  --fc-text:#F4F7FF;
+  --fc-text-soft:rgba(244,247,255,.78);
+  --fc-text-dim:rgba(244,247,255,.58);
 
   --fc-ac-1:#8B5CFF;
   --fc-ac-2:#35B8FF;
   --fc-ac-3:#2D7CFF;
   --fc-gold:#F5D36B;
+  --fc-danger:#EF4444;
+  --fc-success:#22C55E;
+  --fc-warn:#F59E0B;
 
   --fc-grad:linear-gradient(135deg,var(--fc-ac-1),var(--fc-ac-2));
-  --fc-grad-btn:linear-gradient(135deg,var(--fc-ac-1),var(--fc-ac-3));
+  --fc-grad-strong:linear-gradient(135deg,var(--fc-ac-1),var(--fc-ac-3));
+  --fc-grad-soft:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+
+  --fc-page-bg:
+    radial-gradient(1200px 700px at 10% 0%, rgba(139,92,255,.10), transparent 52%),
+    radial-gradient(1200px 760px at 90% 6%, rgba(53,184,255,.07), transparent 54%),
+    linear-gradient(180deg,var(--fc-bg-1),var(--fc-bg-0));
 
   --fc-panel-bg:
-    radial-gradient(120% 120% at 0% 0%, rgba(139,92,255,.12), transparent 42%),
-    radial-gradient(120% 120% at 100% 0%, rgba(53,184,255,.10), transparent 40%),
-    linear-gradient(180deg, rgba(10,21,48,.92), rgba(7,16,31,.98));
+    radial-gradient(140% 120% at 0% 0%, rgba(139,92,255,.12), transparent 42%),
+    radial-gradient(140% 120% at 100% 0%, rgba(53,184,255,.10), transparent 40%),
+    linear-gradient(180deg, rgba(12,18,34,.84), rgba(7,11,22,.94));
+
+  --fc-panel-bg-strong:
+    radial-gradient(140% 120% at 0% 0%, rgba(139,92,255,.16), transparent 42%),
+    radial-gradient(140% 120% at 100% 0%, rgba(53,184,255,.13), transparent 40%),
+    linear-gradient(180deg, rgba(16,22,40,.90), rgba(8,11,20,.97));
 
   --fc-modal-bg:
-    radial-gradient(120% 120% at 0% 0%, rgba(139,92,255,.11), transparent 42%),
-    radial-gradient(120% 120% at 100% 0%, rgba(53,184,255,.09), transparent 40%),
-    linear-gradient(180deg, rgba(13,18,32,.96), rgba(8,11,20,.98));
+    radial-gradient(140% 120% at 0% 0%, rgba(139,92,255,.14), transparent 42%),
+    radial-gradient(140% 120% at 100% 0%, rgba(53,184,255,.12), transparent 40%),
+    linear-gradient(180deg, rgba(14,18,32,.92), rgba(7,10,19,.98));
 
   --fc-radius-sm:12px;
   --fc-radius-md:16px;
   --fc-radius-lg:20px;
   --fc-radius-xl:24px;
+  --fc-radius-pill:999px;
 
-  --fc-shadow-sm:0 10px 28px rgba(0,0,0,.24);
+  --fc-shadow-sm:0 10px 28px rgba(0,0,0,.22);
   --fc-shadow-md:0 18px 50px rgba(0,0,0,.34);
-  --fc-shadow-lg:0 24px 60px rgba(0,0,0,.42);
+  --fc-shadow-lg:0 28px 70px rgba(0,0,0,.45);
+
+  --fc-glow-purple:0 0 24px rgba(139,92,255,.14);
+  --fc-glow-blue:0 0 24px rgba(53,184,255,.10);
 
   --fc-ring:
-    0 0 0 1px rgba(139,92,255,.26),
-    0 0 0 4px rgba(53,184,255,.10);
+    0 0 0 1px rgba(139,92,255,.35),
+    0 0 0 4px rgba(53,184,255,.12);
+
+  --fc-blur: blur(14px);
 }
 
-/* Optional helper if you add <html class="fc-theme"> */
-html.fc-theme,
-html.fc-theme body{
+html, body{
   color:var(--fc-text);
   background-color:var(--fc-bg-0);
 }
-html.fc-theme{ color-scheme:dark; }
+
+body,
+.bg-gray-950{
+  background:var(--fc-page-bg) !important;
+}
+
+html{
+  color-scheme:dark;
+}
 
 /* ======================================================================
-   1) GLOBAL FOUNDATION
+   GLOBAL TYPOGRAPHY
    ====================================================================== */
-
-body{
-  color:var(--fc-text);
-}
-
-.bg-gray-950{
-  background:
-    radial-gradient(1200px 600px at 15% 0%, rgba(139,92,255,.08), transparent 50%),
-    radial-gradient(1200px 650px at 85% 5%, rgba(53,184,255,.06), transparent 52%),
-    linear-gradient(180deg,var(--fc-bg-1),var(--fc-bg-0)) !important;
-}
 
 h1,h2,h3,h4,h5,h6,
 .font-display{
   color:var(--fc-text);
+  text-shadow:0 1px 0 rgba(0,0,0,.25);
 }
 
 .text-gray-50{ color:var(--fc-text) !important; }
@@ -93,23 +105,60 @@ h1,h2,h3,h4,h5,h6,
 .text-primary-600{ color:#fff !important; }
 .text-primary-theme{ color:#fff !important; }
 
-/* safer than styling every random h1 differently page by page */
+/* undo old over-global shimmer behaviour */
+.text-primary-500{
+  color:#F4F7FF !important;
+  background:none !important;
+  -webkit-text-fill-color:currentColor !important;
+  text-shadow:none !important;
+  animation:none !important;
+}
+
+/* markdown is present in app css, theme it once */
+.markdown{
+  color:var(--fc-text) !important;
+}
+.markdown a{
+  color:#CFC7FF !important;
+}
 .markdown h2,
 .markdown h3{
-  color:var(--fc-ac-1) !important;
+  color:#D9CCFF !important;
+}
+.markdown code{
+  background:rgba(255,255,255,.08) !important;
+  color:#F8FAFF !important;
+  border-radius:8px;
+}
+.markdown pre code{
+  background:rgba(0,0,0,.45) !important;
+}
+.markdown blockquote{
+  border-color:rgba(139,92,255,.32) !important;
+  color:var(--fc-text-soft) !important;
 }
 
 /* ======================================================================
-   2) SHARED SURFACES / CARDS / PANELS
+   GENERIC SURFACES / CARDS / PANELS
    ====================================================================== */
 
 [data-flux-card],
+.rounded-lg.border,
+.rounded-xl.border,
+.rounded-2xl.border,
+.shadow-sm.border,
+.shadow-lg.border,
+.bg-gray-800.border,
+.bg-gray-900.border,
+.bg-gray-950.border,
 .rounded-xl.bg-gray-800,
 .bg-gray-900.rounded-xl,
 .border.bg-gray-800.rounded-md,
 .sm\:rounded-lg.border.bg-gray-50,
 .mx-2.sm\:mx-0.border-b.border-t.border-gray-200.bg-gray-50.shadow-sm.sm\:rounded-lg.sm\:border.rounded-xl,
-.mx-auto.max-w-4xl.px-4.sm\:px-6.lg\:px-8 > .bg-gray-900{
+.mx-auto.max-w-4xl.px-4.sm\:px-6.lg\:px-8 > .bg-gray-900,
+aside > .rounded-xl,
+aside > .rounded-lg{
   position:relative;
   border-radius:var(--fc-radius-lg) !important;
   border:1px solid rgba(139,92,255,.16) !important;
@@ -117,42 +166,82 @@ h1,h2,h3,h4,h5,h6,
   box-shadow:
     var(--fc-shadow-md),
     0 0 0 1px rgba(255,255,255,.03) inset,
-    0 0 22px rgba(139,92,255,.07),
-    0 0 24px rgba(53,184,255,.05) !important;
+    var(--fc-glow-purple),
+    var(--fc-glow-blue) !important;
+  backdrop-filter:var(--fc-blur);
+  -webkit-backdrop-filter:var(--fc-blur);
   overflow:hidden;
 }
 
 [data-flux-card]::before,
+.rounded-lg.border::before,
+.rounded-xl.border::before,
+.rounded-2xl.border::before,
 .rounded-xl.bg-gray-800::before,
 .bg-gray-900.rounded-xl::before{
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
-  background:linear-gradient(
-    115deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,.04) 48%,
-    rgba(255,255,255,0) 58%
-  );
+  background:
+    linear-gradient(115deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,.045) 48%,
+      rgba(255,255,255,0) 58%);
   transform:translateX(-120%);
-  animation:fcGlobalSweep 7s linear infinite;
-  opacity:.22;
+  animation:fcGlassSweep 8s linear infinite;
+  opacity:.24;
 }
 
 [data-flux-card]:hover,
+.rounded-lg.border:hover,
+.rounded-xl.border:hover,
+.rounded-2xl.border:hover,
 .rounded-xl.bg-gray-800:hover,
 .bg-gray-900.rounded-xl:hover{
-  border-color:rgba(139,92,255,.24) !important;
+  border-color:rgba(139,92,255,.26) !important;
+  background:var(--fc-panel-bg-strong) !important;
   box-shadow:
     var(--fc-shadow-lg),
     0 0 0 1px rgba(255,255,255,.04) inset,
-    0 0 28px rgba(139,92,255,.09),
-    0 0 28px rgba(53,184,255,.07) !important;
+    0 0 28px rgba(139,92,255,.18),
+    0 0 28px rgba(53,184,255,.12) !important;
+}
+
+/* more generic common wrappers */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-800,
+.bg-gray-900,
+.bg-zinc-800,
+.bg-zinc-900,
+.bg-slate-900,
+[class*="bg-gray-8"],
+[class*="bg-gray-9"]{
+  color:var(--fc-text);
+}
+
+.border,
+.border-gray-100,
+.border-gray-200,
+.border-gray-300,
+.border-gray-600,
+.border-gray-700,
+.border-gray-800,
+.border-white\/10,
+.border-white\/20{
+  border-color:rgba(255,255,255,.10) !important;
+}
+
+.divide-y > :not([hidden]) ~ :not([hidden]),
+.border-b,
+.border-t{
+  border-color:rgba(255,255,255,.08) !important;
 }
 
 /* ======================================================================
-   3) BUTTON SYSTEM
+   BUTTONS / CTA / GROUPS
    ====================================================================== */
 
 button,
@@ -164,13 +253,19 @@ a.block.w-full.rounded-b-xl.bg-primary-500,
 .block.w-full.bg-primary-500.text-primary-theme.text-center.py-2.sm\:py-3.rounded-lg.font-semibold.text-sm.sm\:text-lg.transition-colors.duration-200,
 .mt-5.p-1.rounded-xl.hidden > button.mt-8.flex.w-full.items-center.justify-center.rounded-md.border.border-transparent.bg-primary-600.px-8.py-3.text-base.font-medium.text-primary-theme.hover\:bg-primary-700.focus\:outline-none.focus\:ring-2.focus\:ring-primary-500.focus\:ring-offset-2{
   border-radius:14px !important;
-  border:1px solid rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
   color:#fff !important;
-  background:var(--fc-grad-btn) !important;
+  background:var(--fc-grad-strong) !important;
   box-shadow:
-    0 12px 34px rgba(45,124,255,.26),
-    inset 0 1px 0 rgba(255,255,255,.18) !important;
-  transition:transform .22s ease, box-shadow .22s ease, filter .22s ease, border-color .22s ease;
+    0 14px 36px rgba(45,124,255,.24),
+    0 0 24px rgba(139,92,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.22) !important;
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    filter .22s ease,
+    border-color .22s ease,
+    background .22s ease;
 }
 
 button:hover,
@@ -180,10 +275,11 @@ button:hover,
 [data-flux-button]:hover,
 a.block.w-full.rounded-b-xl.bg-primary-500:hover{
   transform:translateY(-1px);
-  filter:brightness(1.04);
+  filter:brightness(1.045);
   box-shadow:
-    0 18px 44px rgba(45,124,255,.34),
-    inset 0 1px 0 rgba(255,255,255,.24) !important;
+    0 18px 48px rgba(45,124,255,.32),
+    0 0 30px rgba(139,92,255,.14),
+    inset 0 1px 0 rgba(255,255,255,.28) !important;
 }
 
 button:focus-visible,
@@ -196,17 +292,29 @@ a:focus-visible{
   box-shadow:var(--fc-ring), 0 14px 38px rgba(0,0,0,.34) !important;
 }
 
-/* softer buttons / tabs / utility controls */
+button:disabled,
+[type="button"]:disabled,
+[type="submit"]:disabled{
+  opacity:.58;
+  filter:none !important;
+  box-shadow:none !important;
+}
+
+/* softer utility buttons / tabs / topbar controls */
 .flex.flex-1.items-center.justify-end a[href*="/login"],
 .mx-auto.max-w-lg.flex.justify-between.mb-8 button[type="button"],
 [role="tablist"] button,
 .fcEMP7-tab,
 .fcEMP7-ib,
-.fcEMP7-clear{
+.fcEMP7-clear,
+[role="menuitem"],
+[role="option"]{
   background:rgba(255,255,255,.05) !important;
   color:var(--fc-text) !important;
   border:1px solid rgba(255,255,255,.14) !important;
-  box-shadow:none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 8px 18px rgba(0,0,0,.14) !important;
 }
 
 .flex.flex-1.items-center.justify-end a[href*="/login"]:hover,
@@ -214,14 +322,15 @@ a:focus-visible{
 [role="tablist"] button:hover,
 .fcEMP7-tab:hover,
 .fcEMP7-ib:hover,
-.fcEMP7-clear:hover{
+.fcEMP7-clear:hover,
+[role="menuitem"]:hover,
+[role="option"]:hover{
   background:rgba(255,255,255,.09) !important;
   border-color:rgba(139,92,255,.24) !important;
 }
 
-/* keep your premium register button feel */
 .flex.flex-1.items-center.justify-end a[href*="/register"]{
-  background:var(--fc-grad-btn) !important;
+  background:var(--fc-grad-strong) !important;
   color:#fff !important;
   border-radius:14px !important;
   border:none !important;
@@ -230,8 +339,27 @@ a:focus-visible{
     inset 0 1px 0 rgba(255,255,255,.25) !important;
 }
 
+/* app css shows flux button groups, account for them */
+[data-flux-button-group]{
+  border-radius:14px;
+  overflow:hidden;
+}
+[data-flux-button-group] > *,
+[data-flux-button-group] button,
+[data-flux-button-group] a{
+  border-radius:0 !important;
+}
+[data-flux-button-group] > :first-child{
+  border-top-left-radius:14px !important;
+  border-bottom-left-radius:14px !important;
+}
+[data-flux-button-group] > :last-child{
+  border-top-right-radius:14px !important;
+  border-bottom-right-radius:14px !important;
+}
+
 /* ======================================================================
-   4) FORM SYSTEM
+   FORMS / INPUTS / SELECTS / CHECKS
    ====================================================================== */
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
@@ -243,16 +371,23 @@ textarea,
 .mt-10 input[type="text"],
 .mt-10 input[type="email"],
 .mt-10 input[type="tel"],
-.mt-10 select{
+.mt-10 select,
+input[type="search"]{
   min-height:46px;
   border-radius:14px !important;
-  border:1px solid rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.11) !important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
-    rgba(7,12,22,.90) !important;
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015)),
+    rgba(7,12,22,.88) !important;
   color:var(--fc-text) !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
-  transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 8px 18px rgba(0,0,0,.12);
+  transition:border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease;
+}
+
+input[type="search"]{
+  border-radius:999px !important;
 }
 
 input::placeholder,
@@ -269,19 +404,35 @@ textarea:focus,
   outline:none !important;
   border-color:rgba(139,92,255,.34) !important;
   box-shadow:var(--fc-ring) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.018)),
+    rgba(8,13,24,.94) !important;
 }
 
 label,
 [data-flux-label],
 .ui-field > ui-label,
 .mt-10 label{
-  color:#e9f2ff !important;
+  color:#E9F2FF !important;
   font-weight:800 !important;
   letter-spacing:.02em;
 }
 
+[type="checkbox"],
+[type="radio"]{
+  border-color:rgba(255,255,255,.24) !important;
+  background-color:rgba(255,255,255,.04) !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.18) inset;
+}
+[type="checkbox"]:checked,
+[type="radio"]:checked{
+  background-color:var(--fc-ac-1) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+
 /* ======================================================================
-   5) TABS / PILLS / BADGES
+   TABS / NAV TABS / ACTIVE STATES
    ====================================================================== */
 
 [role="tablist"]{
@@ -294,10 +445,17 @@ label,
 
 [role="tablist"] button.text-primary-500,
 [role="tablist"] [aria-selected="true"],
-.fcEMP7-tab.is-active{
-  color:#d9c8ff !important;
-  background:linear-gradient(135deg, rgba(139,92,255,.24), rgba(53,184,255,.16)) !important;
-  border-color:rgba(139,92,255,.24) !important;
+.fcEMP7-tab.is-active,
+button[data-selected],
+a[data-selected],
+button[data-current],
+a[data-current],
+[data-selected],
+[data-current],
+[aria-current="page"]{
+  color:#E5D9FF !important;
+  background:linear-gradient(135deg, rgba(139,92,255,.22), rgba(53,184,255,.14)) !important;
+  border-color:rgba(139,92,255,.22) !important;
 }
 
 [role="tablist"] button.text-primary-500::after,
@@ -313,6 +471,16 @@ label,
   box-shadow:0 0 14px rgba(139,92,255,.42);
 }
 
+/* ======================================================================
+   PILLS / BADGES / STATUS
+   ====================================================================== */
+
+.rounded-full.border,
+.rounded-full.bg-primary-500,
+.rounded-full.bg-gray-800,
+.rounded-full.bg-gray-900,
+.px-2.py-1.rounded-full,
+.px-3.py-1.rounded-full,
 .bg-gray-800.border.border-primary-500.text-primary-500.px-2.sm\:px-3.py-1.rounded-lg.text-xs.font-bold.uppercase.font-mono,
 .bg-gray-800.border-l-4.border-primary-500.p-2.sm\:p-3.mb-4,
 .border-l-4.border-primary-500.bg-gray-800,
@@ -320,34 +488,58 @@ label,
   border-radius:12px !important;
 }
 
+.rounded-full.border,
+.px-2.py-1.rounded-full,
+.px-3.py-1.rounded-full{
+  border-color:rgba(255,255,255,.14) !important;
+  background:rgba(255,255,255,.06) !important;
+  color:var(--fc-text) !important;
+}
+
 .bg-gray-800.border.border-primary-500.text-primary-500.px-2.sm\:px-3.py-1.rounded-lg.text-xs.font-bold.uppercase.font-mono{
   background:linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) !important;
   border:1px solid rgba(139,92,255,.24) !important;
-  color:#e9dcff !important;
+  color:#E9DCFF !important;
   box-shadow:0 8px 22px rgba(0,0,0,.24) !important;
 }
 
 span.font-bold.absolute.bg-primary-500{
   background:linear-gradient(135deg, #ffffff 0%, #f1f5ff 50%, #ffffff 100%) !important;
-  color:#08101f !important;
+  color:#08101F !important;
   border:1px solid rgba(255,255,255,.9) !important;
   box-shadow:0 8px 18px rgba(255,255,255,.18) !important;
 }
-
-/* keep your clock badge touch */
 span.font-bold.absolute.bg-primary-500::before{
   content:"⏰ ";
   margin-right:.25rem;
 }
 
+.text-green-500,.text-green-600,.text-green-700{ color:#86EFAC !important; }
+.text-red-500,.text-red-600,.text-red-700{ color:#FCA5A5 !important; }
+.text-orange-500,.text-orange-600{ color:#FDBA74 !important; }
+
+.bg-green-50,.bg-green-100,.bg-green-950{
+  background:linear-gradient(135deg, rgba(22,163,74,.16), rgba(5,150,105,.14)) !important;
+  color:#D1FAE5 !important;
+}
+.bg-red-50,.bg-red-100,.bg-red-950{
+  background:linear-gradient(135deg, rgba(220,38,38,.16), rgba(185,28,28,.14)) !important;
+  color:#FEE2E2 !important;
+}
+.bg-yellow-50,.bg-yellow-100,.bg-yellow-950{
+  background:linear-gradient(135deg, rgba(245,158,11,.18), rgba(202,138,4,.14)) !important;
+  color:#FEF3C7 !important;
+}
+
 /* ======================================================================
-   6) PROGRESS / RANGE / TICKET PICKERS
+   PROGRESS / RANGE / SLIDERS / CAROUSELS
    ====================================================================== */
 
 .bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl,
 #home-progress{
   background:linear-gradient(145deg, rgba(17,21,38,.95), rgba(10,12,24,.95)) !important;
   border-radius:18px !important;
+  box-shadow:var(--fc-shadow-sm), inset 0 1px 0 rgba(255,255,255,.03) !important;
 }
 
 .bg-gray-200,
@@ -396,46 +588,38 @@ span.font-bold.absolute.bg-primary-500::before{
   color:#fff !important;
 }
 
-/* ticket bundle wrapper */
-[x-show="!terms"]{
-  background:var(--fc-panel-bg) !important;
-  border:1px solid rgba(139,92,255,.16) !important;
-  border-radius:18px !important;
-  box-shadow:var(--fc-shadow-md) !important;
+/* app css includes Splide primitives */
+.splide__track{
+  border-radius:18px;
 }
-
-[x-show="!terms"] label,
-label.border{
-  background:rgba(255,255,255,.04) !important;
-  border:1px solid rgba(255,255,255,.10) !important;
-  color:var(--fc-text) !important;
-  border-radius:14px !important;
-}
-
-[x-show="!terms"] label:hover,
-label.border:hover{
+.splide__arrow{
   background:rgba(255,255,255,.08) !important;
-  border-color:rgba(139,92,255,.24) !important;
-  transform:translateY(-1px);
+  border:1px solid rgba(255,255,255,.14) !important;
+  color:#fff !important;
+  box-shadow:0 12px 24px rgba(0,0,0,.25) !important;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
 }
-
-[x-show="!terms"] label[data-active="true"],
-[x-show="!terms"] label:has(input:checked),
-label.border[class*="border-primary"]{
-  background:linear-gradient(135deg, rgba(139,92,255,.20), rgba(53,184,255,.14)) !important;
-  border-color:rgba(139,92,255,.26) !important;
-  box-shadow:0 0 24px rgba(99,102,241,.16) !important;
+.splide__arrow svg{
+  fill:#fff !important;
 }
-
-/* odds pill */
-span[x-text*="Odds"]{
-  background:#fff !important;
-  color:#000 !important;
-  box-shadow:0 0 30px rgba(255,255,255,.18) !important;
+.splide__arrow:hover:not(:disabled){
+  background:rgba(255,255,255,.12) !important;
+  border-color:rgba(139,92,255,.28) !important;
+}
+.splide__pagination__page{
+  background:rgba(255,255,255,.28) !important;
+}
+.splide__pagination__page.is-active{
+  background:linear-gradient(135deg,var(--fc-ac-1),var(--fc-ac-2)) !important;
+  transform:scale(1.35);
+}
+.splide__progress__bar{
+  background:linear-gradient(90deg,var(--fc-ac-1),var(--fc-ac-2)) !important;
 }
 
 /* ======================================================================
-   7) MODALS / DROPDOWNS / DRAWERS / OVERLAYS
+   MODALS / DRAWERS / MENUS / POPOVERS / TOOLTIP
    ====================================================================== */
 
 [role="dialog"] > div,
@@ -443,55 +627,183 @@ span[x-text*="Odds"]{
 .mx-auto.max-w-lg.flex.justify-between.mb-8 [x-show="dropDown"],
 [x-data][role="region"].rounded.bg-transparent.border,
 [class*="drawer"],
-[class*="modal"]{
+[class*="modal"],
+[role="menu"],
+[role="listbox"],
+[role="tooltip"],
+[data-side],
+[data-placement],
+.tippy-box{
   background:var(--fc-modal-bg) !important;
   border:1px solid rgba(139,92,255,.16) !important;
   border-radius:18px !important;
-  box-shadow:0 30px 80px rgba(0,0,0,.58) !important;
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(255,255,255,.03) inset,
+    0 0 26px rgba(139,92,255,.10) !important;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
 }
 
 [x-data][role="region"].rounded.bg-transparent.border:hover{
   box-shadow:0 34px 86px rgba(0,0,0,.62) !important;
 }
 
+[role="option"],
+[role="menuitem"],
+[role="menuitemcheckbox"],
+[role="menuitemradio"]{
+  border-radius:12px;
+  color:var(--fc-text) !important;
+}
+
+[role="option"]:hover,
+[role="menuitem"]:hover,
+[role="menuitemcheckbox"]:hover,
+[role="menuitemradio"]:hover{
+  background:rgba(255,255,255,.08) !important;
+}
+
 /* ======================================================================
-   8) TABLES / LIST VIEWS
+   TABLES / LISTS / PAGINATION
    ====================================================================== */
 
-table tbody tr{
+table{
+  border-collapse:separate;
+  border-spacing:0 10px;
+}
+
+thead th{
+  color:var(--fc-text-soft) !important;
+  font-weight:800 !important;
+  border-color:rgba(255,255,255,.08) !important;
+}
+
+tbody tr{
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
   transition:transform .22s ease, box-shadow .22s ease, background .22s ease;
 }
 
-table tbody tr:hover{
+tbody tr:hover{
   transform:translateY(-2px);
+  box-shadow:0 14px 28px rgba(0,0,0,.18);
+}
+
+tbody tr td:first-child{
+  border-top-left-radius:14px;
+  border-bottom-left-radius:14px;
+}
+tbody tr td:last-child{
+  border-top-right-radius:14px;
+  border-bottom-right-radius:14px;
 }
 
 table tbody td{
   background:transparent;
-  color:#e5e7eb;
+  color:#E5E7EB;
   padding:.85rem .9rem;
   font-weight:500;
 }
 
 table tbody td .rounded-full{
   background:linear-gradient(135deg, rgba(16,185,129,.15), rgba(5,150,105,.15));
-  color:#34d399;
+  color:#34D399;
   font-weight:700;
   letter-spacing:.03em;
   box-shadow:inset 0 0 0 1px rgba(52,211,153,.4), 0 4px 15px rgba(16,185,129,.18);
 }
 
 table tbody a[data-flux-button]{
-  background:var(--fc-grad-btn) !important;
+  background:var(--fc-grad-strong) !important;
   color:#fff !important;
   border:none !important;
   box-shadow:0 6px 18px rgba(124,58,237,.28);
 }
 
+nav[aria-label*="Pagination"] a,
+nav[aria-label*="Pagination"] button,
+nav[aria-label="Pagination Navigation"] span,
+nav[aria-label="Pagination Navigation"] button{
+  border-radius:12px !important;
+}
+nav[aria-label*="Pagination"] .cursor-default,
+nav[aria-label="Pagination Navigation"] .cursor-default{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:rgba(255,255,255,.6) !important;
+}
+
 /* ======================================================================
-   9) COMPETITION / PRODUCT CARDS
+   TICKET PICKERS / COMP CONTROLS
+   ====================================================================== */
+
+[x-show="!terms"]{
+  background:var(--fc-panel-bg) !important;
+  border:1px solid rgba(139,92,255,.16) !important;
+  border-radius:18px !important;
+  box-shadow:var(--fc-shadow-md) !important;
+}
+[x-show="!terms"] label,
+label.border{
+  background:rgba(255,255,255,.04) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  color:var(--fc-text) !important;
+  border-radius:14px !important;
+}
+[x-show="!terms"] label:hover,
+label.border:hover{
+  background:rgba(255,255,255,.08) !important;
+  border-color:rgba(139,92,255,.24) !important;
+  transform:translateY(-1px);
+}
+[x-show="!terms"] label[data-active="true"],
+[x-show="!terms"] label:has(input:checked),
+label.border[class*="border-primary"]{
+  background:linear-gradient(135deg, rgba(139,92,255,.20), rgba(53,184,255,.14)) !important;
+  border-color:rgba(139,92,255,.26) !important;
+  box-shadow:0 0 24px rgba(99,102,241,.16) !important;
+}
+span[x-text*="Odds"]{
+  background:#fff !important;
+  color:#000 !important;
+  box-shadow:0 0 30px rgba(255,255,255,.18) !important;
+}
+
+/* ======================================================================
+   ALERTS / NOTICES / EMPTY STATES
+   ====================================================================== */
+
+.bg-primary-50,
+.p-4.border.border-red-600.rounded-md.bg-red-50,
+.max-w-2xl .border-l-4.border-primary-500.bg-gray-800{
+  border-radius:16px !important;
+  overflow:hidden;
+}
+
+.bg-primary-50{
+  background:linear-gradient(135deg, rgba(139,92,255,.92), rgba(53,184,255,.88)) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  box-shadow:0 18px 44px rgba(45,124,255,.24) !important;
+}
+.bg-primary-50 p,
+.bg-primary-50 strong,
+.bg-primary-50 svg{
+  color:#fff !important;
+}
+
+.p-4.border.border-red-600.rounded-md.bg-red-50{
+  background:linear-gradient(135deg, rgba(127,29,29,.95), rgba(220,38,38,.94)) !important;
+  border:1px solid rgba(248,113,113,.38) !important;
+}
+
+.max-w-2xl .border-l-4.border-primary-500.bg-gray-800{
+  background:linear-gradient(145deg, rgba(11,16,31,.96), rgba(8,12,24,.98)) !important;
+  border-left:4px solid rgba(139,92,255,.72) !important;
+  box-shadow:var(--fc-shadow-md) !important;
+}
+
+/* ======================================================================
+   COMPETITION / PRODUCT CARDS
    ====================================================================== */
 
 .relative.rounded-xl.flex.flex-col.bg-gray-900,
@@ -521,69 +833,42 @@ table tbody a[data-flux-button]{
 
 .block.w-full.bg-primary-500.text-primary-theme.text-center.py-2.sm\:py-3.rounded-lg.font-semibold.text-sm.sm\:text-lg.transition-colors.duration-200,
 a.block.w-full.rounded-b-xl.bg-primary-500{
-  background:var(--fc-grad-btn) !important;
-}
-
-/* progress style already site-wide above, but keep special sold bar text */
-p.text-gray-50.text-center.font-display.text-sm,
-span.text-gray-50.text-sm{
-  background:none !important;
-  border:none !important;
-  padding:0 !important;
-  margin:0 !important;
+  background:var(--fc-grad-strong) !important;
 }
 
 /* ======================================================================
-   10) ALERTS / NOTICES
+   HEADER / BREADCRUMB / FOOTER / SIDE
    ====================================================================== */
 
-.bg-primary-50,
-.p-4.border.border-red-600.rounded-md.bg-red-50,
-.max-w-2xl .border-l-4.border-primary-500.bg-gray-800{
-  border-radius:16px !important;
-  overflow:hidden;
+header .border,
+header .border-b,
+header .border-t,
+nav[aria-label="Breadcrumb"]{
+  border-color:rgba(255,255,255,.08) !important;
 }
 
-.bg-primary-50{
-  background:linear-gradient(135deg, rgba(139,92,255,.92), rgba(53,184,255,.88)) !important;
-  border:1px solid rgba(255,255,255,.18) !important;
-  box-shadow:0 18px 44px rgba(45,124,255,.24) !important;
+nav[aria-label="Breadcrumb"] a,
+nav[aria-label="Breadcrumb"] span{
+  color:var(--fc-text-soft) !important;
 }
 
-.bg-primary-50 p,
-.bg-primary-50 strong,
-.bg-primary-50 svg{
+footer,
+footer .border-t,
+footer .border{
+  border-color:rgba(255,255,255,.08) !important;
+  color:var(--fc-text-soft);
+}
+footer a{
+  color:var(--fc-text-soft) !important;
+}
+footer a:hover{
   color:#fff !important;
 }
 
-.p-4.border.border-red-600.rounded-md.bg-red-50{
-  background:linear-gradient(135deg, rgba(127,29,29,.95), rgba(220,38,38,.94)) !important;
-  border:1px solid rgba(248,113,113,.38) !important;
-}
-
-.max-w-2xl .border-l-4.border-primary-500.bg-gray-800{
-  background:linear-gradient(145deg, rgba(11,16,31,.96), rgba(8,12,24,.98)) !important;
-  border-left:4px solid rgba(139,92,255,.72) !important;
-  box-shadow:var(--fc-shadow-md) !important;
-}
-
-/* hide duplicate alert icon in the style you were already using */
-div.flex > div.flex-shrink-0 > svg{
-  display:none;
-}
-
 /* ======================================================================
-   11) KEEP YOUR EXISTING CUSTOM SYSTEMS
+   EXISTING CUSTOM FLASH SYSTEMS — PRESERVED
    ====================================================================== */
 
-/* These are intentionally left usable so your custom injected HTML stays styled */
-.fcNavX{}
-.fcEMP7{}
-.flash-socialbar{}
-.fcLists{}
-.fc-mobile-account{}
-
-/* your mobile sidebar polish */
 [data-flux-sidebar].lg\:hidden{
   background:
     radial-gradient(900px 520px at 18% 10%, rgba(139,92,255,.18), transparent 58%),
@@ -592,7 +877,6 @@ div.flex > div.flex-shrink-0 > svg{
   border-right:1px solid rgba(139,92,255,.22) !important;
 }
 
-/* injected nav wrapper */
 .fcNavX{
   margin:18px 0 14px !important;
   padding:0 !important;
@@ -668,7 +952,6 @@ div.flex > div.flex-shrink-0 > svg{
   background:rgba(255,255,255,.08) !important;
 }
 
-/* social bar */
 .flash-socialbar{
   display:inline-flex;
   align-items:center;
@@ -715,7 +998,6 @@ div.flex > div.flex-shrink-0 > svg{
   opacity:1;
 }
 
-/* lists page system */
 .fcLists{
   background:transparent !important;
   border:0 !important;
@@ -769,26 +1051,7 @@ div.flex > div.flex-shrink-0 > svg{
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 14px 36px rgba(0,0,0,.45);
 }
-.fcLists .fcLists-meta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:10px;
-}
-.fcLists .fcLists-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:7px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:850;
-  color:rgba(255,255,255,.86);
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.12);
-}
 
-/* command / utility widget */
 .fcEMP7{ font-family:inherit; color:var(--fc-text); }
 .fcEMP7-launch{
   position:fixed;
@@ -862,7 +1125,6 @@ div.flex > div.flex-shrink-0 > svg{
   background:rgba(0,0,0,.20);
 }
 
-/* mobile account button */
 @media (max-width:1023px){
   .fc-mobile-account{
     display:flex !important;
@@ -887,7 +1149,28 @@ div.flex > div.flex-shrink-0 > svg{
 }
 
 /* ======================================================================
-   12) REDUCED MOTION
+   SMALL CLEANUPS
+   ====================================================================== */
+
+.flex.flex-1.items-center.justify-end.gap-x-1.border{
+  border:none !important;
+  padding:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  gap:10px !important;
+}
+
+div.flex > div.flex-shrink-0 > svg{
+  display:none;
+}
+
+svg.size-5{
+  width:1.25rem;
+  height:1.25rem;
+}
+
+/* ======================================================================
+   REDUCED MOTION
    ====================================================================== */
 
 @media (prefers-reduced-motion: reduce){
@@ -901,393 +1184,14 @@ div.flex > div.flex-shrink-0 > svg{
 }
 
 /* ======================================================================
-   13) KEYFRAMES
+   KEYFRAMES
    ====================================================================== */
 
-@keyframes fcGlobalSweep{
+@keyframes fcGlassSweep{
   0%{ transform:translateX(-120%); }
   100%{ transform:translateX(120%); }
 }
-
 @keyframes fcShimmer{
   0%{ left:-50%; }
   100%{ left:150%; }
-}
-
-
-/* ======================================================================
-   14) V2 WIDER SITE-WIDE COVERAGE
-   These selectors intentionally catch more of Rafflex / Flux primitives.
-   ====================================================================== */
-
-/* shared layout shells */
-main section > .mx-auto,
-main .max-w-7xl,
-main .max-w-6xl,
-main .max-w-5xl,
-main .max-w-4xl,
-main .max-w-3xl,
-main .max-w-2xl{
-  color:inherit;
-}
-
-/* generic white / gray / zinc surfaces */
-.bg-white,
-.bg-gray-50,
-.bg-gray-100,
-.bg-gray-800,
-.bg-gray-900,
-.bg-zinc-800,
-.bg-zinc-900,
-.bg-slate-900,
-[class*="bg-gray-8"],
-[class*="bg-gray-9"]{
-  color:var(--fc-text);
-}
-
-.border,
-.border-gray-100,
-.border-gray-200,
-.border-gray-300,
-.border-gray-600,
-.border-gray-700,
-.border-gray-800,
-.border-white\/10,
-.border-white\/20{
-  border-color:rgba(255,255,255,.10) !important;
-}
-
-/* more generic cards / blocks / wrappers */
-.rounded-lg.border,
-.rounded-xl.border,
-.rounded-2xl.border,
-.shadow-sm.rounded-lg,
-.shadow-lg.rounded-xl,
-.shadow-sm.border,
-.shadow-lg.border,
-.bg-gray-800.border,
-.bg-gray-900.border,
-.bg-gray-950.border{
-  border-radius:var(--fc-radius-lg) !important;
-  border-color:rgba(139,92,255,.14) !important;
-  background:var(--fc-panel-bg) !important;
-  box-shadow:
-    var(--fc-shadow-sm),
-    0 0 0 1px rgba(255,255,255,.03) inset !important;
-}
-
-/* accordions / disclosures / details */
-details,
-[role="region"],
-[data-open],
-.group\/accordion-heading,
-.group\/disclosure-button{
-  border-radius:16px;
-}
-
-details > summary,
-[role="button"][aria-expanded],
-button[aria-expanded]{
-  border-radius:14px;
-}
-
-/* menu / dropdown / popover content */
-[role="menu"],
-[role="listbox"],
-[role="tooltip"],
-[data-side],
-[data-placement],
-.tippy-box{
-  background:var(--fc-modal-bg) !important;
-  color:var(--fc-text) !important;
-  border:1px solid rgba(139,92,255,.16) !important;
-  box-shadow:0 20px 60px rgba(0,0,0,.42) !important;
-}
-
-[role="option"],
-[role="menuitem"],
-[role="menuitemcheckbox"],
-[role="menuitemradio"]{
-  border-radius:12px;
-  color:var(--fc-text) !important;
-}
-
-[role="option"]:hover,
-[role="menuitem"]:hover,
-[role="menuitemcheckbox"]:hover,
-[role="menuitemradio"]:hover{
-  background:rgba(255,255,255,.08) !important;
-}
-
-/* tabs from data-state / data-selected style systems */
-[data-selected],
-[data-current],
-[aria-current="page"],
-[aria-selected="true"]{
-  color:#e8daff;
-}
-
-button[data-selected],
-a[data-selected],
-button[data-current],
-a[data-current]{
-  background:linear-gradient(135deg, rgba(139,92,255,.18), rgba(53,184,255,.12)) !important;
-  border-color:rgba(139,92,255,.22) !important;
-}
-
-/* pagination */
-nav[aria-label*="Pagination"] a,
-nav[aria-label*="Pagination"] button,
-nav[aria-label="Pagination Navigation"] span,
-nav[aria-label="Pagination Navigation"] button{
-  border-radius:12px !important;
-}
-
-nav[aria-label*="Pagination"] .cursor-default,
-nav[aria-label="Pagination Navigation"] .cursor-default{
-  background:rgba(255,255,255,.06) !important;
-  border:1px solid rgba(255,255,255,.12) !important;
-  color:rgba(255,255,255,.6) !important;
-}
-
-/* tables */
-table{
-  border-collapse:separate;
-  border-spacing:0 10px;
-}
-thead th{
-  color:var(--fc-text-soft) !important;
-  font-weight:800 !important;
-  border-color:rgba(255,255,255,.08) !important;
-}
-tbody tr{
-  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-}
-tbody tr td:first-child{
-  border-top-left-radius:14px;
-  border-bottom-left-radius:14px;
-}
-tbody tr td:last-child{
-  border-top-right-radius:14px;
-  border-bottom-right-radius:14px;
-}
-
-/* definition lists / stat rows / split rows */
-.divide-y > :not([hidden]) ~ :not([hidden]),
-.border-b,
-.border-t{
-  border-color:rgba(255,255,255,.08) !important;
-}
-
-/* links */
-a{
-  transition:color .18s ease, opacity .18s ease, border-color .18s ease;
-}
-a:hover{
-  color:#ffffff;
-}
-
-/* chips / pills / inline badges */
-.rounded-full.border,
-.rounded-full.bg-primary-500,
-.rounded-full.bg-gray-800,
-.rounded-full.bg-gray-900,
-.px-2.py-1.rounded-full,
-.px-3.py-1.rounded-full{
-  border-radius:999px !important;
-}
-
-.rounded-full.border,
-.px-2.py-1.rounded-full,
-.px-3.py-1.rounded-full{
-  border-color:rgba(255,255,255,.14) !important;
-  background:rgba(255,255,255,.06) !important;
-  color:var(--fc-text) !important;
-}
-
-/* status colors */
-.text-green-500,
-.text-green-600,
-.text-green-700{ color:#86efac !important; }
-.text-red-500,
-.text-red-600,
-.text-red-700{ color:#fca5a5 !important; }
-.text-orange-500,
-.text-orange-600{ color:#fdba74 !important; }
-
-.bg-green-50,
-.bg-green-100,
-.bg-green-950{
-  background:linear-gradient(135deg, rgba(22,163,74,.16), rgba(5,150,105,.14)) !important;
-  color:#d1fae5 !important;
-}
-.bg-red-50,
-.bg-red-100,
-.bg-red-950{
-  background:linear-gradient(135deg, rgba(220,38,38,.16), rgba(185,28,28,.14)) !important;
-  color:#fee2e2 !important;
-}
-.bg-yellow-50,
-.bg-yellow-100,
-.bg-yellow-950{
-  background:linear-gradient(135deg, rgba(245,158,11,.18), rgba(202,138,4,.14)) !important;
-  color:#fef3c7 !important;
-}
-
-/* checkboxes / radios */
-[type="checkbox"],
-[type="radio"]{
-  border-color:rgba(255,255,255,.26) !important;
-  background-color:rgba(255,255,255,.04) !important;
-}
-[type="checkbox"]:checked,
-[type="radio"]:checked{
-  background-color:var(--fc-ac-1) !important;
-  color:#fff !important;
-}
-
-/* search bars / command style */
-input[type="search"]{
-  border-radius:999px !important;
-}
-
-/* headers / breadcrumbs / account page top bars */
-header .border,
-header .border-b,
-header .border-t,
-nav[aria-label="Breadcrumb"]{
-  border-color:rgba(255,255,255,.08) !important;
-}
-
-nav[aria-label="Breadcrumb"] a,
-nav[aria-label="Breadcrumb"] span{
-  color:var(--fc-text-soft) !important;
-}
-
-/* footer */
-footer,
-footer .border-t,
-footer .border{
-  border-color:rgba(255,255,255,.08) !important;
-  color:var(--fc-text-soft);
-}
-footer a{
-  color:var(--fc-text-soft) !important;
-}
-footer a:hover{
-  color:#fff !important;
-}
-
-/* sidebars / sticky panels */
-aside,
-.sticky.top-0,
-.sticky.top-4,
-.sticky.top-6{
-  border-color:rgba(255,255,255,.08);
-}
-
-/* images inside themed cards */
-.rounded-lg img,
-.rounded-xl img,
-.rounded-2xl img,
-[data-flux-card] img{
-  overflow:hidden;
-}
-
-/* account / dashboard generic lists */
-.space-y-12 > .border-b{
-  border-color:rgba(255,255,255,.08) !important;
-}
-.space-y-12 h2{
-  letter-spacing:.05em;
-  text-transform:uppercase;
-}
-.space-y-12 p{
-  color:rgba(255,255,255,.75);
-}
-
-/* site credit / wallet type compact flex pills */
-.flex.items-center.border.rounded-lg.py-1\.5.px-2.gap-1\.5.group,
-.flex.items-center.border.rounded-lg,
-.inline-flex.items-center.border.rounded-lg{
-  background:linear-gradient(145deg, rgba(15,23,42,.92), rgba(2,6,23,.96)) !important;
-  border:1px solid rgba(99,102,241,0.28) !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.03),
-    0 6px 18px rgba(0,0,0,.24) !important;
-}
-.flex.items-center.border.rounded-lg.py-1\.5.px-2.gap-1\.5.group:hover,
-.flex.items-center.border.rounded-lg:hover,
-.inline-flex.items-center.border.rounded-lg:hover{
-  border-color:rgba(139,92,255,.34) !important;
-}
-
-/* hero / empty state / large callout */
-.max-w-4xl .bg-gray-900,
-.max-w-4xl .bg-gray-800,
-.max-w-2xl .bg-gray-900{
-  border-radius:24px !important;
-}
-
-/* make utility text-brand classes fit the theme better */
-.text-primary-500{
-  color:#f4f7ff !important;
-  background:none !important;
-  -webkit-text-fill-color:currentColor !important;
-  animation:none !important;
-}
-
-.text-primary-theme{
-  color:#ffffff !important;
-}
-
-/* arrows / tiny utility icons should not disappear globally */
-svg.size-5{
-  width:1.25rem;
-  height:1.25rem;
-}
-
-/* safer social helper card if it appears */
-.card{
-  width:fit-content;
-  height:fit-content;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px 18px;
-  gap:14px;
-  box-shadow:0 0 20px rgba(0,0,0,.35);
-  margin:0 auto;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.10);
-}
-.socialContainer{
-  width:52px;
-  height:52px;
-  border-radius:14px;
-  background-color:rgba(255,255,255,.06);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  transition-duration:.3s;
-}
-
-/* preserve account/login area cleanup */
-.flex.flex-1.items-center.justify-end.gap-x-1.border{
-  border:none !important;
-  padding:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  gap:10px !important;
-}
-
-/* keep mobile hidden items hidden only when intended */
-@media (max-width:900px){
-  .fcEMP7,
-  .fcEMP7-launch,
-  .fcEMP7-panel{
-    display:none !important;
-  }
 }
