@@ -2843,3 +2843,145 @@ document.addEventListener("DOMContentLoaded", function() {
   const mo = new MutationObserver(() => apply());
   mo.observe(document.documentElement, { childList:true, subtree:true });
 })();
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   FLASH COMPETITIONS — MOBILE SIDEBAR RESKIN
+   File: flash.js
+   Version: fc-mobile-nav-v1
+   Notes:
+   - Adds tidy helper classes / active state / body hooks
+   - Idempotent for Rafflex dynamic page updates
+   ========================================================= */
+
+(function(){
+  var CFG = {
+    rootSelector: '[data-flux-sidebar]',
+    navSelector: '.fcNavX[data-fc-navx="1"]',
+    rowSelector: '.fcNavX-row',
+    closeSelector: '[data-flux-sidebar-toggle]',
+    mobileMax: 1023.98,
+
+    classes: {
+      ready: 'fcNavReady',
+      active: 'is-current',
+      bodyOpen: 'fc-nav-open'
+    }
+  };
+
+  function isMobile(){
+    return window.innerWidth <= CFG.mobileMax;
+  }
+
+  function getPathname(url){
+    try{
+      return new URL(url, window.location.origin).pathname.replace(/\/+$/, '') || '/';
+    }catch(e){
+      return '';
+    }
+  }
+
+  function markCurrentRows(root){
+    var rows = root.querySelectorAll(CFG.rowSelector);
+    if(!rows.length) return;
+
+    var currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+
+    rows.forEach(function(row){
+      row.classList.remove(CFG.classes.active);
+      row.removeAttribute('aria-current');
+
+      var href = row.getAttribute('href');
+      if(!href) return;
+
+      var rowPath = getPathname(href);
+      if(!rowPath) return;
+
+      if(rowPath === currentPath){
+        row.classList.add(CFG.classes.active);
+        row.setAttribute('aria-current', 'page');
+      }
+    });
+  }
+
+  function enhanceSidebar(root){
+    if(!root || root.dataset.fcNavEnhanced === '1') return;
+    root.dataset.fcNavEnhanced = '1';
+    root.classList.add(CFG.classes.ready);
+
+    var nav = root.querySelector(CFG.navSelector);
+    if(nav && !nav.dataset.fcNavPanel){
+      nav.dataset.fcNavPanel = '1';
+    }
+
+    markCurrentRows(root);
+
+    var rows = root.querySelectorAll(CFG.rowSelector);
+    rows.forEach(function(row){
+      if(row.dataset.fcNavBound === '1') return;
+      row.dataset.fcNavBound = '1';
+
+      row.addEventListener('click', function(){
+        if(!isMobile()) return;
+        // let navigation happen naturally; close visual state immediately
+        document.body.removeAttribute('data-show-stashed-sidebar');
+        document.body.classList.remove(CFG.classes.bodyOpen);
+      }, { passive:true });
+    });
+
+    var closeBtn = root.querySelector(CFG.closeSelector);
+    if(closeBtn && closeBtn.dataset.fcNavBound !== '1'){
+      closeBtn.dataset.fcNavBound = '1';
+      closeBtn.addEventListener('click', function(){
+        setTimeout(syncBodyOpenState, 30);
+      });
+    }
+  }
+
+  function syncBodyOpenState(){
+    var isOpen = document.body.hasAttribute('data-show-stashed-sidebar');
+    document.body.classList.toggle(CFG.classes.bodyOpen, isOpen);
+  }
+
+  function init(){
+    var roots = document.querySelectorAll(CFG.rootSelector);
+    if(!roots.length) return;
+
+    roots.forEach(enhanceSidebar);
+    syncBodyOpenState();
+  }
+
+  var mo;
+  function startObserver(){
+    if(mo) return;
+    mo = new MutationObserver(function(){
+      init();
+      syncBodyOpenState();
+    });
+    mo.observe(document.documentElement, {
+      childList:true,
+      subtree:true,
+      attributes:true,
+      attributeFilter:['data-show-stashed-sidebar']
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){
+      init();
+      startObserver();
+    });
+  }else{
+    init();
+    startObserver();
+  }
+
+  window.addEventListener('resize', syncBodyOpenState, { passive:true });
+})();
