@@ -1,0 +1,915 @@
+/* ======================================================================
+   FLASH — GLOBAL INJECT CSS
+   Purpose:
+   - Keep the Flash visual language
+   - Style shared Rafflex / Flux primitives site-wide
+   - Reduce brittle one-off page targeting
+   - Preserve your custom Flash systems
+   ====================================================================== */
+
+/* ======================================================================
+   0) ROOT TOKENS
+   ====================================================================== */
+
+:root{
+  --fc-bg-0:#070815;
+  --fc-bg-1:#0B0F22;
+  --fc-bg-2:#10182D;
+
+  --fc-surface-0:rgba(255,255,255,.03);
+  --fc-surface-1:rgba(255,255,255,.05);
+  --fc-surface-2:rgba(255,255,255,.075);
+
+  --fc-line:rgba(255,255,255,.10);
+  --fc-line-strong:rgba(255,255,255,.16);
+
+  --fc-text:rgba(255,255,255,.94);
+  --fc-text-soft:rgba(255,255,255,.76);
+  --fc-text-dim:rgba(255,255,255,.58);
+
+  --fc-ac-1:#8B5CFF;
+  --fc-ac-2:#35B8FF;
+  --fc-ac-3:#2D7CFF;
+  --fc-gold:#F5D36B;
+
+  --fc-grad:linear-gradient(135deg,var(--fc-ac-1),var(--fc-ac-2));
+  --fc-grad-btn:linear-gradient(135deg,var(--fc-ac-1),var(--fc-ac-3));
+
+  --fc-panel-bg:
+    radial-gradient(120% 120% at 0% 0%, rgba(139,92,255,.12), transparent 42%),
+    radial-gradient(120% 120% at 100% 0%, rgba(53,184,255,.10), transparent 40%),
+    linear-gradient(180deg, rgba(10,21,48,.92), rgba(7,16,31,.98));
+
+  --fc-modal-bg:
+    radial-gradient(120% 120% at 0% 0%, rgba(139,92,255,.11), transparent 42%),
+    radial-gradient(120% 120% at 100% 0%, rgba(53,184,255,.09), transparent 40%),
+    linear-gradient(180deg, rgba(13,18,32,.96), rgba(8,11,20,.98));
+
+  --fc-radius-sm:12px;
+  --fc-radius-md:16px;
+  --fc-radius-lg:20px;
+  --fc-radius-xl:24px;
+
+  --fc-shadow-sm:0 10px 28px rgba(0,0,0,.24);
+  --fc-shadow-md:0 18px 50px rgba(0,0,0,.34);
+  --fc-shadow-lg:0 24px 60px rgba(0,0,0,.42);
+
+  --fc-ring:
+    0 0 0 1px rgba(139,92,255,.26),
+    0 0 0 4px rgba(53,184,255,.10);
+}
+
+/* Optional helper if you add <html class="fc-theme"> */
+html.fc-theme,
+html.fc-theme body{
+  color:var(--fc-text);
+  background-color:var(--fc-bg-0);
+}
+html.fc-theme{ color-scheme:dark; }
+
+/* ======================================================================
+   1) GLOBAL FOUNDATION
+   ====================================================================== */
+
+body{
+  color:var(--fc-text);
+}
+
+.bg-gray-950{
+  background:
+    radial-gradient(1200px 600px at 15% 0%, rgba(139,92,255,.08), transparent 50%),
+    radial-gradient(1200px 650px at 85% 5%, rgba(53,184,255,.06), transparent 52%),
+    linear-gradient(180deg,var(--fc-bg-1),var(--fc-bg-0)) !important;
+}
+
+h1,h2,h3,h4,h5,h6,
+.font-display{
+  color:var(--fc-text);
+}
+
+.text-gray-50{ color:var(--fc-text) !important; }
+.text-gray-400,
+.text-gray-500{ color:var(--fc-text-dim) !important; }
+.text-primary-600{ color:#fff !important; }
+.text-primary-theme{ color:#fff !important; }
+
+/* safer than styling every random h1 differently page by page */
+.markdown h2,
+.markdown h3{
+  color:var(--fc-ac-1) !important;
+}
+
+/* ======================================================================
+   2) SHARED SURFACES / CARDS / PANELS
+   ====================================================================== */
+
+[data-flux-card],
+.rounded-xl.bg-gray-800,
+.bg-gray-900.rounded-xl,
+.border.bg-gray-800.rounded-md,
+.sm\:rounded-lg.border.bg-gray-50,
+.mx-2.sm\:mx-0.border-b.border-t.border-gray-200.bg-gray-50.shadow-sm.sm\:rounded-lg.sm\:border.rounded-xl,
+.mx-auto.max-w-4xl.px-4.sm\:px-6.lg\:px-8 > .bg-gray-900{
+  position:relative;
+  border-radius:var(--fc-radius-lg) !important;
+  border:1px solid rgba(139,92,255,.16) !important;
+  background:var(--fc-panel-bg) !important;
+  box-shadow:
+    var(--fc-shadow-md),
+    0 0 0 1px rgba(255,255,255,.03) inset,
+    0 0 22px rgba(139,92,255,.07),
+    0 0 24px rgba(53,184,255,.05) !important;
+  overflow:hidden;
+}
+
+[data-flux-card]::before,
+.rounded-xl.bg-gray-800::before,
+.bg-gray-900.rounded-xl::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(
+    115deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.04) 48%,
+    rgba(255,255,255,0) 58%
+  );
+  transform:translateX(-120%);
+  animation:fcGlobalSweep 7s linear infinite;
+  opacity:.22;
+}
+
+[data-flux-card]:hover,
+.rounded-xl.bg-gray-800:hover,
+.bg-gray-900.rounded-xl:hover{
+  border-color:rgba(139,92,255,.24) !important;
+  box-shadow:
+    var(--fc-shadow-lg),
+    0 0 0 1px rgba(255,255,255,.04) inset,
+    0 0 28px rgba(139,92,255,.09),
+    0 0 28px rgba(53,184,255,.07) !important;
+}
+
+/* ======================================================================
+   3) BUTTON SYSTEM
+   ====================================================================== */
+
+button,
+[type="button"],
+[type="submit"],
+[type="reset"],
+[data-flux-button],
+a.block.w-full.rounded-b-xl.bg-primary-500,
+.block.w-full.bg-primary-500.text-primary-theme.text-center.py-2.sm\:py-3.rounded-lg.font-semibold.text-sm.sm\:text-lg.transition-colors.duration-200,
+.mt-5.p-1.rounded-xl.hidden > button.mt-8.flex.w-full.items-center.justify-center.rounded-md.border.border-transparent.bg-primary-600.px-8.py-3.text-base.font-medium.text-primary-theme.hover\:bg-primary-700.focus\:outline-none.focus\:ring-2.focus\:ring-primary-500.focus\:ring-offset-2{
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  color:#fff !important;
+  background:var(--fc-grad-btn) !important;
+  box-shadow:
+    0 12px 34px rgba(45,124,255,.26),
+    inset 0 1px 0 rgba(255,255,255,.18) !important;
+  transition:transform .22s ease, box-shadow .22s ease, filter .22s ease, border-color .22s ease;
+}
+
+button:hover,
+[type="button"]:hover,
+[type="submit"]:hover,
+[type="reset"]:hover,
+[data-flux-button]:hover,
+a.block.w-full.rounded-b-xl.bg-primary-500:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.04);
+  box-shadow:
+    0 18px 44px rgba(45,124,255,.34),
+    inset 0 1px 0 rgba(255,255,255,.24) !important;
+}
+
+button:focus-visible,
+[type="button"]:focus-visible,
+[type="submit"]:focus-visible,
+[type="reset"]:focus-visible,
+[data-flux-button]:focus-visible,
+a:focus-visible{
+  outline:none !important;
+  box-shadow:var(--fc-ring), 0 14px 38px rgba(0,0,0,.34) !important;
+}
+
+/* softer buttons / tabs / utility controls */
+.flex.flex-1.items-center.justify-end a[href*="/login"],
+.mx-auto.max-w-lg.flex.justify-between.mb-8 button[type="button"],
+[role="tablist"] button,
+.fcEMP7-tab,
+.fcEMP7-ib,
+.fcEMP7-clear{
+  background:rgba(255,255,255,.05) !important;
+  color:var(--fc-text) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow:none !important;
+}
+
+.flex.flex-1.items-center.justify-end a[href*="/login"]:hover,
+.mx-auto.max-w-lg.flex.justify-between.mb-8 button[type="button"]:hover,
+[role="tablist"] button:hover,
+.fcEMP7-tab:hover,
+.fcEMP7-ib:hover,
+.fcEMP7-clear:hover{
+  background:rgba(255,255,255,.09) !important;
+  border-color:rgba(139,92,255,.24) !important;
+}
+
+/* keep your premium register button feel */
+.flex.flex-1.items-center.justify-end a[href*="/register"]{
+  background:var(--fc-grad-btn) !important;
+  color:#fff !important;
+  border-radius:14px !important;
+  border:none !important;
+  box-shadow:
+    0 10px 40px rgba(45,124,255,.35),
+    inset 0 1px 0 rgba(255,255,255,.25) !important;
+}
+
+/* ======================================================================
+   4) FORM SYSTEM
+   ====================================================================== */
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea,
+[data-flux-input] input,
+.fcEMP7-input,
+.mx-auto.max-w-lg.flex.justify-between.mb-8 input#code,
+.mt-10 input[type="text"],
+.mt-10 input[type="email"],
+.mt-10 input[type="tel"],
+.mt-10 select{
+  min-height:46px;
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+    rgba(7,12,22,.90) !important;
+  color:var(--fc-text) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+  transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:var(--fc-text-dim) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+[data-flux-input] input:focus,
+.fcEMP7-input:focus,
+.mx-auto.max-w-lg.flex.justify-between.mb-8 input#code:focus{
+  outline:none !important;
+  border-color:rgba(139,92,255,.34) !important;
+  box-shadow:var(--fc-ring) !important;
+}
+
+label,
+[data-flux-label],
+.ui-field > ui-label,
+.mt-10 label{
+  color:#e9f2ff !important;
+  font-weight:800 !important;
+  letter-spacing:.02em;
+}
+
+/* ======================================================================
+   5) TABS / PILLS / BADGES
+   ====================================================================== */
+
+[role="tablist"]{
+  border-bottom:1px solid rgba(255,255,255,.08) !important;
+}
+
+[role="tablist"] button{
+  position:relative;
+}
+
+[role="tablist"] button.text-primary-500,
+[role="tablist"] [aria-selected="true"],
+.fcEMP7-tab.is-active{
+  color:#d9c8ff !important;
+  background:linear-gradient(135deg, rgba(139,92,255,.24), rgba(53,184,255,.16)) !important;
+  border-color:rgba(139,92,255,.24) !important;
+}
+
+[role="tablist"] button.text-primary-500::after,
+[role="tablist"] [aria-selected="true"]::after{
+  content:"";
+  position:absolute;
+  left:14%;
+  right:14%;
+  bottom:-1px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--fc-ac-1),var(--fc-ac-2));
+  box-shadow:0 0 14px rgba(139,92,255,.42);
+}
+
+.bg-gray-800.border.border-primary-500.text-primary-500.px-2.sm\:px-3.py-1.rounded-lg.text-xs.font-bold.uppercase.font-mono,
+.bg-gray-800.border-l-4.border-primary-500.p-2.sm\:p-3.mb-4,
+.border-l-4.border-primary-500.bg-gray-800,
+.inline.py-1.font-display.px-5.mb-5.border-2.border-primary-400.rounded.text-primary-theme{
+  border-radius:12px !important;
+}
+
+.bg-gray-800.border.border-primary-500.text-primary-500.px-2.sm\:px-3.py-1.rounded-lg.text-xs.font-bold.uppercase.font-mono{
+  background:linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) !important;
+  border:1px solid rgba(139,92,255,.24) !important;
+  color:#e9dcff !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.24) !important;
+}
+
+span.font-bold.absolute.bg-primary-500{
+  background:linear-gradient(135deg, #ffffff 0%, #f1f5ff 50%, #ffffff 100%) !important;
+  color:#08101f !important;
+  border:1px solid rgba(255,255,255,.9) !important;
+  box-shadow:0 8px 18px rgba(255,255,255,.18) !important;
+}
+
+/* keep your clock badge touch */
+span.font-bold.absolute.bg-primary-500::before{
+  content:"⏰ ";
+  margin-right:.25rem;
+}
+
+/* ======================================================================
+   6) PROGRESS / RANGE / TICKET PICKERS
+   ====================================================================== */
+
+.bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl,
+#home-progress{
+  background:linear-gradient(145deg, rgba(17,21,38,.95), rgba(10,12,24,.95)) !important;
+  border-radius:18px !important;
+}
+
+.bg-gray-200,
+.bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .col-span-10 .h-6.w-full.bg-gray-200.rounded-lg,
+#slider-round,
+.noUi-target{
+  background:rgba(255,255,255,.10) !important;
+  border-radius:999px !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+.bg-primary-500,
+#home-progress .bg-primary-500,
+.bg-gray-700.p-2.w-full.grid.grid-cols-12.rounded-xl .col-span-10 .h-6.rounded-lg.bg-primary-500.barbershop-animation,
+.noUi-connect,
+#slider-round .noUi-connect,
+.bg-primary-600{
+  background:linear-gradient(90deg,var(--fc-ac-1),var(--fc-ac-2)) !important;
+  box-shadow:0 0 22px rgba(99,102,241,.26) !important;
+  color:#fff !important;
+}
+
+.barbershop-animation::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-50%;
+  width:50%;
+  height:100%;
+  background:rgba(255,255,255,.22);
+  transform:skewX(-20deg);
+  animation:fcShimmer 2s infinite;
+}
+
+.noUi-handle,
+#slider-round .noUi-handle{
+  background:#fff !important;
+  border:2px solid rgba(139,92,255,.55) !important;
+  border-radius:999px !important;
+  box-shadow:0 0 18px rgba(255,255,255,.22) !important;
+}
+
+#obsidian-progress,
+#home-progress p{
+  color:#fff !important;
+}
+
+/* ticket bundle wrapper */
+[x-show="!terms"]{
+  background:var(--fc-panel-bg) !important;
+  border:1px solid rgba(139,92,255,.16) !important;
+  border-radius:18px !important;
+  box-shadow:var(--fc-shadow-md) !important;
+}
+
+[x-show="!terms"] label,
+label.border{
+  background:rgba(255,255,255,.04) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  color:var(--fc-text) !important;
+  border-radius:14px !important;
+}
+
+[x-show="!terms"] label:hover,
+label.border:hover{
+  background:rgba(255,255,255,.08) !important;
+  border-color:rgba(139,92,255,.24) !important;
+  transform:translateY(-1px);
+}
+
+[x-show="!terms"] label[data-active="true"],
+[x-show="!terms"] label:has(input:checked),
+label.border[class*="border-primary"]{
+  background:linear-gradient(135deg, rgba(139,92,255,.20), rgba(53,184,255,.14)) !important;
+  border-color:rgba(139,92,255,.26) !important;
+  box-shadow:0 0 24px rgba(99,102,241,.16) !important;
+}
+
+/* odds pill */
+span[x-text*="Odds"]{
+  background:#fff !important;
+  color:#000 !important;
+  box-shadow:0 0 30px rgba(255,255,255,.18) !important;
+}
+
+/* ======================================================================
+   7) MODALS / DROPDOWNS / DRAWERS / OVERLAYS
+   ====================================================================== */
+
+[role="dialog"] > div,
+[data-flux-navmenu],
+.mx-auto.max-w-lg.flex.justify-between.mb-8 [x-show="dropDown"],
+[x-data][role="region"].rounded.bg-transparent.border,
+[class*="drawer"],
+[class*="modal"]{
+  background:var(--fc-modal-bg) !important;
+  border:1px solid rgba(139,92,255,.16) !important;
+  border-radius:18px !important;
+  box-shadow:0 30px 80px rgba(0,0,0,.58) !important;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+[x-data][role="region"].rounded.bg-transparent.border:hover{
+  box-shadow:0 34px 86px rgba(0,0,0,.62) !important;
+}
+
+/* ======================================================================
+   8) TABLES / LIST VIEWS
+   ====================================================================== */
+
+table tbody tr{
+  transition:transform .22s ease, box-shadow .22s ease, background .22s ease;
+}
+
+table tbody tr:hover{
+  transform:translateY(-2px);
+}
+
+table tbody td{
+  background:transparent;
+  color:#e5e7eb;
+  padding:.85rem .9rem;
+  font-weight:500;
+}
+
+table tbody td .rounded-full{
+  background:linear-gradient(135deg, rgba(16,185,129,.15), rgba(5,150,105,.15));
+  color:#34d399;
+  font-weight:700;
+  letter-spacing:.03em;
+  box-shadow:inset 0 0 0 1px rgba(52,211,153,.4), 0 4px 15px rgba(16,185,129,.18);
+}
+
+table tbody a[data-flux-button]{
+  background:var(--fc-grad-btn) !important;
+  color:#fff !important;
+  border:none !important;
+  box-shadow:0 6px 18px rgba(124,58,237,.28);
+}
+
+/* ======================================================================
+   9) COMPETITION / PRODUCT CARDS
+   ====================================================================== */
+
+.relative.rounded-xl.flex.flex-col.bg-gray-900,
+.relative.rounded-xl.flex.flex-col.bg-gray-900.h-full.overflow-hidden.shadow-lg.group-hover\:shadow-xl.transition-all.duration-300,
+.border-2.border-primary-500.rounded-l.rounded-r-xl{
+  position:relative;
+  border-radius:20px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:
+    radial-gradient(120% 120% at top left, rgba(30,41,59,.96) 0%, rgba(2,6,23,.98) 55%, rgba(2,6,23,.98) 100%) !important;
+  overflow:hidden;
+}
+
+.relative.rounded-xl.flex.flex-col.bg-gray-900::before,
+.border-2.border-primary-500.rounded-l.rounded-r-xl::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  padding:1px;
+  border-radius:inherit;
+  background:linear-gradient(135deg, rgba(139,92,255,.32), rgba(53,184,255,.22), rgba(139,92,255,.18));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+
+.block.w-full.bg-primary-500.text-primary-theme.text-center.py-2.sm\:py-3.rounded-lg.font-semibold.text-sm.sm\:text-lg.transition-colors.duration-200,
+a.block.w-full.rounded-b-xl.bg-primary-500{
+  background:var(--fc-grad-btn) !important;
+}
+
+/* progress style already site-wide above, but keep special sold bar text */
+p.text-gray-50.text-center.font-display.text-sm,
+span.text-gray-50.text-sm{
+  background:none !important;
+  border:none !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+/* ======================================================================
+   10) ALERTS / NOTICES
+   ====================================================================== */
+
+.bg-primary-50,
+.p-4.border.border-red-600.rounded-md.bg-red-50,
+.max-w-2xl .border-l-4.border-primary-500.bg-gray-800{
+  border-radius:16px !important;
+  overflow:hidden;
+}
+
+.bg-primary-50{
+  background:linear-gradient(135deg, rgba(139,92,255,.92), rgba(53,184,255,.88)) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  box-shadow:0 18px 44px rgba(45,124,255,.24) !important;
+}
+
+.bg-primary-50 p,
+.bg-primary-50 strong,
+.bg-primary-50 svg{
+  color:#fff !important;
+}
+
+.p-4.border.border-red-600.rounded-md.bg-red-50{
+  background:linear-gradient(135deg, rgba(127,29,29,.95), rgba(220,38,38,.94)) !important;
+  border:1px solid rgba(248,113,113,.38) !important;
+}
+
+.max-w-2xl .border-l-4.border-primary-500.bg-gray-800{
+  background:linear-gradient(145deg, rgba(11,16,31,.96), rgba(8,12,24,.98)) !important;
+  border-left:4px solid rgba(139,92,255,.72) !important;
+  box-shadow:var(--fc-shadow-md) !important;
+}
+
+/* hide duplicate alert icon in the style you were already using */
+div.flex > div.flex-shrink-0 > svg{
+  display:none;
+}
+
+/* ======================================================================
+   11) KEEP YOUR EXISTING CUSTOM SYSTEMS
+   ====================================================================== */
+
+/* These are intentionally left usable so your custom injected HTML stays styled */
+.fcNavX{}
+.fcEMP7{}
+.flash-socialbar{}
+.fcLists{}
+.fc-mobile-account{}
+
+/* your mobile sidebar polish */
+[data-flux-sidebar].lg\:hidden{
+  background:
+    radial-gradient(900px 520px at 18% 10%, rgba(139,92,255,.18), transparent 58%),
+    radial-gradient(900px 520px at 82% 16%, rgba(45,124,255,.16), transparent 60%),
+    linear-gradient(180deg, #0B0F22, #070815) !important;
+  border-right:1px solid rgba(139,92,255,.22) !important;
+}
+
+/* injected nav wrapper */
+.fcNavX{
+  margin:18px 0 14px !important;
+  padding:0 !important;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.fcNavX .fcNavX-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:14px 10px;
+  border-radius:14px;
+  color:rgba(255,255,255,.94);
+  text-decoration:none;
+  background:transparent;
+  border:1px solid transparent;
+  transition:background .18s ease, border-color .18s ease;
+}
+.fcNavX .fcNavX-row:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(139,92,255,.22);
+}
+.fcNavX .fcNavX-ico{
+  width:22px;
+  height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.92);
+  flex:0 0 auto;
+  filter:drop-shadow(0 0 12px rgba(139,92,255,.16));
+}
+.fcNavX .fcNavX-ico svg{ width:100%; height:100%; display:block; }
+.fcNavX .fcNavX-txt{
+  font-size:16px;
+  font-weight:900;
+  line-height:1.1;
+  color:rgba(255,255,255,.92);
+}
+.fcNavX .fcNavX-sep{
+  height:1px;
+  margin:6px 10px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+  opacity:.65;
+}
+.fcNavX ui-dropdown{ display:block; }
+.fcNavX ui-dropdown > button{
+  all:unset;
+  box-sizing:border-box;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:14px 10px;
+  border-radius:14px;
+  color:rgba(255,255,255,.94);
+  background:transparent;
+  border:1px solid transparent;
+  transition:background .18s ease, border-color .18s ease;
+}
+.fcNavX ui-dropdown > button:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(139,92,255,.22);
+}
+.fcNavX [data-flux-navmenu] a{
+  color:rgba(255,255,255,.90) !important;
+  border-radius:12px !important;
+}
+.fcNavX [data-flux-navmenu] a:hover{
+  background:rgba(255,255,255,.08) !important;
+}
+
+/* social bar */
+.flash-socialbar{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-right:12px;
+}
+.flash-socialbar a{
+  width:34px;
+  height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  text-decoration:none;
+  position:relative;
+  overflow:hidden;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  transition:transform .18s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.flash-socialbar a:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.09);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:0 16px 32px -22px rgba(59,130,246,.65);
+}
+.flash-socialbar svg{
+  width:18px;
+  height:18px;
+  display:block;
+  fill:rgba(255,255,255,.92);
+}
+.flash-socialbar a::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .22s ease;
+  background:linear-gradient(135deg, rgba(168,85,247,.20), rgba(59,130,246,.22));
+}
+.flash-socialbar a:hover::after{
+  opacity:1;
+}
+
+/* lists page system */
+.fcLists{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+}
+.fcLists .fcLists-hero{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 0 12px !important;
+  margin-bottom:12px !important;
+  border-bottom:1px solid rgba(255,255,255,.10) !important;
+}
+.fcLists .fcLists-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:900;
+  color:rgba(255,255,255,.72);
+}
+.fcLists .fcLists-kicker::before{
+  content:"";
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  background:var(--fc-grad);
+  box-shadow:0 0 18px rgba(139,92,255,.20);
+}
+.fcLists .fcLists-title{
+  margin-top:8px;
+  font-size:22px;
+  line-height:1.15;
+  font-weight:950;
+  color:rgba(255,255,255,.96);
+}
+.fcLists .fcLists-title strong{
+  background:linear-gradient(90deg,var(--fc-ac-1),var(--fc-ac-2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.fcLists .fcLists-sub{
+  margin-top:6px;
+  font-size:13px;
+  color:rgba(255,255,255,.66);
+}
+.fcLists [data-flux-card] img{
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.45);
+}
+.fcLists .fcLists-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+.fcLists .fcLists-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:850;
+  color:rgba(255,255,255,.86);
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.12);
+}
+
+/* command / utility widget */
+.fcEMP7{ font-family:inherit; color:var(--fc-text); }
+.fcEMP7-launch{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  user-select:none;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(900px 420px at 0% 0%, rgba(139,92,255,.18), transparent 60%),
+    radial-gradient(900px 420px at 100% 0%, rgba(45,124,255,.14), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    linear-gradient(180deg, #0B0F22, #070815);
+  box-shadow:0 18px 55px rgba(0,0,0,.65);
+}
+.fcEMP7-panel{
+  position:fixed;
+  right:14px;
+  bottom:70px;
+  z-index:99999;
+  width:280px;
+  max-height:min(520px, calc(100vh - 110px));
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    linear-gradient(180deg, #0B0F22, #070815);
+  box-shadow:0 18px 55px rgba(0,0,0,.65);
+}
+.fcEMP7-head{
+  padding:10px 10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.fcEMP7-search{
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.fcEMP7-body{
+  max-height:calc(100% - 154px);
+  overflow:auto;
+  padding:8px;
+}
+.fcEMP7-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid transparent;
+  color:rgba(255,255,255,.92);
+  font-weight:900;
+  font-size:13px;
+  background:rgba(0,0,0,.14);
+}
+.fcEMP7-item:hover{
+  border-color:rgba(255,255,255,.12);
+  background:rgba(0,0,0,.20);
+}
+
+/* mobile account button */
+@media (max-width:1023px){
+  .fc-mobile-account{
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    padding:0 12px;
+    height:38px;
+    border-radius:14px;
+    font-size:13px;
+    font-weight:600;
+    color:#fff;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.25);
+    box-shadow:0 4px 20px rgba(0,0,0,.4);
+  }
+}
+@media (min-width:1024px){
+  .fc-mobile-account{ display:none !important; }
+}
+
+/* ======================================================================
+   12) REDUCED MOTION
+   ====================================================================== */
+
+@media (prefers-reduced-motion: reduce){
+  *,
+  *::before,
+  *::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* ======================================================================
+   13) KEYFRAMES
+   ====================================================================== */
+
+@keyframes fcGlobalSweep{
+  0%{ transform:translateX(-120%); }
+  100%{ transform:translateX(120%); }
+}
+
+@keyframes fcShimmer{
+  0%{ left:-50%; }
+  100%{ left:150%; }
+}
