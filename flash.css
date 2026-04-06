@@ -1999,11 +1999,6 @@ h1.text-4xl.font-bold.tracking-tight.text-center.sm\:text-3xl.mb-10.rounded-xl.b
     }
 }
 
-/* REMOVE CATEGORIES FROM BROWSE ON HOME SCREEN */
-.mx-auto.max-w-7xl.px-2.lg\:px-8.relative {
-    display: none !important;
-}
-
 .text-primary-600 {
     color: #ffffff;
 }
