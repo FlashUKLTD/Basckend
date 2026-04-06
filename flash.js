@@ -68,7 +68,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     instagram: "https://www.instagram.com/flashcompetitionsuk",
 
     /* IMPORTANT: keep socials out of mobile sidebar */
-    showOnMobile: false,
+    showOnMobile: true,
 
     desktopTargets: [
       "header nav",
