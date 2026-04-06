@@ -2854,191 +2854,138 @@ document.addEventListener("DOMContentLoaded", function() {
 
 /* =========================================================
    FLASH COMPETITIONS — MOBILE SIDEBAR REBUILD
+   SAFE VERSION
    File: flash.js
-   Version: fc-mobile-nav-v2
-   Notes:
-   - Creates a standalone custom nav panel from existing links
-   - Keeps Rafflex sidebar shell intact
-   - Idempotent for dynamic loads
    ========================================================= */
 
 (function(){
+  if (window.__fcMobileNavInit) return;
+  window.__fcMobileNavInit = true;
+
   var CFG = {
     mobileMax: 1023.98,
     sidebarSelector: '[data-flux-sidebar]',
     oldNavSelector: '.fcNavX[data-fc-navx="1"]',
-    mountClass: 'fcMobNav',
     mountAttr: 'data-fc-mobile-nav',
-    linkSelector: '.fcNavX-row',
-    closeSelector: '[data-flux-sidebar-toggle]'
+    rowSelector: '.fcNavX-row'
   };
 
   function isMobile(){
     return window.innerWidth <= CFG.mobileMax;
   }
 
-  function getPath(url){
+  function normPath(path){
+    return (path || '/').replace(/\/+$/, '') || '/';
+  }
+
+  function getPathFromUrl(url){
     try{
-      return (new URL(url, window.location.origin).pathname || '/').replace(/\/+$/, '') || '/';
+      return normPath(new URL(url, window.location.origin).pathname);
     }catch(e){
       return '';
     }
   }
 
-  function currentPath(){
-    return (window.location.pathname || '/').replace(/\/+$/, '') || '/';
-  }
-
-  function cloneIcon(iconEl){
-    if(!iconEl) return '';
-    return iconEl.innerHTML;
+  function getCurrentPath(){
+    return normPath(window.location.pathname);
   }
 
   function getLabel(row){
     var txt = row.querySelector('.fcNavX-txt');
-    if(txt && txt.textContent.trim()) return txt.textContent.trim();
+    if (txt && txt.textContent.trim()) return txt.textContent.trim();
 
-    var span = row.querySelector('[data-content] span');
-    if(span && span.textContent.trim()) return span.textContent.trim();
+    var contentSpan = row.querySelector('[data-content] span');
+    if (contentSpan && contentSpan.textContent.trim()) return contentSpan.textContent.trim();
 
-    return row.textContent.trim();
+    return '';
   }
 
-  function buildLink(row){
-    var href = row.getAttribute('href');
-    if(!href) return null;
-
-    var label = getLabel(row);
-    if(!label) return null;
-
+  function getIconMarkup(row){
     var iconWrap = row.querySelector('.fcNavX-ico');
-    var icon = cloneIcon(iconWrap);
-
-    var a = document.createElement('a');
-    a.className = 'fcMobNav-link';
-    a.href = href;
-
-    if(getPath(href) === currentPath()){
-      a.classList.add('is-current');
-      a.setAttribute('aria-current', 'page');
-    }
-
-    a.innerHTML =
-      '<span class="fcMobNav-linkIcon" aria-hidden="true">' + icon + '</span>' +
-      '<span class="fcMobNav-linkText">' + label + '</span>';
-
-    a.addEventListener('click', function(){
-      if(!isMobile()) return;
-      document.body.removeAttribute('data-show-stashed-sidebar');
-    }, { passive:true });
-
-    return a;
+    return iconWrap ? iconWrap.innerHTML : '';
   }
 
-  function buildPanel(sidebar, oldNav){
-    var existing = sidebar.querySelector('[' + CFG.mountAttr + ']');
-    if(existing) existing.remove();
+  function buildPanel(oldNav){
+    var existing = document.querySelector('[' + CFG.mountAttr + '="1"]');
+    if (existing) existing.remove();
 
     var panel = document.createElement('div');
-    panel.className = CFG.mountClass;
+    panel.className = 'fcMobNav';
     panel.setAttribute(CFG.mountAttr, '1');
 
     var list = document.createElement('div');
     list.className = 'fcMobNav-list';
 
-    var rows = oldNav.querySelectorAll(CFG.linkSelector);
+    var rows = oldNav.querySelectorAll(CFG.rowSelector);
+    var currentPath = getCurrentPath();
+
     rows.forEach(function(row){
-      var link = buildLink(row);
-      if(link) list.appendChild(link);
+      var href = row.getAttribute('href');
+      var label = getLabel(row);
+
+      if (!href || !label) return;
+
+      var a = document.createElement('a');
+      a.className = 'fcMobNav-link';
+      a.href = href;
+
+      if (getPathFromUrl(href) === currentPath) {
+        a.classList.add('is-current');
+        a.setAttribute('aria-current', 'page');
+      }
+
+      a.innerHTML =
+        '<span class="fcMobNav-linkIcon" aria-hidden="true">' + getIconMarkup(row) + '</span>' +
+        '<span class="fcMobNav-linkText">' + label + '</span>';
+
+      a.addEventListener('click', function(){
+        if (!isMobile()) return;
+        document.body.removeAttribute('data-show-stashed-sidebar');
+      }, { passive:true });
+
+      list.appendChild(a);
     });
 
     panel.appendChild(list);
     return panel;
   }
 
-  function insertPanel(sidebar){
+  function init(){
+    if (!isMobile()) return;
+
+    var sidebar = document.querySelector(CFG.sidebarSelector);
+    if (!sidebar) return;
+
     var oldNav = sidebar.querySelector(CFG.oldNavSelector);
-    if(!oldNav) return;
+    if (!oldNav) return;
 
-    var panel = buildPanel(sidebar, oldNav);
+    if (sidebar.querySelector('[' + CFG.mountAttr + '="1"]')) return;
 
+    var panel = buildPanel(oldNav);
     oldNav.insertAdjacentElement('beforebegin', panel);
   }
 
-  function bindClose(sidebar){
-    var btn = sidebar.querySelector(CFG.closeSelector);
-    if(!btn || btn.dataset.fcMobNavBound === '1') return;
-    btn.dataset.fcMobNavBound = '1';
-
-    btn.addEventListener('click', function(){
-      setTimeout(function(){
-        if(!document.body.hasAttribute('data-show-stashed-sidebar')){
-          document.body.classList.remove('fc-mob-nav-open');
-        }
-      }, 30);
-    });
-  }
-
-  function syncBodyState(){
-    var isOpen = document.body.hasAttribute('data-show-stashed-sidebar');
-    document.body.classList.toggle('fc-mob-nav-open', isOpen);
-  }
-
-  function initOne(sidebar){
-    if(!sidebar) return;
-    if(sidebar.dataset.fcMobNavReady === '1'){
-      syncBodyState();
-      return;
+  function boot(){
+    try{
+      init();
+    }catch(e){
+      console.error('fc mobile nav failed:', e);
     }
-
-    sidebar.dataset.fcMobNavReady = '1';
-    insertPanel(sidebar);
-    bindClose(sidebar);
-    syncBodyState();
   }
 
-  function initAll(){
-    var sidebars = document.querySelectorAll(CFG.sidebarSelector);
-    if(!sidebars.length) return;
-
-    sidebars.forEach(function(sidebar){
-      if(sidebar.querySelector(CFG.oldNavSelector)){
-        if(sidebar.querySelector('[' + CFG.mountAttr + ']')){
-          var existing = sidebar.querySelector('[' + CFG.mountAttr + ']');
-          existing.remove();
-        }
-        sidebar.dataset.fcMobNavReady = '0';
-        initOne(sidebar);
-      }
-    });
-
-    syncBodyState();
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot, { once:true });
+  } else {
+    boot();
   }
 
-  var mo;
-  function observe(){
-    if(mo) return;
-    mo = new MutationObserver(function(){
-      initAll();
-      syncBodyState();
-    });
-    mo.observe(document.documentElement, {
-      childList:true,
-      subtree:true,
-      attributes:true,
-      attributeFilter:['data-show-stashed-sidebar']
-    });
-  }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', function(){
-      initAll();
-      observe();
-    });
-  }else{
-    initAll();
-    observe();
-  }
-
-  window.addEventListener('resize', syncBodyState, { passive:true });
+  window.addEventListener('resize', function(){
+    try{
+      var panel = document.querySelector('[' + CFG.mountAttr + '="1"]');
+      if (!isMobile() && panel) panel.remove();
+      if (isMobile() && !panel) init();
+    }catch(e){
+      console.error('fc mobile nav resize failed:', e);
+    }
+  }, { passive:true });
 })();

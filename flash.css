@@ -13332,183 +13332,21 @@ body.fc-auth-hide-heading .sm\:mx-auto.sm\:w-full.sm\:max-w-md{
 
 
 
-/* =========================================================
-   FLASH COMPETITIONS — MOBILE SIDEBAR REBUILD
-   File: flash.css
-   Version: fc-mobile-nav-v2
-   Notes:
-   - Creates a new standalone custom nav panel inside Rafflex sidebar
-   - Hides old nav visually
-   - Restyles login/register into Flash vibe
-   - Mobile only
-   ========================================================= */
-
-/* =========================
-   SETTINGS
-   ========================= */
-:root{
-  --fcMobNav-bg-0:#030716;
-  --fcMobNav-bg-1:#061025;
-  --fcMobNav-bg-2:#0a1530;
-
-  --fcMobNav-panel-1:#071d2d;
-  --fcMobNav-panel-2:#082337;
-  --fcMobNav-panel-3:#061827;
-
-  --fcMobNav-ac1:#8B5CFF;
-  --fcMobNav-ac2:#35B8FF;
-  --fcMobNav-ac3:#59e1ff;
-
-  --fcMobNav-text:#f6f8ff;
-  --fcMobNav-text-soft:rgba(255,255,255,.78);
-  --fcMobNav-text-dim:rgba(255,255,255,.46);
-
-  --fcMobNav-line:rgba(255,255,255,.10);
-  --fcMobNav-line-strong:rgba(53,184,255,.24);
-
-  --fcMobNav-shadow:
-    0 28px 80px rgba(0,0,0,.58),
-    0 0 0 1px rgba(255,255,255,.03) inset,
-    0 0 36px rgba(53,184,255,.08),
-    0 0 26px rgba(139,92,255,.08);
-
-  --fcMobNav-drawer-width:86vw;
-  --fcMobNav-drawer-max:360px;
-
-  --fcMobNav-pad-x:14px;
-  --fcMobNav-pad-y:14px;
-
-  --fcMobNav-logo-max-h:34px;
-  --fcMobNav-close-size:42px;
-
-  --fcMobNav-panel-radius:24px;
-  --fcMobNav-item-radius:16px;
-  --fcMobNav-btn-radius:14px;
-
-  --fcMobNav-item-h:58px;
-  --fcMobNav-item-gap:10px;
-  --fcMobNav-item-font:16px;
-  --fcMobNav-item-weight:850;
-  --fcMobNav-icon-size:18px;
-
-  --fcMobNav-action-h:46px;
-  --fcMobNav-action-font:15px;
-  --fcMobNav-action-gap:10px;
-
-  --fcMobNav-wallet-h:36px;
-  --fcMobNav-wallet-radius:12px;
-
-  --fcMobNav-backdrop:rgba(2,8,22,.56);
-  --fcMobNav-backdrop-blur:8px;
-}
-
-/* =========================
-   MOBILE ONLY
-   ========================= */
 @media (max-width:1023.98px){
-
-  /* Drawer shell */
-  [data-flux-sidebar]{
-    width:var(--fcMobNav-drawer-width) !important;
-    max-width:var(--fcMobNav-drawer-max) !important;
-    min-width:0 !important;
-    padding:var(--fcMobNav-pad-y) var(--fcMobNav-pad-x) !important;
-    background:
-      radial-gradient(110% 62% at 50% -8%, rgba(53,184,255,.10), transparent 48%),
-      radial-gradient(90% 72% at 0% 0%, rgba(139,92,255,.16), transparent 52%),
-      linear-gradient(180deg, var(--fcMobNav-bg-2), var(--fcMobNav-bg-0)) !important;
-    border-right:1px solid rgba(255,255,255,.08) !important;
-    box-shadow:var(--fcMobNav-shadow) !important;
-    overflow:hidden !important;
-    isolation:isolate;
-  }
-
-  body[data-show-stashed-sidebar]::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:19;
-    background:var(--fcMobNav-backdrop);
-    -webkit-backdrop-filter:blur(var(--fcMobNav-backdrop-blur));
-    backdrop-filter:blur(var(--fcMobNav-backdrop-blur));
-    pointer-events:none;
-  }
-
-  [data-flux-sidebar]::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    z-index:0;
-    pointer-events:none;
-    opacity:.22;
-    background:
-      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-    background-size:26px 26px, 26px 26px;
-    mask-image:linear-gradient(180deg, rgba(0,0,0,.8), rgba(0,0,0,.18));
-  }
-
-  [data-flux-sidebar] > *{
-    position:relative;
-    z-index:1;
-  }
-
-  /* top row */
-  [data-flux-sidebar] > .flex.lg\:flex-1{
-    flex:none !important;
-    min-height:auto !important;
-    align-items:center !important;
-    margin:8px 54px 14px 2px !important;
-  }
-
-  [data-flux-sidebar] .settings_logo_max_width{
-    max-height:var(--fcMobNav-logo-max-h) !important;
-    width:auto !important;
-    object-fit:contain !important;
-    filter:
-      drop-shadow(0 0 10px rgba(53,184,255,.12))
-      drop-shadow(0 0 12px rgba(139,92,255,.10));
-  }
-
-  /* close */
-  [data-flux-sidebar] > .text-right.absolute{
-    top:14px !important;
-    right:12px !important;
-    z-index:5 !important;
-  }
-
-  [data-flux-sidebar] [data-flux-sidebar-toggle]{
-    width:var(--fcMobNav-close-size) !important;
-    height:var(--fcMobNav-close-size) !important;
-    min-width:var(--fcMobNav-close-size) !important;
-    padding:0 !important;
-    border-radius:15px !important;
-    border:1px solid rgba(255,255,255,.10) !important;
-    color:#fff !important;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-      linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.008)) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.05),
-      0 12px 26px rgba(0,0,0,.22) !important;
-  }
-
-  /* hide old nav visually */
   .fcNavX[data-fc-navx="1"],
   [data-flux-sidebar] > nav[data-flux-navlist]{
     display:none !important;
   }
 
-  /* custom standalone nav */
   .fcMobNav{
     position:relative;
     margin:6px 0 0 !important;
     padding:14px 12px 12px !important;
-    border-radius:var(--fcMobNav-panel-radius);
+    border-radius:24px;
     border:1px solid rgba(53,184,255,.18);
     background:
       radial-gradient(100% 80% at 50% 0%, rgba(53,184,255,.10), transparent 44%),
-      linear-gradient(180deg, rgba(6,28,45,.94), rgba(5,18,31,.96));
+      linear-gradient(180deg, rgba(10,23,52,.94), rgba(7,19,38,.96));
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,.04),
       0 0 0 1px rgba(53,184,255,.05),
@@ -13526,9 +13364,9 @@ body.fc-auth-hide-heading .sm\:mx-auto.sm\:w-full.sm\:max-w-md{
     height:14px;
     transform:translateX(-50%) rotate(45deg);
     border-radius:2px;
-    background:linear-gradient(135deg, var(--fcMobNav-ac2), var(--fcMobNav-ac3));
+    background:linear-gradient(135deg, #35B8FF, #59e1ff);
     box-shadow:
-      0 0 0 2px rgba(7,29,45,.96),
+      0 0 0 2px rgba(10,23,52,.96),
       0 0 20px rgba(53,184,255,.24);
   }
 
@@ -13543,44 +13381,22 @@ body.fc-auth-hide-heading .sm\:mx-auto.sm\:w-full.sm\:max-w-md{
     display:flex;
     align-items:center;
     gap:12px;
-    min-height:var(--fcMobNav-item-h);
+    min-height:58px;
     padding:0 14px;
-    border-radius:var(--fcMobNav-item-radius);
+    border-radius:16px;
     border:1px solid rgba(53,184,255,.16);
     background:
       linear-gradient(180deg, rgba(255,255,255,.018), rgba(255,255,255,.008)),
-      linear-gradient(180deg, rgba(0,68,94,.32), rgba(2,38,58,.50));
-    color:var(--fcMobNav-text);
+      linear-gradient(180deg, rgba(20,35,74,.56), rgba(8,25,48,.78));
+    color:#f6f8ff;
     text-decoration:none;
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,.03),
       0 10px 22px rgba(0,0,0,.16);
-    transition:
-      transform .18s ease,
-      border-color .18s ease,
-      box-shadow .18s ease,
-      background .18s ease;
-  }
-
-  .fcMobNav-link:hover,
-  .fcMobNav-link:focus-visible{
-    transform:translateY(-1px);
-    border-color:rgba(53,184,255,.28);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.024), rgba(255,255,255,.012)),
-      linear-gradient(180deg, rgba(0,78,108,.42), rgba(2,48,72,.58));
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.04),
-      0 14px 26px rgba(0,0,0,.18),
-      0 0 16px rgba(53,184,255,.08);
-    outline:none;
   }
 
   .fcMobNav-link.is-current{
     border-color:rgba(53,184,255,.32);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.024), rgba(255,255,255,.012)),
-      linear-gradient(180deg, rgba(18,66,120,.44), rgba(7,42,78,.60));
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,.04),
       0 14px 26px rgba(0,0,0,.20),
@@ -13595,166 +13411,54 @@ body.fc-auth-hide-heading .sm\:mx-auto.sm\:w-full.sm\:max-w-md{
     align-items:center;
     justify-content:center;
     color:#7ee5ff;
-    filter:drop-shadow(0 0 10px rgba(53,184,255,.14));
   }
 
   .fcMobNav-linkIcon svg{
-    width:var(--fcMobNav-icon-size);
-    height:var(--fcMobNav-icon-size);
+    width:18px;
+    height:18px;
     stroke-width:1.9;
   }
 
   .fcMobNav-linkText{
     min-width:0;
-    font-size:var(--fcMobNav-item-font);
+    font-size:16px;
     line-height:1;
-    font-weight:var(--fcMobNav-item-weight);
+    font-weight:850;
     letter-spacing:-.01em;
-    color:var(--fcMobNav-text);
+    color:#f6f8ff;
   }
 
-  /* divider */
-  [data-flux-sidebar] [data-flux-separator]{
-    margin:14px 2px 12px !important;
-    background:
-      linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.12),
-        transparent
-      ) !important;
-    opacity:1 !important;
-  }
-
-  /* bottom row */
-  [data-flux-sidebar] > .flex.justify-between.items-center{
-    align-items:center !important;
-    gap:10px !important;
-    margin-top:auto !important;
-    padding:6px 2px 0 !important;
-  }
-
-  /* wallet */
-  [data-flux-sidebar] #wallet > div{
-    min-height:var(--fcMobNav-wallet-h) !important;
-    padding:0 10px !important;
-    gap:8px !important;
-    border-radius:var(--fcMobNav-wallet-radius) !important;
-    border:1px solid rgba(53,184,255,.20) !important;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.012)),
-      linear-gradient(180deg, rgba(28,25,90,.70), rgba(11,16,50,.80)) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.04),
-      0 10px 24px rgba(0,0,0,.20),
-      0 0 16px rgba(53,184,255,.06) !important;
-  }
-
-  [data-flux-sidebar] #wallet p{
-    color:#fff !important;
-    font-size:14px !important;
-    font-weight:900 !important;
-  }
-
-  /* basket */
-  [data-flux-sidebar] [wire\\:id] a[href*="/basket"]{
-    width:42px !important;
-    height:42px !important;
-    min-width:42px !important;
-    padding:0 !important;
-    border-radius:14px !important;
-    border:1px solid rgba(255,255,255,.10) !important;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012)),
-      linear-gradient(180deg, rgba(5,14,29,.82), rgba(4,10,20,.90)) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.04),
-      0 10px 24px rgba(0,0,0,.22) !important;
-  }
-
-  [data-flux-sidebar] [wire\\:id] a[href*="/basket"] svg{
-    width:22px !important;
-    height:22px !important;
-    color:#fff !important;
-  }
-
-  /* login/signup */
   [data-flux-sidebar] .space-y-3.mt-5{
     display:grid !important;
     grid-template-columns:1fr 1fr;
-    gap:var(--fcMobNav-action-gap) !important;
+    gap:10px !important;
     margin-top:14px !important;
   }
 
   [data-flux-sidebar] .space-y-3.mt-5 > a{
     width:100% !important;
-    min-height:var(--fcMobNav-action-h) !important;
-    height:auto !important;
-    padding:0 14px !important;
-    border-radius:var(--fcMobNav-btn-radius) !important;
-    font-size:var(--fcMobNav-action-font) !important;
+    min-height:46px !important;
+    border-radius:14px !important;
+    font-size:15px !important;
     font-weight:900 !important;
-    letter-spacing:-.01em !important;
     justify-content:center !important;
-    transition:
-      transform .18s ease,
-      border-color .18s ease,
-      box-shadow .18s ease,
-      background .18s ease !important;
   }
 
-  /* login primary */
   [data-flux-sidebar] .space-y-3.mt-5 > a[href*="/login"]{
     color:#fff !important;
     border:1px solid rgba(53,184,255,.22) !important;
-    background:
-      linear-gradient(135deg, rgba(139,92,255,.96), rgba(53,184,255,.96)) !important;
+    background:linear-gradient(135deg, #8B5CFF, #35B8FF) !important;
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,.12),
       0 10px 22px rgba(0,0,0,.22),
       0 0 18px rgba(53,184,255,.12) !important;
   }
 
-  [data-flux-sidebar] .space-y-3.mt-5 > a[href*="/login"]:hover,
-  [data-flux-sidebar] .space-y-3.mt-5 > a[href*="/login"]:focus-visible{
-    transform:translateY(-1px);
-    filter:brightness(1.04);
-    outline:none !important;
-  }
-
-  /* register secondary */
   [data-flux-sidebar] .space-y-3.mt-5 > a[href*="/register"]{
     color:#fff !important;
     border:1px solid rgba(255,255,255,.10) !important;
     background:
       linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.012)),
       linear-gradient(180deg, rgba(12,24,48,.88), rgba(7,14,28,.94)) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.04),
-      0 10px 22px rgba(0,0,0,.18) !important;
-  }
-
-  [data-flux-sidebar] .space-y-3.mt-5 > a[href*="/register"]:hover,
-  [data-flux-sidebar] .space-y-3.mt-5 > a[href*="/register"]:focus-visible{
-    transform:translateY(-1px);
-    border-color:rgba(53,184,255,.18) !important;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.04),
-      0 12px 24px rgba(0,0,0,.20),
-      0 0 14px rgba(53,184,255,.06) !important;
-    outline:none !important;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    [data-flux-sidebar],
-    .fcMobNav-link,
-    [data-flux-sidebar] .space-y-3.mt-5 > a{
-      transition:none !important;
-    }
-
-    body[data-show-stashed-sidebar]::before{
-      -webkit-backdrop-filter:none !important;
-      backdrop-filter:none !important;
-    }
   }
 }
