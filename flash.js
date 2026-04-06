@@ -2853,117 +2853,174 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 /* =========================================================
-   FLASH COMPETITIONS — MOBILE SIDEBAR RESKIN
+   FLASH COMPETITIONS — MOBILE SIDEBAR REBUILD
    File: flash.js
-   Version: fc-mobile-nav-v1
+   Version: fc-mobile-nav-v2
    Notes:
-   - Adds tidy helper classes / active state / body hooks
-   - Idempotent for Rafflex dynamic page updates
+   - Creates a standalone custom nav panel from existing links
+   - Keeps Rafflex sidebar shell intact
+   - Idempotent for dynamic loads
    ========================================================= */
 
 (function(){
   var CFG = {
-    rootSelector: '[data-flux-sidebar]',
-    navSelector: '.fcNavX[data-fc-navx="1"]',
-    rowSelector: '.fcNavX-row',
-    closeSelector: '[data-flux-sidebar-toggle]',
     mobileMax: 1023.98,
-
-    classes: {
-      ready: 'fcNavReady',
-      active: 'is-current',
-      bodyOpen: 'fc-nav-open'
-    }
+    sidebarSelector: '[data-flux-sidebar]',
+    oldNavSelector: '.fcNavX[data-fc-navx="1"]',
+    mountClass: 'fcMobNav',
+    mountAttr: 'data-fc-mobile-nav',
+    linkSelector: '.fcNavX-row',
+    closeSelector: '[data-flux-sidebar-toggle]'
   };
 
   function isMobile(){
     return window.innerWidth <= CFG.mobileMax;
   }
 
-  function getPathname(url){
+  function getPath(url){
     try{
-      return new URL(url, window.location.origin).pathname.replace(/\/+$/, '') || '/';
+      return (new URL(url, window.location.origin).pathname || '/').replace(/\/+$/, '') || '/';
     }catch(e){
       return '';
     }
   }
 
-  function markCurrentRows(root){
-    var rows = root.querySelectorAll(CFG.rowSelector);
-    if(!rows.length) return;
+  function currentPath(){
+    return (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+  }
 
-    var currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+  function cloneIcon(iconEl){
+    if(!iconEl) return '';
+    return iconEl.innerHTML;
+  }
 
+  function getLabel(row){
+    var txt = row.querySelector('.fcNavX-txt');
+    if(txt && txt.textContent.trim()) return txt.textContent.trim();
+
+    var span = row.querySelector('[data-content] span');
+    if(span && span.textContent.trim()) return span.textContent.trim();
+
+    return row.textContent.trim();
+  }
+
+  function buildLink(row){
+    var href = row.getAttribute('href');
+    if(!href) return null;
+
+    var label = getLabel(row);
+    if(!label) return null;
+
+    var iconWrap = row.querySelector('.fcNavX-ico');
+    var icon = cloneIcon(iconWrap);
+
+    var a = document.createElement('a');
+    a.className = 'fcMobNav-link';
+    a.href = href;
+
+    if(getPath(href) === currentPath()){
+      a.classList.add('is-current');
+      a.setAttribute('aria-current', 'page');
+    }
+
+    a.innerHTML =
+      '<span class="fcMobNav-linkIcon" aria-hidden="true">' + icon + '</span>' +
+      '<span class="fcMobNav-linkText">' + label + '</span>';
+
+    a.addEventListener('click', function(){
+      if(!isMobile()) return;
+      document.body.removeAttribute('data-show-stashed-sidebar');
+    }, { passive:true });
+
+    return a;
+  }
+
+  function buildPanel(sidebar, oldNav){
+    var existing = sidebar.querySelector('[' + CFG.mountAttr + ']');
+    if(existing) existing.remove();
+
+    var panel = document.createElement('div');
+    panel.className = CFG.mountClass;
+    panel.setAttribute(CFG.mountAttr, '1');
+
+    var list = document.createElement('div');
+    list.className = 'fcMobNav-list';
+
+    var rows = oldNav.querySelectorAll(CFG.linkSelector);
     rows.forEach(function(row){
-      row.classList.remove(CFG.classes.active);
-      row.removeAttribute('aria-current');
+      var link = buildLink(row);
+      if(link) list.appendChild(link);
+    });
 
-      var href = row.getAttribute('href');
-      if(!href) return;
+    panel.appendChild(list);
+    return panel;
+  }
 
-      var rowPath = getPathname(href);
-      if(!rowPath) return;
+  function insertPanel(sidebar){
+    var oldNav = sidebar.querySelector(CFG.oldNavSelector);
+    if(!oldNav) return;
 
-      if(rowPath === currentPath){
-        row.classList.add(CFG.classes.active);
-        row.setAttribute('aria-current', 'page');
+    var panel = buildPanel(sidebar, oldNav);
+
+    oldNav.insertAdjacentElement('beforebegin', panel);
+  }
+
+  function bindClose(sidebar){
+    var btn = sidebar.querySelector(CFG.closeSelector);
+    if(!btn || btn.dataset.fcMobNavBound === '1') return;
+    btn.dataset.fcMobNavBound = '1';
+
+    btn.addEventListener('click', function(){
+      setTimeout(function(){
+        if(!document.body.hasAttribute('data-show-stashed-sidebar')){
+          document.body.classList.remove('fc-mob-nav-open');
+        }
+      }, 30);
+    });
+  }
+
+  function syncBodyState(){
+    var isOpen = document.body.hasAttribute('data-show-stashed-sidebar');
+    document.body.classList.toggle('fc-mob-nav-open', isOpen);
+  }
+
+  function initOne(sidebar){
+    if(!sidebar) return;
+    if(sidebar.dataset.fcMobNavReady === '1'){
+      syncBodyState();
+      return;
+    }
+
+    sidebar.dataset.fcMobNavReady = '1';
+    insertPanel(sidebar);
+    bindClose(sidebar);
+    syncBodyState();
+  }
+
+  function initAll(){
+    var sidebars = document.querySelectorAll(CFG.sidebarSelector);
+    if(!sidebars.length) return;
+
+    sidebars.forEach(function(sidebar){
+      if(sidebar.querySelector(CFG.oldNavSelector)){
+        if(sidebar.querySelector('[' + CFG.mountAttr + ']')){
+          var existing = sidebar.querySelector('[' + CFG.mountAttr + ']');
+          existing.remove();
+        }
+        sidebar.dataset.fcMobNavReady = '0';
+        initOne(sidebar);
       }
     });
-  }
 
-  function enhanceSidebar(root){
-    if(!root || root.dataset.fcNavEnhanced === '1') return;
-    root.dataset.fcNavEnhanced = '1';
-    root.classList.add(CFG.classes.ready);
-
-    var nav = root.querySelector(CFG.navSelector);
-    if(nav && !nav.dataset.fcNavPanel){
-      nav.dataset.fcNavPanel = '1';
-    }
-
-    markCurrentRows(root);
-
-    var rows = root.querySelectorAll(CFG.rowSelector);
-    rows.forEach(function(row){
-      if(row.dataset.fcNavBound === '1') return;
-      row.dataset.fcNavBound = '1';
-
-      row.addEventListener('click', function(){
-        if(!isMobile()) return;
-        // let navigation happen naturally; close visual state immediately
-        document.body.removeAttribute('data-show-stashed-sidebar');
-        document.body.classList.remove(CFG.classes.bodyOpen);
-      }, { passive:true });
-    });
-
-    var closeBtn = root.querySelector(CFG.closeSelector);
-    if(closeBtn && closeBtn.dataset.fcNavBound !== '1'){
-      closeBtn.dataset.fcNavBound = '1';
-      closeBtn.addEventListener('click', function(){
-        setTimeout(syncBodyOpenState, 30);
-      });
-    }
-  }
-
-  function syncBodyOpenState(){
-    var isOpen = document.body.hasAttribute('data-show-stashed-sidebar');
-    document.body.classList.toggle(CFG.classes.bodyOpen, isOpen);
-  }
-
-  function init(){
-    var roots = document.querySelectorAll(CFG.rootSelector);
-    if(!roots.length) return;
-
-    roots.forEach(enhanceSidebar);
-    syncBodyOpenState();
+    syncBodyState();
   }
 
   var mo;
-  function startObserver(){
+  function observe(){
     if(mo) return;
     mo = new MutationObserver(function(){
-      init();
-      syncBodyOpenState();
+      initAll();
+      syncBodyState();
     });
     mo.observe(document.documentElement, {
       childList:true,
@@ -2975,13 +3032,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){
-      init();
-      startObserver();
+      initAll();
+      observe();
     });
   }else{
-    init();
-    startObserver();
+    initAll();
+    observe();
   }
 
-  window.addEventListener('resize', syncBodyOpenState, { passive:true });
+  window.addEventListener('resize', syncBodyState, { passive:true });
 })();
