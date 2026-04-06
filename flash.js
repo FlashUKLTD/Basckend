@@ -27,7 +27,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
     wrapClass: "flash-live-wrap",
     dotClass: "flash-live-dot",
     textClass: "flash-live-text",
-    text: "LIVE",
+    text: "🏆",
     retries: { max: 20, everyMs: 250 }
   },
 
@@ -2088,56 +2088,218 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 (function(){
-  if(document.getElementById("fcAdminToggle")) return;
+  if (window.__fcAdminToggleV3__) return;
+  window.__fcAdminToggleV3__ = true;
+
   var FC_REDIRECT_URL = "/i/administration";
+  var STORAGE_KEY = "fcAdminTogglePosV3";
 
   function isAdmin(){
     return !!document.querySelector('[wire\\:snapshot*="tenant.global.admin-bar"]');
   }
 
+  function getSavedPos(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function savePos(x, y){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ x:x, y:y }));
+    }catch(e){}
+  }
+
+  function clamp(n, min, max){
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function applySavedPosition(el){
+    if (!el) return;
+
+    var pos = getSavedPos();
+    var pad = 12;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var w = el.offsetWidth || 56;
+    var h = el.offsetHeight || 56;
+
+    var x = pos && typeof pos.x === "number" ? pos.x : (vw - w - 18);
+    var y = pos && typeof pos.y === "number" ? pos.y : (vh - h - 18);
+
+    x = clamp(x, pad, vw - w - pad);
+    y = clamp(y, pad, vh - h - pad);
+
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.style.right = "auto";
+    el.style.bottom = "auto";
+  }
+
   function create(){
-    if(!isAdmin()) return;
-    if(document.getElementById("fcAdminToggle")) return;
+    if (!isAdmin()) return;
+    if (document.getElementById("fcAdminToggle")) return;
 
     var a = document.createElement("a");
     a.id = "fcAdminToggle";
     a.href = FC_REDIRECT_URL;
     a.setAttribute("aria-label", "Open Admin");
+    a.setAttribute("title", "Admin");
 
     a.innerHTML =
+      '<span class="fcAdmGlass" aria-hidden="true"></span>' +
       '<svg class="fcAdmIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
-        '<path d="M12 2.25l8.25 4.5v10.5L12 21.75 3.75 17.25V6.75L12 2.25Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>' +
-        '<path d="M7.3 11.95h9.4" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/>' +
-        '<path d="M9 8.9h6" stroke="rgba(255,255,255,.78)" stroke-width="1.6" stroke-linecap="round"/>' +
-        '<path d="M9 15h6" stroke="rgba(255,255,255,.78)" stroke-width="1.6" stroke-linecap="round"/>' +
+        '<path d="M12 2.25l8.25 4.5v10.5L12 21.75 3.75 17.25V6.75L12 2.25Z" stroke="currentColor" stroke-width="1.55"/>' +
+        '<path d="M7.3 11.95h9.4" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/>' +
+        '<path d="M9 8.9h6" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" opacity=".72"/>' +
+        '<path d="M9 15h6" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" opacity=".72"/>' +
       '</svg>' +
       '<span class="fcAdmTag">Admin</span>';
 
+    document.body.appendChild(a);
+    applySavedPosition(a);
+    makeDraggable(a);
+
     a.addEventListener("click", function(e){
-      e.preventDefault();
-      window.location.href = FC_REDIRECT_URL;
+      if (a.dataset.dragMoved === "1") {
+        e.preventDefault();
+        a.dataset.dragMoved = "0";
+        return;
+      }
     });
 
-    document.body.appendChild(a);
+    window.addEventListener("resize", function(){
+      applySavedPosition(a);
+    });
+  }
+
+  function makeDraggable(el){
+    if (!el) return;
+
+    var dragging = false;
+    var moved = false;
+    var startX = 0;
+    var startY = 0;
+    var originX = 0;
+    var originY = 0;
+    var pointerId = null;
+
+    function getPoint(evt){
+      if (evt.touches && evt.touches.length) return evt.touches[0];
+      if (evt.changedTouches && evt.changedTouches.length) return evt.changedTouches[0];
+      return evt;
+    }
+
+    function start(evt){
+      var p = getPoint(evt);
+      if (!p) return;
+
+      dragging = true;
+      moved = false;
+      el.dataset.dragMoved = "0";
+
+      var rect = el.getBoundingClientRect();
+      startX = p.clientX;
+      startY = p.clientY;
+      originX = rect.left;
+      originY = rect.top;
+
+      if (evt.pointerId != null) {
+        pointerId = evt.pointerId;
+        try { el.setPointerCapture(pointerId); } catch(e){}
+      }
+
+      el.classList.add("is-dragging");
+    }
+
+    function move(evt){
+      if (!dragging) return;
+
+      var p = getPoint(evt);
+      if (!p) return;
+
+      var dx = p.clientX - startX;
+      var dy = p.clientY - startY;
+
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+
+      var pad = 12;
+      var w = el.offsetWidth || 56;
+      var h = el.offsetHeight || 56;
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
+
+      var nextX = clamp(originX + dx, pad, vw - w - pad);
+      var nextY = clamp(originY + dy, pad, vh - h - pad);
+
+      el.style.left = nextX + "px";
+      el.style.top = nextY + "px";
+      el.style.right = "auto";
+      el.style.bottom = "auto";
+
+      if (moved && evt.cancelable) evt.preventDefault();
+    }
+
+    function end(){
+      if (!dragging) return;
+      dragging = false;
+
+      el.classList.remove("is-dragging");
+
+      if (moved) {
+        el.dataset.dragMoved = "1";
+        savePos(parseFloat(el.style.left) || 0, parseFloat(el.style.top) || 0);
+        setTimeout(function(){
+          el.dataset.dragMoved = "0";
+        }, 180);
+      }
+
+      if (pointerId != null) {
+        try { el.releasePointerCapture(pointerId); } catch(e){}
+      }
+      pointerId = null;
+    }
+
+    if (window.PointerEvent) {
+      el.addEventListener("pointerdown", start, { passive:true });
+      window.addEventListener("pointermove", move, { passive:false });
+      window.addEventListener("pointerup", end, { passive:true });
+      window.addEventListener("pointercancel", end, { passive:true });
+    } else {
+      el.addEventListener("mousedown", start);
+      window.addEventListener("mousemove", move);
+      window.addEventListener("mouseup", end);
+
+      el.addEventListener("touchstart", start, { passive:true });
+      window.addEventListener("touchmove", move, { passive:false });
+      window.addEventListener("touchend", end, { passive:true });
+      window.addEventListener("touchcancel", end, { passive:true });
+    }
   }
 
   function boot(){
     create();
 
-    if(window.__fcAdminLauncherV2Obs) return;
-    window.__fcAdminLauncherV2Obs = true;
+    if (window.__fcAdminLauncherV3Obs) return;
+    window.__fcAdminLauncherV3Obs = true;
 
     var obs = new MutationObserver(function(){
-      if(document.getElementById("fcAdminToggle")) return;
+      if (document.getElementById("fcAdminToggle")) return;
       create();
     });
 
-    obs.observe(document.documentElement, { childList:true, subtree:true });
+    obs.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
   }
 
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", boot);
-  }else{
+  if (document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot, { once:true });
+  } else {
     boot();
   }
 })();
@@ -2147,50 +2309,25 @@ document.addEventListener("DOMContentLoaded", function() {
   window.__FC_MINIMAL_STRIP__ = true;
 
   var CFG = {
-    rotateEvery: 7000,
-    fadeMs: 200,
-  messages: [
-    "Secure checkout • Instant entry",
-    "2% cashback on every order",
-    "Live draws on main prizes",
-    "Real winners • Verified draws",
-    "Instant confirmation every time",
-    "Fast checkout • No delays",
-    "Play now • Results soon",
-    "Transparent from entry to draw",
-    "Premium competitions daily",
-    "Entries confirmed instantly",
-    "Cashback added automatically",
-    "Watch draws live",
-    "Limited tickets • High demand",
-    "New competitions now live",
-    "Enter in seconds",
-    "Fair and transparent draws",
-    "Secure payments always",
-    "Your entries • Instantly active",
-    "More chances • More winners",
-    "Win real prizes today",
-    "Built for speed and trust",
-    "Simple entry • Big prizes",
-    "Quick play • Real rewards",
-    "Daily chances to win",
-    "Instant wins available",
-    "Play smarter with cashback",
-    "New prizes added regularly",
-    "Secure • Fast • Transparent",
-    "Trusted competition platform",
-    "Enter now • Don’t miss out",
-    "Live updates • Real results",
-    "Winning made simple",
-    "More entries • More chances",
-    "Play today • Win today",
-    "Fair play guaranteed",
-    "Fast entry • Instant results",
-    "Your chance starts here",
-    "Big prizes • Small entry",
-    "Always fair • Always clear",
-    "Instant access to entries"
-  ]
+    speed: 40, // lower = faster (px per second feel)
+    gap: "   •   ",
+    messages: [
+  "<g>Secure checkout</g> • <s>Instant entry</s> every time",
+  "<b>Fast checkout</b> • Your entries are <g>active instantly</g>",
+  "<g>Instant-win tickets</g> available • Play and see what happens",
+  "<s>2% cashback</s> on every eligible order",
+  "<b>Fair draws</b> • <d>Transparent from entry to result</d>",
+  "<g>Instant confirmation</g> as soon as you enter",
+  "Play now • <p>Results coming up</p>",
+  "<b>Simple entry</b> • No complicated steps",
+  "<g>Secure payments</g> • Trusted platform",
+  "More entries • <b>More chances</b>",
+  "<s>Cashback added</s> automatically",
+  "<g>Fast entry</g> • No delays",
+  "<d>Transparent process</d> from start to finish",
+  "<b>Real winners</b> • Verified results",
+  "<p>Play anytime</p> • It’s always live"
+]
   };
 
   function esc(s){
@@ -2200,11 +2337,65 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function styleMessage(text){
-    text = esc(text);
-    text = text.replace("2% cashback",
-      '<span class="fcMin-strong">2% cashback</span>'
-    );
-    return text;
+  text = String(text || "");
+
+  var parts = text.split(/(<[sgrbyodipu]>.*?<\/[sgrbyodipu]>)/g);
+
+  parts = parts.map(function(part){
+
+    function wrap(cls, inner){
+      return '<span class="' + cls + '">' + esc(inner) + '</span>';
+    }
+
+    if(part.startsWith("<s>") && part.endsWith("</s>")){
+      return wrap("fcMin-strong", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<g>") && part.endsWith("</g>")){
+      return wrap("fcMin-green", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<r>") && part.endsWith("</r>")){
+      return wrap("fcMin-red", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<b>") && part.endsWith("</b>")){
+      return wrap("fcMin-bold", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<d>") && part.endsWith("</d>")){
+      return wrap("fcMin-dim", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<y>") && part.endsWith("</y>")){
+      return wrap("fcMin-gold", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<o>") && part.endsWith("</o>")){
+      return wrap("fcMin-orange", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<i>") && part.endsWith("</i>")){
+      return wrap("fcMin-italic", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<u>") && part.endsWith("</u>")){
+      return wrap("fcMin-underline", part.slice(3, -4));
+    }
+
+    if(part.startsWith("<p>") && part.endsWith("</p>")){
+      return wrap("fcMin-pulse", part.slice(3, -4));
+    }
+
+    return esc(part);
+  });
+
+  return parts.join("");
+}
+
+  function buildContent(){
+    var joined = CFG.messages.map(styleMessage).join(CFG.gap);
+    return joined;
   }
 
   function init(){
@@ -2214,29 +2405,34 @@ document.addEventListener("DOMContentLoaded", function() {
     el.id = "fcMinimalStrip";
     el.innerHTML =
       '<div class="fcMin-inner">' +
-        '<div class="fcMin-text" aria-live="polite"></div>' +
+        '<div class="fcMin-marquee">' +
+          '<div class="fcMin-track"></div>' +
+        '</div>' +
       '</div>';
 
     document.body.insertBefore(el, document.body.firstChild);
 
-    var textEl = el.querySelector(".fcMin-text");
-    var i = 0;
+    var track = el.querySelector(".fcMin-track");
 
-    function show(){
-      el.setAttribute("data-fade","1");
+    // duplicate content for seamless loop
+    var content = buildContent();
+    track.innerHTML = 
+      '<div class="fcMin-text">' + content + '</div>' +
+      '<div class="fcMin-text">' + content + '</div>';
 
-      setTimeout(function(){
-        textEl.innerHTML = styleMessage(CFG.messages[i]);
-        el.setAttribute("data-fade","0");
-      }, CFG.fadeMs);
-    }
+    applySpeed(el);
+  }
 
-    show();
+  function applySpeed(el){
+    var track = el.querySelector(".fcMin-track");
 
-    setInterval(function(){
-      i = (i + 1) % CFG.messages.length;
-      show();
-    }, CFG.rotateEvery);
+    // measure width for smooth timing
+    requestAnimationFrame(function(){
+      var width = track.scrollWidth / 2;
+      var duration = width / CFG.speed;
+
+      track.style.animationDuration = duration + "s";
+    });
   }
 
   if(document.readyState === "loading"){
