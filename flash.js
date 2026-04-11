@@ -2674,7 +2674,7 @@ document.addEventListener("DOMContentLoaded", function() {
     underlineClass: 'fcNavSwiftUnderline',
     badgeClass: 'fcNavSwiftBadge',
     lineClass: 'fcNavSwiftLine',
-    logoUrl: 'https://static.rafflex.io/custom-twig-images/01KN2S86PQBX7SZ13EB330S7NJ.png'
+    logoUrl: 'https://static.rafflex.io/custom-twig-images/01KNYQGPK6KMCYN0KQNF5P4KF0.png'
   };
 
   function buildUnderline(root){
