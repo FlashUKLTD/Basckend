@@ -194,7 +194,7 @@ window.FLASH_CUSTOM = window.FLASH_CUSTOM || {
         id: "about",
         type: "link",
         match: { idEquals: "header-about" },
-        label: "Our Impact",
+        label: "Mission",
         enabled: true,
         icon:
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
