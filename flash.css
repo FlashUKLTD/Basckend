@@ -1578,86 +1578,77 @@ span.text-gray-50.text-sm {
   transform: translateY(-1px);
 }
 
-/* ================================
-   Dropdown Panel
-   ================================ */
-
-.mx-auto.max-w-lg.flex.justify-between.mb-8 [x-show="dropDown"] {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,0.035),
-      rgba(255,255,255,0)
-    ),
-    #020617;
-
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-
-  box-shadow:
-    0 24px 64px rgba(0,0,0,0.7),
-    0 0 0 1px rgba(255,255,255,0.04);
-
-  backdrop-filter: blur(6px);
+/* =========================
+   FIX DROPDOWN POSITION (CENTER IT)
+========================= */
+.z-50.absolute.inset-x-0{
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%) !important;
+  margin-right:0 !important;
 }
 
-/* ================================
-   Discount Code Input
-   ================================ */
-
-.mx-auto.max-w-lg.flex.justify-between.mb-8 input#code {
-  background-color: rgba(2,6,23,0.85);
-  border-radius: 10px;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.05),
-    inset 0 0 0 1px rgba(255,255,255,0.06);
-
-  transition:
-    box-shadow 0.4s ease,
-    background-color 0.4s ease;
+/* =========================
+   CENTER CONTENT INSIDE
+========================= */
+.z-50 form{
+  text-align:center;
 }
 
-.mx-auto.max-w-lg.flex.justify-between.mb-8 input#code:focus {
-  background-color: rgba(2,6,23,0.95);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    0 0 0 1px rgba(59,130,246,0.45),
-    0 10px 26px rgba(59,130,246,0.25);
+.z-50 label{
+  display:block;
+  text-align:center;
 }
 
-/* ================================
-   Submit Button
-   ================================ */
-
-.mx-auto.max-w-lg.flex.justify-between.mb-8 button[type="submit"] {
-  border-radius: 9999px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-
-  background:
-    linear-gradient(
-      135deg,
-      #3b82f6,
-      #ec4899
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.35),
-    0 8px 24px rgba(59,130,246,0.35);
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+.z-50 .relative{
+  margin-left:auto;
+  margin-right:auto;
 }
 
-.mx-auto.max-w-lg.flex.justify-between.mb-8 button[type="submit"]:hover {
-  transform: translateY(-1px);
+/* =========================
+   CENTER INPUT + ICON CLEANLY
+========================= */
+.z-50 input{
+  text-align:center;
+  padding-left:2.2rem !important;
+}
+
+/* =========================
+   CENTER SUBMIT BUTTON
+========================= */
+.z-50 .flex.justify-end{
+  justify-content:center !important;
+}
+
+.z-50 button[type="submit"]{
+  margin:0 auto !important;
+  display:block;
+  padding:6px 16px;
+  border-radius:999px;
+
+  background:linear-gradient(135deg,#8b5cff,#35b8ff);
+  color:#fff;
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.4),
-    0 12px 36px rgba(236,72,153,0.4);
+    0 10px 24px rgba(53,184,255,.18),
+    0 0 20px rgba(139,92,255,.18);
+
+  transition:all .25s ease;
+}
+
+.z-50 button[type="submit"]:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 14px 30px rgba(53,184,255,.25),
+    0 0 30px rgba(139,92,255,.25);
+}
+
+/* =========================
+   OPTIONAL: SMOOTHER DROPDOWN FEEL
+========================= */
+.z-50{
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
 }
 
 /* ================================
