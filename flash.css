@@ -1552,6 +1552,15 @@ span.text-gray-50.text-sm {
     transform 0.4s ease;
 }
 
+.mx-auto.max-w-lg.flex.justify-between.mb-8{
+  justify-content: center;
+}
+
+.mx-auto.max-w-lg.flex.justify-between.mb-8 button[type="button"]{
+  margin: 0 auto;
+  display:block;
+}
+
 .mx-auto.max-w-lg.flex.justify-between.mb-8 button[type="button"]:hover {
   background:
     linear-gradient(
