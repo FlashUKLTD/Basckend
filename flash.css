@@ -10057,6 +10057,11 @@ section.pb-16.sm\:pb-20 .grid.grid-cols-12 > .col-span-full.md\:col-span-2.mb-4 
    SOURCE: flash_site_ui_fixed.css
    ====================================================================== */
 
+[wire\:snapshot*="tenant.global.admin-bar"]{
+  display:none !important;
+}
+
+
 #fcAdminToggle{
   position: fixed;
   left: auto;
