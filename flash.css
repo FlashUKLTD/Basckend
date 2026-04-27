@@ -13377,3 +13377,102 @@ body.fc-auth-hide-heading .sm\:mx-auto.sm\:w-full.sm\:max-w-md{
   0%,45%{transform:translateX(-120%);}
   70%,100%{transform:translateX(120%);}
 }
+
+#winners-card [data-flux-pagination]{
+  border-top:1px solid rgba(255,255,255,.07)!important;
+  padding-top:16px!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+
+#winners-card [data-flux-pagination] > div:first-child{
+  color:rgba(240,246,255,.50)!important;
+  font-size:11px!important;
+}
+
+#winners-card [data-flux-pagination] > div:last-child{
+  display:flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  width:auto!important;
+  max-width:100%!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  border-radius:999px!important;
+  padding:5px!important;
+  background:rgba(3,6,17,.72)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 12px 28px rgba(0,0,0,.26)!important;
+}
+
+#winners-card [data-flux-pagination] button,
+#winners-card [data-flux-pagination] [aria-current="page"],
+#winners-card [data-flux-pagination] [aria-disabled="true"]{
+  width:30px!important;
+  min-width:30px!important;
+  height:30px!important;
+  padding:0!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  color:rgba(240,246,255,.65)!important;
+  background:transparent!important;
+  transition:.18s ease!important;
+}
+
+#winners-card [data-flux-pagination] [aria-current="page"]{
+  color:#fff!important;
+  background:linear-gradient(135deg,#8b5cff,#35b8ff)!important;
+  box-shadow:
+    0 8px 18px rgba(53,184,255,.22),
+    inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
+#winners-card [data-flux-pagination] button:hover{
+  color:#fff!important;
+  background:rgba(255,255,255,.10)!important;
+}
+
+#winners-card [data-flux-pagination] [aria-disabled="true"]{
+  opacity:.35!important;
+}
+
+#winners-card [data-flux-pagination] svg{
+  width:15px!important;
+  height:15px!important;
+}
+
+/* Mobile: keep it neat instead of squashed */
+@media(max-width:640px){
+  #winners-card [data-flux-pagination]{
+    align-items:center!important;
+    justify-content:center!important;
+  }
+
+  #winners-card [data-flux-pagination] > div:first-child{
+    width:100%!important;
+    text-align:center!important;
+  }
+
+  #winners-card [data-flux-pagination] > div:last-child{
+    margin:0 auto!important;
+    overflow-x:auto!important;
+    scrollbar-width:none;
+  }
+
+  #winners-card [data-flux-pagination] > div:last-child::-webkit-scrollbar{
+    display:none;
+  }
+
+  #winners-card [data-flux-pagination] button,
+  #winners-card [data-flux-pagination] [aria-current="page"],
+  #winners-card [data-flux-pagination] [aria-disabled="true"]{
+    width:28px!important;
+    min-width:28px!important;
+    height:28px!important;
+    font-size:11px!important;
+  }
+}
