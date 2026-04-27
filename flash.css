@@ -13108,3 +13108,334 @@ body.fc-register-page [data-flux-error]{
 body.fc-auth-hide-heading .sm\:mx-auto.sm\:w-full.sm\:max-w-md{
   display:none !important;
 }
+
+/*Instant Winners Page*/
+
+#winners-container{
+  --fcw-a1:#8b5cff;
+  --fcw-a2:#35b8ff;
+  --fcw-bg:#030611;
+  --fcw-card:#070b18;
+  --fcw-soft:rgba(255,255,255,.065);
+
+  position:relative;
+  max-width:1180px;
+  margin:0 auto;
+}
+
+#winners-card{
+  position:relative!important;
+  overflow:hidden!important;
+  border-radius:28px!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  background:
+    radial-gradient(520px 220px at 0% 0%, rgba(139,92,255,.20), transparent 70%),
+    radial-gradient(520px 220px at 100% 0%, rgba(53,184,255,.14), transparent 70%),
+    linear-gradient(180deg, rgba(7,11,26,.98), rgba(3,6,17,.99))!important;
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.46),
+    inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+
+#winners-card::before{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(53,184,255,.85), rgba(139,92,255,.75), transparent);
+  opacity:.9;
+}
+
+#winners-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.055), transparent);
+  transform:translateX(-120%);
+}
+
+#winners-card > div{
+  position:relative;
+  z-index:2;
+}
+
+/* Header */
+#winners-card [data-flux-heading]{
+  color:#fff!important;
+  margin-bottom:6px!important;
+}
+
+#winners-card [data-flux-heading] span{
+  display:block!important;
+  font-size:clamp(24px, 5vw, 42px)!important;
+  line-height:.95!important;
+  letter-spacing:-.055em!important;
+  font-weight:1000!important;
+  text-shadow:0 0 28px rgba(139,92,255,.22);
+}
+
+#winners-card [data-flux-subheading]{
+  color:rgba(240,246,255,.66)!important;
+  font-size:14px!important;
+  line-height:1.5!important;
+}
+
+#winners-card .inline-flex.items-center.px-4.py-2{
+  border-radius:999px!important;
+  border:1px solid rgba(53,184,255,.24)!important;
+  color:#fff!important;
+  background:
+    linear-gradient(135deg, rgba(139,92,255,.20), rgba(53,184,255,.12))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 12px 30px rgba(0,0,0,.20)!important;
+}
+
+#winners-card .inline-flex.items-center.px-4.py-2 svg{
+  color:#8fdcff!important;
+  filter:drop-shadow(0 0 10px rgba(53,184,255,.45));
+}
+
+/* Winners list container */
+#winners-card ul{
+  display:grid!important;
+  gap:8px!important;
+}
+
+#winners-card ul.divide-y,
+#winners-card .divide-y > :not([hidden]) ~ :not([hidden]){
+  border-color:transparent!important;
+}
+
+/* Winner row */
+#winners-card .winner-entry{
+  position:relative!important;
+  overflow:hidden!important;
+  margin:0!important;
+  border-radius:20px!important;
+  background:
+    radial-gradient(260px 90px at 0% 50%, rgba(139,92,255,.12), transparent 70%),
+    rgba(255,255,255,.04)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    0 10px 26px rgba(0,0,0,.18)!important;
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    box-shadow .18s ease!important;
+}
+
+#winners-card .winner-entry::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:12px;
+  bottom:12px;
+  width:3px;
+  border-radius:999px;
+  background:linear-gradient(180deg, var(--fcw-a1), var(--fcw-a2));
+  opacity:.85;
+}
+
+#winners-card .winner-entry:hover{
+  transform:translateY(-1px)!important;
+  background:
+    radial-gradient(280px 100px at 0% 50%, rgba(139,92,255,.18), transparent 70%),
+    rgba(255,255,255,.055)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 14px 34px rgba(0,0,0,.26),
+    0 0 30px rgba(53,184,255,.08)!important;
+}
+
+#winners-card .winner-entry > div{
+  padding:14px!important;
+}
+
+/* Prize image badge */
+#winners-card .winner-entry span[id^="winner-badge-"]{
+  width:54px!important;
+  height:54px!important;
+  border-radius:18px!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  background:
+    linear-gradient(135deg, rgba(139,92,255,.20), rgba(53,184,255,.10)),
+    #080d1d!important;
+  box-shadow:
+    0 0 0 3px rgba(139,92,255,.08),
+    0 12px 26px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.10)!important;
+  ring-width:0!important;
+}
+
+#winners-card .winner-entry span[id^="winner-badge-"] img{
+  border-radius:16px!important;
+}
+
+/* Text */
+#winners-card .winner-entry p.text-base{
+  color:rgba(255,255,255,.88)!important;
+  font-size:15px!important;
+  line-height:1.25!important;
+}
+
+#winners-card .winner-entry .font-semibold{
+  color:#fff!important;
+  font-weight:950!important;
+}
+
+#winners-card .winner-entry .prize-amount{
+  display:inline-flex!important;
+  align-items:center!important;
+  margin-left:3px!important;
+  padding:4px 8px!important;
+  border-radius:999px!important;
+  color:#fff!important;
+  font-size:13px!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  background:linear-gradient(135deg, rgba(139,92,255,.70), rgba(53,184,255,.55))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 16px rgba(53,184,255,.16)!important;
+}
+
+#winners-card .winner-entry p.text-gray-400.text-xs{
+  margin-top:5px!important;
+  color:rgba(240,246,255,.52)!important;
+  font-size:12px!important;
+}
+
+/* Time */
+#winners-card .winner-entry .text-gray-400.text-sm.flex.items-center{
+  color:rgba(240,246,255,.54)!important;
+  font-size:12px!important;
+  white-space:nowrap!important;
+}
+
+#winners-card .winner-entry .text-gray-400.text-sm.flex.items-center svg{
+  color:#8fdcff!important;
+  opacity:.9!important;
+}
+
+/* Pagination */
+#winners-card [data-flux-pagination]{
+  border-top:1px solid rgba(255,255,255,.07)!important;
+  padding-top:14px!important;
+  margin-top:6px!important;
+}
+
+#winners-card [data-flux-pagination] > div:first-child{
+  color:rgba(240,246,255,.52)!important;
+}
+
+#winners-card [data-flux-pagination] > div:last-child{
+  border:1px solid rgba(255,255,255,.08)!important;
+  border-radius:14px!important;
+  padding:4px!important;
+  background:rgba(255,255,255,.045)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+
+#winners-card [data-flux-pagination] button,
+#winners-card [data-flux-pagination] [aria-current="page"],
+#winners-card [data-flux-pagination] [aria-disabled="true"]{
+  border-radius:10px!important;
+  color:rgba(240,246,255,.70)!important;
+}
+
+#winners-card [data-flux-pagination] [aria-current="page"]{
+  color:#fff!important;
+  background:linear-gradient(135deg, var(--fcw-a1), var(--fcw-a2))!important;
+  box-shadow:0 8px 18px rgba(53,184,255,.16)!important;
+}
+
+#winners-card [data-flux-pagination] button:hover{
+  color:#fff!important;
+  background:rgba(255,255,255,.08)!important;
+}
+
+/* Mobile polish */
+@media(max-width:640px){
+  #winners-container{
+    width:calc(100% - 10px);
+  }
+
+  #winners-card{
+    border-radius:22px!important;
+  }
+
+  #winners-card > div{
+    padding:16px!important;
+  }
+
+  #winners-card [data-flux-heading] span{
+    font-size:26px!important;
+  }
+
+  #winners-card [data-flux-subheading]{
+    font-size:13px!important;
+  }
+
+  #winners-card .winner-entry > div{
+    padding:12px!important;
+  }
+
+  #winners-card .winner-entry span[id^="winner-badge-"]{
+    width:48px!important;
+    height:48px!important;
+    border-radius:16px!important;
+  }
+
+  #winners-card .winner-entry p.text-base{
+    font-size:14px!important;
+  }
+
+  #winners-card .winner-entry .prize-amount{
+    margin-top:2px!important;
+  }
+
+  #winners-card .winner-entry .text-gray-400.text-sm.flex.items-center{
+    margin-top:7px!important;
+    font-size:11px!important;
+  }
+}
+
+/* Animations */
+@media(prefers-reduced-motion:no-preference){
+  #winners-card{
+    animation:fcWinnersIn .38s ease both;
+  }
+
+  #winners-card::after{
+    animation:fcWinnersSweep 5.5s ease-in-out infinite;
+  }
+
+  #winners-card .winner-entry{
+    animation:fcWinnerRowIn .35s ease both;
+  }
+
+  #winners-card .winner-entry:nth-child(1){animation-delay:.02s;}
+  #winners-card .winner-entry:nth-child(2){animation-delay:.04s;}
+  #winners-card .winner-entry:nth-child(3){animation-delay:.06s;}
+  #winners-card .winner-entry:nth-child(4){animation-delay:.08s;}
+  #winners-card .winner-entry:nth-child(5){animation-delay:.10s;}
+}
+
+@keyframes fcWinnersIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:none;}
+}
+
+@keyframes fcWinnerRowIn{
+  from{opacity:0; transform:translateY(8px);}
+  to{opacity:1; transform:none;}
+}
+
+@keyframes fcWinnersSweep{
+  0%,45%{transform:translateX(-120%);}
+  70%,100%{transform:translateX(120%);}
+}
