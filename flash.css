@@ -3275,68 +3275,6 @@ svg.size-6.md\:size-7.flex-shrink-0 {
   transition: all .25s ease;
 }
 
-
-/* Premium competition name (only inside winner list) */
-li.winner-entry p.text-gray-400.text-xs{
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: .4rem !important;
-
-    margin-top: .35rem !important;
-    padding: .25rem .6rem !important;
-
-    font-size: 11px !important;
-    font-weight: 800 !important;
-    letter-spacing: .08em !important;
-    text-transform: uppercase !important;
-
-    color: rgba(255,255,255,.92) !important;
-
-    /* premium “glass chip” */
-    background: linear-gradient(135deg,
-      rgba(183,93,255,.25),
-      rgba(126,58,242,.12),
-      rgba(0,0,0,.2)
-    ) !important;
-
-    border: 1px solid rgba(183,93,255,.35) !important;
-    border-radius: 999px !important;
-
-    box-shadow:
-      0 10px 24px rgba(0,0,0,.35),
-      inset 0 0 0 1px rgba(255,255,255,.06) !important;
-
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-}
-
-/* Add a premium purple dot before it */
-li.winner-entry p.text-gray-400.text-xs::before{
-    content: "" !important;
-    width: 8px !important;
-    height: 8px !important;
-    border-radius: 999px !important;
-
-    background: radial-gradient(circle at 30% 30%,
-      #ffffff 0%,
-      #b75dff 35%,
-      #7c3aed 100%
-    ) !important;
-
-    box-shadow:
-      0 0 0 2px rgba(183,93,255,.15),
-      0 0 18px rgba(183,93,255,.45) !important;
-}
-
-/* Small luxury hover lift */
-li.winner-entry:hover p.text-gray-400.text-xs{
-    transform: translateY(-1px) !important;
-    border-color: rgba(183,93,255,.55) !important;
-    box-shadow:
-      0 14px 34px rgba(0,0,0,.42),
-      inset 0 0 0 1px rgba(255,255,255,.08) !important;
-}
-
 /* Soft glow accent */
 .flex.items-center.border.rounded-xl.py-1.px-1\.5.gap-1.hover\:border-primary-500.group::before{
   content:"";
