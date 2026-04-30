@@ -1501,36 +1501,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       };
 
-      const chips = wrap.querySelector('[data-fc-chips]');
-      if (chips && !chips.getAttribute('data-built')){
-        chips.setAttribute('data-built', '1');
-        const defs = [
-          { label: '+5', add: 5 },
-          { label: '+10', add: 10 },
-          { label: '+25', add: 25 },
-          { label: '+50', add: 50 },
-          { label: '+100', add: 100 },
-          { label: 'Max', max: true }
-        ];
-
-        defs.forEach((d) => {
-          const b = document.createElement('button');
-          b.type = 'button';
-          b.className = 'fcFastChip';
-          b.textContent = d.label;
-          b.addEventListener('click', () => {
-            if (isFreeComp()){
-              setTickets(panel, 1);
-              return;
-            }
-            const cur = getTickets(panel);
-            const next = d.max ? maxUser : (cur + d.add);
-            setTickets(panel, next);
-          });
-          chips.appendChild(b);
-        });
-      }
-
       const sticky = buildSticky();
       const stickyAmt = sticky?.querySelector('.amt');
       const stickyBtn = sticky?.querySelector('button');
